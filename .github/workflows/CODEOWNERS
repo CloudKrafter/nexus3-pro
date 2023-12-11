@@ -1,0 +1,15 @@
+# To match two or more code owners with the same pattern, all the code owners must be on the same line.
+# If the code owners are not on the same line, the pattern matches only the last mentioned code owner.
+
+# Order is important; the last matching pattern takes the most precedence.
+
+# These owners will be the default owners for everything in
+# the repo. Unless a later match takes precedence,
+# @brianveltman will be requested for
+# review when someone opens a pull request.
+
+*           @brianveltman
+
+# These owners will be the default reviewers for everything inside
+# the .github directory
+/.github/   @brianveltman
