@@ -31,7 +31,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-      - name: Run Yaml lint
+      - name: Run lint
         run: |
-          cd defaults/ && yamllint .
+          ./tests/test_groovySyntax.sh
       - run: echo "🍏 This job's status is ${{ job.status }}."
