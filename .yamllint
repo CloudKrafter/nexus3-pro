@@ -1,7 +1,10 @@
 ---
 extends: default
 
-ignore-from-file: .gitignore
+ignore:
+  - .github/
+  - ".travis.yml"
+  - ".pre-commit-config.yaml"
 
 rules:
   indentation:
