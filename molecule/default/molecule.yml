@@ -4,9 +4,12 @@ dependency:
   enabled: false
 
 driver:
-  name: docker
-  safe_files:
-    - nexus-downloads
+  name: default
+  options:
+    managed: True
+    login_cmd_template: "docker exec -ti {instance} bash"
+    ansible_connection_options:
+      ansible_connection: docker
 
 platforms:
   - name: nexus3-oss-default
