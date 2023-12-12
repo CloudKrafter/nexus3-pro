@@ -2,15 +2,6 @@ name: CI Actions
 run-name: ${{ github.actor }} is testing changes
 on:
   pull_request:
-    types:
-      [
-        opened,
-        reopened,
-        review_requested,
-        auto_merge_enabled,
-        ready_for_review,
-        edited,
-      ]
   merge_group:
     types: [checks_requested]
 jobs:
