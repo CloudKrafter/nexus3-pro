@@ -8,12 +8,6 @@ driver:
   safe_files:
     - nexus-downloads
 
-lint: |
-  set -e
-  yamllint .
-  ansible-lint
-  flake8
-
 platforms:
   - name: nexus3-oss-default
     hostname: nexus3-oss-default
@@ -43,6 +37,8 @@ platforms:
 
 provisioner:
   name: ansible
+  lint:
+    name: ansible-lint
 
 scenario:
   check_sequence:
