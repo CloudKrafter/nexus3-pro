@@ -25,6 +25,7 @@ platforms:
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:rw
       - ${MOLECULE_PROJECT_DIRECTORY}/molecule/.nexus-downloads:/nexus-downloads
+      - ${MOLECULE_PROJECT_DIRECTORY}:/ansible
 
   - name: slapd-server-mock
     hostname: slapd-server-mock

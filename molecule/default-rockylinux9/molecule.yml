@@ -21,6 +21,7 @@ platforms:
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:rw
       - ${MOLECULE_PROJECT_DIRECTORY}/molecule/.nexus-downloads:/nexus-downloads
+      - ${MOLECULE_PROJECT_DIRECTORY}:/ansible
     cgroupns_mode: host
     groups:
       - nexus
