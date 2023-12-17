@@ -1,0 +1,58 @@
+---
+- name: Verify
+  hosts: nexus
+  vars_files:
+    - nexus_common_test_vars.yml
+    - nexus_ldap_test_vars.yml
+
+  tasks:
+    - name: include default vars
+      ansible.builtin.include_vars:
+        dir: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/defaults/"
+        extensions:
+          - "yml"
+
+    # ensure podman is installed
+    - name: Install podman
+      ansible.builtin.package:
+        name: podman
+        state: present
+
+    # pull alpine docker image from public docker hub
+    - name: Container present
+      containers.podman.podman_container:
+        name: alpine
+        state: present
+        image: alpine:latest
+
+    # tag alpine docker image and push it to local registry
+    - name: Tag and push alpine image
+      ansible.builtin.command: podman tag alpine:latest localhost:5000/alpine:latest
+
+    #podman login to local registry
+    - name: Login to local registry
+      ansible.builtin.command: "podman login -u {{ nexus_admin_username }} -p {{ nexus_admin_password }} localhost:5000 --tls-verify={{ nexus_validate_certs }}"
+
+    # push alpine docker image to local registry
+    - name: Push alpine image
+      ansible.builtin.command: podman push localhost:5000/alpine:latest --tls-verify="{{ nexus_validate_certs }}"
+
+    # Call Nexus API to get docker-private hosted repo configuration
+    - name: Get config for docker-private hosted repo
+      ansible.builtin.uri:
+        url: "https://localhost:8091/service/rest/v1/repositories/docker/hosted/docker-private"
+        method: GET
+        validate_certs: "{{ nexus_validate_certs }}"
+        user: "{{ nexus_admin_username }}"
+        password: "{{ nexus_admin_password }}"
+        force_basic_auth: yes
+      register: nexus_api_response
+      delegate_to: localhost
+
+    # assert that hosted docker repo 'docker-private' writePolicy is 'ALLOW'
+    - name: Assert that hosted docker repo 'docker-private' writePolicy is 'ALLOW'
+      ansible.builtin.assert:
+        that:
+          - nexus_api_response.json.storage.writePolicy == 'ALLOW'
+        fail_msg: "hosted docker repo 'docker-private' writePolicy is {{ nexus_api_response.json.storage.writePolicy}}"
+        success_msg: "hosted docker repo 'docker-private' writePolicy is {{ nexus_api_response.json.storage.writePolicy}}"
