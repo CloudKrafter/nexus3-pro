@@ -66,6 +66,16 @@
   ansible.builtin.set_fact:
     nexus_package: nexus-{{ nexus_version }}-unix.tar.gz
 
+- name: Check if nexus package is already downloaded
+  ansible.builtin.stat:
+    path: "{{ nexus_download_dir }}/{{ nexus_package }}"
+  register: nexus_package_stat
+  check_mode: false
+
+- name: show nexus_package_stat
+  ansible.builtin.debug:
+    msg: "{{ nexus_package_stat }}"
+
 - name: Download nexus_package
   ansible.builtin.get_url:
     url: "{{ nexus_download_url }}/{{ nexus_package }}"
@@ -82,6 +92,7 @@
   delay: "{{ nexus_download_delay }}"
   notify:
     - nexus-service-stop
+  when: nexus_package_stat.stat.exists is not defined or nexus_package_stat.stat.exists == false
 
 - name: Ensure Nexus o/s group exists
   ansible.builtin.group:
