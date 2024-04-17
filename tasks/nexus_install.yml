@@ -218,6 +218,10 @@
     group: "{{ nexus_os_group }}"
     mode: "0750"
 
+- name: Prepare for Postgres
+  ansible.builtin.include_tasks: prepare_postgres.yml
+  when: nexus_use_postgres | default(false) | bool
+
 - name: Setup Nexus data directory
   ansible.builtin.lineinfile:
     dest: "{{ nexus_installation_dir }}/nexus-latest/bin/nexus.vmoptions"
@@ -420,6 +424,10 @@
 
 - name: Run all notified handlers now
   ansible.builtin.meta: flush_handlers
+
+- name: Enable Postgres
+  ansible.builtin.include_tasks: enable_postgres.yml
+  when: nexus_use_postgres | default(false) | bool
 
 - name: Enable nexus systemd service and make sure it is started
   ansible.builtin.systemd:

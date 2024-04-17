@@ -5,6 +5,20 @@ httpd_ssl_cert_file_location: "{{ default_cert }}"
 httpd_ssl_cert_key_location: "{{ default_key }}"
 nexus_public_hostname: localhost
 nexus_api_timeout: 45
+nexus_purge: true
+nexus_run_provisionning: false
+
+# Postgres settings
+#nexus_migrate_orientdb_to_postgres: true
+nexus_use_postgres: true
+
+nexus_postgres_db_host: postgresql-server
+nexus_postgres_db_name: nexus
+nexus_postgres_db_port: 5432
+nexus_postgres_db_username: nexus
+nexus_postgres_db_password: nexus
+nexus_postgres_max_lifetime: 840000
+nexus_postgres_max_pool_size: 85
 
 nexus_custom_jvm_settings:
   - XX:+UseG1GC

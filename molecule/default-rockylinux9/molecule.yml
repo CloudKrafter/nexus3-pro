@@ -39,6 +39,23 @@ platforms:
       - mockldap
     networks: *nexus_networks
 
+  # container instance to run postgresql database
+  - name: postgresql-server
+    hostname: postgresql-server
+    image: postgres:14-bullseye
+    override_command: false
+    pull: true
+    pre_build_image: true
+    published_ports:
+      - 5432:5432
+    env:
+      POSTGRES_DB: nexus
+      POSTGRES_USER: nexus
+      POSTGRES_PASSWORD: nexus
+    groups:
+      - postgresql
+    networks: *nexus_networks
+
 provisioner:
   name: ansible
 

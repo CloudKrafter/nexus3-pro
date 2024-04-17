@@ -1,0 +1,39 @@
+---
+# Download database migration tool
+- name: Download the Nexus database migration tool
+  get_url:
+    url: "https://download.sonatype.com/nexus/nxrm3-migrator/nexus-db-migrator-{{ nexus_version }}.jar"
+    dest: "{{ nexus_data_dir }}/db/nexus-db-migrator-{{ nexus_version }}.jar"
+    mode: "0644"
+    owner: "{{ nexus_os_user }}"
+    group: "{{ nexus_os_group }}"
+  tags: nexus-postgresql
+
+- name: Prepare Postgres
+  ansible.builtin.include_tasks: prepare_postgres.yml
+  #when: nexus_migrate_orientdb_to_postgres | default(false) | bool
+
+- name: Stop Nexus service
+  ansible.builtin.systemd:
+    name: nexus.service
+    state: stopped
+  tags: nexus-postgresql
+
+- name: Run migration
+  ansible.builtin.command:
+    cmd: 'java -Xmx4G -Xms4G -XX:MaxDirectMemorySize=4014M -jar {{ nexus_data_dir }}/db/nexus-db-migrator-{{ nexus_version }}.jar --yes --migration_type=h2_to_postgres --db_url="jdbc:postgresql://{{ nexus_postgres_db_host }}:{{ nexus_postgres_db_port }}/{{ nexus_postgres_db_name }}?user={{ nexus_postgres_db_username }}&password={{ nexus_postgres_db_password }}" --force=true'
+  register: migration_result
+  tags: nexus-postgresql
+
+- debug:
+    var: migration_result.stdout_lines
+
+- name: Start Nexus service
+  ansible.builtin.systemd:
+    name: nexus.service
+    state: started
+  tags: nexus-postgresql
+
+- name: Enable Postgres as datastore
+  ansible.builtin.include_tasks: enable_postgres.yml
+  when: nexus_enable_postgres_db | default(false) | bool

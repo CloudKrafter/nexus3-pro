@@ -1,0 +1,29 @@
+---
+- name: Store Nexus properties in {{ nexus_data_dir }}/etc/nexus.properties file
+  ansible.builtin.lineinfile:
+    path: "{{ nexus_data_dir }}/etc/nexus.properties"
+    line: "nexus.datastore.enabled=true"
+    firstmatch: true
+    insertafter: "EOF"
+    state: present
+  tags: nexus-postgresql
+
+- name: Add the username and password to the environment variables
+  ansible.builtin.lineinfile:
+    dest: "{{ nexus_os_user_home_dir }}/.bashrc"
+    line: "{{ item }}"
+    insertafter: "EOF"
+    state: present
+  loop:
+    - "export NEXUS_DATASTORE_NEXUS_USERNAME={{ nexus_postgres_db_username }}"
+    - "export NEXUS_DATASTORE_NEXUS_PASSWORD={{ nexus_postgres_db_password }}"
+    - "export NEXUS_DATASTORE_NEXUS_JDBCURL=jdbc:postgresql://{{ nexus_postgres_db_host }}:{{ nexus_postgres_db_port }}/{{ nexus_postgres_db_name }}"
+    - "export NEXUS_DATASTORE_NEXUS_ADVANCED='maximumPoolSize={{ nexus_postgres_max_pool_size }}'"
+    - "export NEXUS_DATASTORE_NEXUS_ADVANCED='maxLifetime={{ nexus_postgres_max_lifetime }}'"
+  tags: nexus-postgresql
+
+# - name: Start Nexus service
+#   ansible.builtin.systemd:
+#     name: nexus.service
+#     state: restarted
+#   tags: nexus-postgresql
