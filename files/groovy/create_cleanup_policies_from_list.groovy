@@ -42,7 +42,7 @@ parsed_args.each { currentPolicy ->
                             currentPolicy.format,
                             currentPolicy.criteria.lastBlobUpdated,
                             currentPolicy.criteria.lastDownloaded,
-                            // currentPolicy.criteria.preRelease,
+                            currentPolicy.criteria.releaseType,
                             currentPolicy.criteria.regexKey)
                 existingPolicy.setNotes(currentPolicy.notes)
                 existingPolicy.setCriteria(criteriaMap)
@@ -58,7 +58,7 @@ parsed_args.each { currentPolicy ->
                             currentPolicy.format,
                             currentPolicy.criteria.lastBlobUpdated,
                             currentPolicy.criteria.lastDownloaded,
-                            // currentPolicy.criteria.preRelease,
+                            currentPolicy.criteria.releaseType,
                             currentPolicy.criteria.regexKey)
 
             CleanupPolicy cleanupPolicy = cleanupPolicyStorage.newCleanupPolicy()
@@ -96,11 +96,13 @@ def Map<String, String> createCriteria(currentPolicy) {
     } else {
         criteriaMap.put('lastDownloaded', asStringSeconds(currentPolicy.criteria.lastDownloaded))
     }
-    // if ((currentPolicy.criteria.preRelease == null) || (currentPolicy.criteria.preRelease == "")) {
-    //     criteriaMap.remove(IS_PRERELEASE_KEY)
-    // } else {
-    //     criteriaMap.put(IS_PRERELEASE_KEY, Boolean.toString(currentPolicy.criteria.preRelease == "PRERELEASES"))
-    // }
+    if (currentPolicy.criteria.releaseType == "RELEASES") {
+        criteriaMap.put('releaseType', currentPolicy.criteria.releaseType == "RELEASES")
+    } else if (currentPolicy.criteria.releaseType == "PRERELEASES") {
+        criteriaMap.put('releaseType', currentPolicy.criteria.releaseType == "PRERELEASES")
+    } else {
+        criteriaMap.remove('releaseType')
+    }
     if ((currentPolicy.criteria.regexKey == null) || (currentPolicy.criteria.regexKey == "")) {
         criteriaMap.remove('regex')
     } else {
@@ -128,10 +130,10 @@ def Boolean isPolicyEqual(existingPolicy, currentPolicy) {
         && currentCriteria.containsKey('lastDownloaded')
         && existingPolicy.getCriteria()['lastDownloaded'] == currentCriteria['lastDownloaded']))
 
-    // isequal &= (((! existingPolicy.getCriteria().containsKey(IS_PRERELEASE_KEY)) && (! currentCriteria.containsKey(IS_PRERELEASE_KEY)))
-    // ||  (existingPolicy.getCriteria().containsKey(IS_PRERELEASE_KEY)
-    //     && currentCriteria.containsKey(IS_PRERELEASE_KEY)
-    //     && existingPolicy.getCriteria()[IS_PRERELEASE_KEY] == currentCriteria[IS_PRERELEASE_KEY]))
+    isequal &= (((! existingPolicy.getCriteria().containsKey('releaseType')) && (! currentCriteria.containsKey('releaseType')))
+    ||  (existingPolicy.getCriteria().containsKey('releaseType')
+        && currentCriteria.containsKey('releaseType')
+        && existingPolicy.getCriteria()['releaseType'] == currentCriteria['releaseType'']))
 
     isequal &= (((! existingPolicy.getCriteria().containsKey('regex')) && (! currentCriteria.containsKey('regex')))
     ||  (existingPolicy.getCriteria().containsKey('regex')
