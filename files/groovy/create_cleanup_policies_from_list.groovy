@@ -133,7 +133,7 @@ def Boolean isPolicyEqual(existingPolicy, currentPolicy) {
     isequal &= (((! existingPolicy.getCriteria().containsKey('releaseType')) && (! currentCriteria.containsKey('releaseType')))
     ||  (existingPolicy.getCriteria().containsKey('releaseType')
         && currentCriteria.containsKey('releaseType')
-        && existingPolicy.getCriteria()['releaseType'] == currentCriteria['releaseType'']))
+        && existingPolicy.getCriteria()['releaseType'] == currentCriteria['releaseType']))
 
     isequal &= (((! existingPolicy.getCriteria().containsKey('regex')) && (! currentCriteria.containsKey('regex')))
     ||  (existingPolicy.getCriteria().containsKey('regex')
