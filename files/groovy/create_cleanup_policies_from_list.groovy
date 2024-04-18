@@ -42,7 +42,7 @@ parsed_args.each { currentPolicy ->
                             currentPolicy.format,
                             currentPolicy.criteria.lastBlobUpdated,
                             currentPolicy.criteria.lastDownloaded,
-                            currentPolicy.criteria.preRelease,
+                            // currentPolicy.criteria.preRelease,
                             currentPolicy.criteria.regexKey)
                 existingPolicy.setNotes(currentPolicy.notes)
                 existingPolicy.setCriteria(criteriaMap)
@@ -58,7 +58,7 @@ parsed_args.each { currentPolicy ->
                             currentPolicy.format,
                             currentPolicy.criteria.lastBlobUpdated,
                             currentPolicy.criteria.lastDownloaded,
-                            currentPolicy.criteria.preRelease,
+                            // currentPolicy.criteria.preRelease,
                             currentPolicy.criteria.regexKey)
 
             CleanupPolicy cleanupPolicy = cleanupPolicyStorage.newCleanupPolicy()
@@ -96,11 +96,11 @@ def Map<String, String> createCriteria(currentPolicy) {
     } else {
         criteriaMap.put(LAST_DOWNLOADED_KEY, asStringSeconds(currentPolicy.criteria.lastDownloaded))
     }
-    if ((currentPolicy.criteria.preRelease == null) || (currentPolicy.criteria.preRelease == "")) {
-        criteriaMap.remove(IS_PRERELEASE_KEY)
-    } else {
-        criteriaMap.put(IS_PRERELEASE_KEY, Boolean.toString(currentPolicy.criteria.preRelease == "PRERELEASES"))
-    }
+    // if ((currentPolicy.criteria.preRelease == null) || (currentPolicy.criteria.preRelease == "")) {
+    //     criteriaMap.remove(IS_PRERELEASE_KEY)
+    // } else {
+    //     criteriaMap.put(IS_PRERELEASE_KEY, Boolean.toString(currentPolicy.criteria.preRelease == "PRERELEASES"))
+    // }
     if ((currentPolicy.criteria.regexKey == null) || (currentPolicy.criteria.regexKey == "")) {
         criteriaMap.remove(REGEX_KEY)
     } else {
@@ -128,10 +128,10 @@ def Boolean isPolicyEqual(existingPolicy, currentPolicy) {
         && currentCriteria.containsKey(LAST_DOWNLOADED_KEY)
         && existingPolicy.getCriteria()[LAST_DOWNLOADED_KEY] == currentCriteria[LAST_DOWNLOADED_KEY]))
 
-    isequal &= (((! existingPolicy.getCriteria().containsKey(IS_PRERELEASE_KEY)) && (! currentCriteria.containsKey(IS_PRERELEASE_KEY)))
-    ||  (existingPolicy.getCriteria().containsKey(IS_PRERELEASE_KEY)
-        && currentCriteria.containsKey(IS_PRERELEASE_KEY)
-        && existingPolicy.getCriteria()[IS_PRERELEASE_KEY] == currentCriteria[IS_PRERELEASE_KEY]))
+    // isequal &= (((! existingPolicy.getCriteria().containsKey(IS_PRERELEASE_KEY)) && (! currentCriteria.containsKey(IS_PRERELEASE_KEY)))
+    // ||  (existingPolicy.getCriteria().containsKey(IS_PRERELEASE_KEY)
+    //     && currentCriteria.containsKey(IS_PRERELEASE_KEY)
+    //     && existingPolicy.getCriteria()[IS_PRERELEASE_KEY] == currentCriteria[IS_PRERELEASE_KEY]))
 
     isequal &= (((! existingPolicy.getCriteria().containsKey(REGEX_KEY)) && (! currentCriteria.containsKey(REGEX_KEY)))
     ||  (existingPolicy.getCriteria().containsKey(REGEX_KEY)
