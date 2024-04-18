@@ -68,10 +68,24 @@ nexus_repos_cleanup_policies:
       lastDownloaded: 120
   - name: mvn_cleanup
     format: maven2
-    notes: "This is a note"
+    notes: "mvn"
     criteria:
       lastBlobUpdated: 60
       lastDownloaded: 120
+  - name: mvn_releases_cleanup
+    format: maven2
+    notes: "mvn RELEASES"
+    criteria:
+      lastBlobUpdated: 60
+      lastDownloaded: 120
+      isPrerelease: RELEASES
+  - name: mvn_prereleases_cleanup
+    format: maven2
+    notes: "mvn PRERELEASES"
+    criteria:
+      lastBlobUpdated: 60
+      lastDownloaded: 120
+      isPrerelease: PRERELEASES
   - name: python_cleanup
     format: pypi
     notes: "Python pip"
@@ -107,16 +121,16 @@ nexus_repos_cleanup_policies:
       regexKey: 'beta-*'
   - name: npm_releases_cleanup
     format: npm
-    notes: ""
+    notes: "npm RELEASES"
     criteria:
       regexKey: 'beta-*'
-      releaseType: "RELEASES"
+      isPrerelease: RELEASES
   - name: npm_prereleases_cleanup
     format: npm
-    notes: ""
+    notes: "npm PRERELEASES"
     criteria:
       regexKey: 'beta-*'
-      releaseType: "PRERELEASES"
+      isPrerelease: PRERELEASES
   - name: nuget_cleanup
     format: nuget
     notes: "NuGet"
@@ -132,20 +146,20 @@ nexus_repos_cleanup_policies:
       lastDownloaded: 120
   - name: yum_prerelease_cleanup
     format: yum
-    notes: "yum"
+    notes: "yum PRERELEASES"
     criteria:
       lastBlobUpdated: 60
       lastDownloaded: 120
       regexKey: 'beta-*'
-      releaseType: "PRERELEASES"
+      isPrerelease: PRERELEASES
   - name: yum_release_cleanup
     format: yum
-    notes: "yum"
+    notes: "yum RELEASES"
     criteria:
       lastBlobUpdated: 60
       lastDownloaded: 120
       regexKey: 'beta-*'
-      releaseType: "RELEASES"
+      isPrerelease: RELEASES
   - name: yum_cleanup
     format: yum
     notes: "yum"
@@ -209,7 +223,6 @@ nexus_repos_cleanup_policies:
       lastBlobUpdated: 60
       lastDownloaded: 120
       regexKey: 'beta-*'
-
 nexus_repos_maven_proxy:
   - name: central
     remote_url: https://repo1.maven.org/maven2/

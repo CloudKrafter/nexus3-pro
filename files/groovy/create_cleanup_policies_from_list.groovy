@@ -42,7 +42,7 @@ parsed_args.each { currentPolicy ->
                             currentPolicy.format,
                             currentPolicy.criteria.lastBlobUpdated,
                             currentPolicy.criteria.lastDownloaded,
-                            currentPolicy.criteria.releaseType,
+                            currentPolicy.criteria.isPrerelease,
                             currentPolicy.criteria.regexKey)
                 existingPolicy.setNotes(currentPolicy.notes)
                 existingPolicy.setCriteria(criteriaMap)
@@ -58,7 +58,7 @@ parsed_args.each { currentPolicy ->
                             currentPolicy.format,
                             currentPolicy.criteria.lastBlobUpdated,
                             currentPolicy.criteria.lastDownloaded,
-                            currentPolicy.criteria.releaseType,
+                            currentPolicy.criteria.isPrerelease,
                             currentPolicy.criteria.regexKey)
 
             CleanupPolicy cleanupPolicy = cleanupPolicyStorage.newCleanupPolicy()
@@ -96,12 +96,10 @@ def Map<String, String> createCriteria(currentPolicy) {
     } else {
         criteriaMap.put('lastDownloaded', asStringSeconds(currentPolicy.criteria.lastDownloaded))
     }
-    if (currentPolicy.criteria.releaseType == "RELEASES") {
-        criteriaMap.put('releaseType', currentPolicy.criteria.releaseType == "RELEASES")
-    } else if (currentPolicy.criteria.releaseType == "PRERELEASES") {
-        criteriaMap.put('releaseType', currentPolicy.criteria.releaseType == "PRERELEASES")
+    if ((currentPolicy.criteria.isPrerelease == null) || (currentPolicy.criteria.isPrerelease == "")) {
+        criteriaMap.remove('isPrerelease')
     } else {
-        criteriaMap.remove('releaseType')
+        criteriaMap.put('isPrerelease', Boolean.toString(currentPolicy.criteria.isPrerelease == "PRERELEASES"))
     }
     if ((currentPolicy.criteria.regexKey == null) || (currentPolicy.criteria.regexKey == "")) {
         criteriaMap.remove('regex')
@@ -130,10 +128,10 @@ def Boolean isPolicyEqual(existingPolicy, currentPolicy) {
         && currentCriteria.containsKey('lastDownloaded')
         && existingPolicy.getCriteria()['lastDownloaded'] == currentCriteria['lastDownloaded']))
 
-    isequal &= (((! existingPolicy.getCriteria().containsKey('releaseType')) && (! currentCriteria.containsKey('releaseType')))
-    ||  (existingPolicy.getCriteria().containsKey('releaseType')
-        && currentCriteria.containsKey('releaseType')
-        && existingPolicy.getCriteria()['releaseType'] == currentCriteria['releaseType']))
+    isequal &= (((! existingPolicy.getCriteria().containsKey('isPrerelease')) && (! currentCriteria.containsKey('isPrerelease')))
+    ||  (existingPolicy.getCriteria().containsKey('isPrerelease')
+        && currentCriteria.containsKey('isPrerelease')
+        && existingPolicy.getCriteria()['isPrerelease'] == currentCriteria['isPrerelease']))
 
     isequal &= (((! existingPolicy.getCriteria().containsKey('regex')) && (! currentCriteria.containsKey('regex')))
     ||  (existingPolicy.getCriteria().containsKey('regex')
