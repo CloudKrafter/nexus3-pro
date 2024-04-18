@@ -28,7 +28,6 @@ nexus_config_pypi: true
 nexus_config_docker: true
 nexus_config_raw: true
 nexus_config_rubygems: true
-nexus_config_bower: true
 nexus_config_npm: true
 nexus_config_nuget: true
 nexus_config_gitlfs: true
@@ -49,11 +48,28 @@ nexus_rut_auth_header: CUSTOM_RUT_HEADER
 nexus_repos_cleanup_policies:
   - name: mvn_cleanup
     format: maven2
-    mode:
-    notes: ""
+    notes: "This is a note"
     criteria:
       lastBlobUpdated: 60
       lastDownloaded: 120
+  - name: npm_cleanup
+    format: npm
+    notes: ""
+    criteria:
+      regexKey: 'beta-*'
+  - name: all_cleanup
+    format: all
+    notes: "All"
+    criteria:
+      lastBlobUpdated: 60
+      lastDownloaded: 120
+  - name: pyhton_cleanup
+    format: pypi
+    notes: "Python pip"
+    criteria:
+      lastBlobUpdated: 60
+      lastDownloaded: 120
+      regexKey: 'beta-*'
 
 nexus_repos_maven_proxy:
   - name: central
