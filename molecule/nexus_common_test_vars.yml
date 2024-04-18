@@ -60,26 +60,151 @@ nexus_rut_auth_realm: false
 nexus_rut_auth_header: CUSTOM_RUT_HEADER
 
 nexus_repos_cleanup_policies:
-  - name: mvn_cleanup
-    format: maven2
-    notes: "This is a note"
-    criteria:
-      lastBlobUpdated: 60
-      lastDownloaded: 120
-  - name: npm_cleanup
-    format: npm
-    notes: ""
-    criteria:
-      regexKey: 'beta-*'
   - name: all_cleanup
     format: all
     notes: "All"
     criteria:
       lastBlobUpdated: 60
       lastDownloaded: 120
-  - name: pyhton_cleanup
+  - name: mvn_cleanup
+    format: maven2
+    notes: "This is a note"
+    criteria:
+      lastBlobUpdated: 60
+      lastDownloaded: 120
+  - name: python_cleanup
     format: pypi
     notes: "Python pip"
+    criteria:
+      lastBlobUpdated: 60
+      lastDownloaded: 120
+      regexKey: 'beta-*'
+  - name: docker_cleanup
+    format: docker
+    notes: "Docker"
+    criteria:
+      lastBlobUpdated: 60
+      lastDownloaded: 120
+      regexKey: 'beta-*'
+  - name: raw_cleanup
+    format: raw
+    notes: "Raw"
+    criteria:
+      lastBlobUpdated: 60
+      lastDownloaded: 120
+      regexKey: 'beta-*'
+  - name: rubygems_cleanup
+    format: rubygems
+    notes: "Rubygems"
+    criteria:
+      lastBlobUpdated: 60
+      lastDownloaded: 120
+      regexKey: 'beta-*'
+  - name: npm_cleanup
+    format: npm
+    notes: ""
+    criteria:
+      regexKey: 'beta-*'
+  - name: npm_releases_cleanup
+    format: npm
+    notes: ""
+    criteria:
+      regexKey: 'beta-*'
+      releaseType: "RELEASES"
+  - name: npm_prereleases_cleanup
+    format: npm
+    notes: ""
+    criteria:
+      regexKey: 'beta-*'
+      releaseType: "PRERELEASES"
+  - name: nuget_cleanup
+    format: nuget
+    notes: "NuGet"
+    criteria:
+      lastBlobUpdated: 60
+      lastDownloaded: 120
+      regexKey: 'beta-*'
+  - name: gitlfs_cleanup
+    format: gitlfs
+    notes: "gitlfs"
+    criteria:
+      lastBlobUpdated: 60
+      lastDownloaded: 120
+  - name: yum_prerelease_cleanup
+    format: yum
+    notes: "yum"
+    criteria:
+      lastBlobUpdated: 60
+      lastDownloaded: 120
+      regexKey: 'beta-*'
+      releaseType: "PRERELEASES"
+  - name: yum_release_cleanup
+    format: yum
+    notes: "yum"
+    criteria:
+      lastBlobUpdated: 60
+      lastDownloaded: 120
+      regexKey: 'beta-*'
+      releaseType: "RELEASES"
+  - name: yum_cleanup
+    format: yum
+    notes: "yum"
+    criteria:
+      lastBlobUpdated: 60
+      lastDownloaded: 120
+      regexKey: 'beta-*'
+  - name: apt_cleanup
+    format: apt
+    notes: "apt"
+    criteria:
+      lastBlobUpdated: 60
+      lastDownloaded: 120
+      regexKey: 'beta-*'
+  - name: helm_cleanup
+    format: helm
+    notes: "Helm"
+    criteria:
+      lastBlobUpdated: 60
+      lastDownloaded: 120
+      regexKey: 'beta-*'
+  - name: r_cleanup
+    format: r
+    notes: "r"
+    criteria:
+      lastBlobUpdated: 60
+      lastDownloaded: 120
+      regexKey: 'beta-*'
+  - name: conda_cleanup
+    format: conda
+    notes: "conda"
+    criteria:
+      lastBlobUpdated: 60
+      lastDownloaded: 120
+      regexKey: 'beta-*'
+  - name: go_cleanup
+    format: go
+    notes: "go"
+    criteria:
+      lastBlobUpdated: 60
+      lastDownloaded: 120
+      regexKey: 'beta-*'
+  - name: cocoapods_cleanup
+    format: cocoapods
+    notes: "cocoapods"
+    criteria:
+      lastBlobUpdated: 60
+      lastDownloaded: 120
+      regexKey: 'beta-*'
+  - name: conan_cleanup
+    format: conan
+    notes: "conan"
+    criteria:
+      lastBlobUpdated: 60
+      lastDownloaded: 120
+      regexKey: 'beta-*'
+  - name: p2_cleanup
+    format: p2
+    notes: "p2"
     criteria:
       lastBlobUpdated: 60
       lastDownloaded: 120
