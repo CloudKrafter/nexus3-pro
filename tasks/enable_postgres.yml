@@ -2,7 +2,7 @@
 - name: Store Nexus properties in {{ nexus_data_dir }}/etc/nexus.properties file
   ansible.builtin.lineinfile:
     path: "{{ nexus_data_dir }}/etc/nexus.properties"
-    line: "nexus.datastore.enabled=true"
+    line: "nexus.datastore.enabled={{ nexus_use_postgres | bool }}"
     firstmatch: true
     insertafter: "EOF"
     state: present
