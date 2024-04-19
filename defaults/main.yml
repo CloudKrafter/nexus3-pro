@@ -22,10 +22,6 @@ nexus_tmp_dir: "{{ (ansible_os_family == 'RedHat') | ternary('/var/nexus-tmp', '
 nexus_script_dir: "{{ nexus_installation_dir }}/nexus-{{ nexus_version }}/etc/scripts"
 nexus_plugin_urls: []
 nexus_onboarding_wizard: false
-# Nexus 3.21.0+ supports the ability to migrate from OrientDB to PostgreSQL
-# This is a one-time operation and should be done before starting Nexus
-# If you are migrating from OrientDB to PostgreSQL, set the following to true
-nexus_migrate_orientdb_to_postgres: false
 
 # Nexus 3.21.0+ supports the ability to use PostgreSQL as the database
 # This is a one-time operation and should be done before starting Nexus

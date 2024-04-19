@@ -21,9 +21,3 @@
     - "export NEXUS_DATASTORE_NEXUS_ADVANCED='maximumPoolSize={{ nexus_postgres_max_pool_size }}'"
     - "export NEXUS_DATASTORE_NEXUS_ADVANCED='maxLifetime={{ nexus_postgres_max_lifetime }}'"
   tags: nexus-postgresql
-
-# - name: Start Nexus service
-#   ansible.builtin.systemd:
-#     name: nexus.service
-#     state: restarted
-#   tags: nexus-postgresql

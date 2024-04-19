@@ -7,6 +7,7 @@
     - ssl-{{ ansible_os_family }}.yml
     - nexus_common_test_vars.yml
     - nexus_ldap_test_vars.yml
+    - nexus_postgres_test_vars.yml
 
   environment:
     http_proxy: "{{ lookup('env', 'http_proxy') }}"

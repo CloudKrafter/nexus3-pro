@@ -10,9 +10,7 @@ NOTE: You have to import a Pro license. It may look like Nexus will work with po
 
 When ready add the following variables to your playbook;
 ```yaml
-
-nexus_setup_postgres_db: false # when true, the nexus.properties file will be prepared for postgres support but will NOT be active
-nexus_enable_postgres_db: false # when true Nexus Repository will use Postgres, otherwise it will use the default OrientDB
+nexus_use_postgres: true
 nexus_postgres_db_host: localhost
 nexus_postgres_db_name: nexus
 nexus_postgres_db_port: 5432
