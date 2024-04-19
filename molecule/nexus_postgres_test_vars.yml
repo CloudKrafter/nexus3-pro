@@ -1,0 +1,14 @@
+nexus_purge: true
+nexus_run_provisionning: true
+
+# Postgres settings
+#nexus_migrate_orientdb_to_postgres: true
+nexus_use_postgres: true
+
+nexus_postgres_db_host: postgresql-server
+nexus_postgres_db_name: nexus
+nexus_postgres_db_port: 5432
+nexus_postgres_db_username: nexus
+nexus_postgres_db_password: nexus
+nexus_postgres_max_lifetime: 840000
+nexus_postgres_max_pool_size: 85

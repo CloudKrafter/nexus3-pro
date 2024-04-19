@@ -1,5 +1,6 @@
 {
-    "java.compile.nullAnalysis.mode": "disabled",
     "python.terminal.activateEnvInCurrentTerminal": true,
-    "python.defaultInterpreterPath": ".venv/bin/python"
+    "python.defaultInterpreterPath": ".venv/bin/python",
+    "python.testing.autoTestDiscoverOnSaveEnabled": false,
+    "python.createEnvironment.contentButton": "show"
 }

@@ -38,6 +38,22 @@
 				"ms-python.python"
 			]
 		}
+	},
+	"portsAttributes": {
+		"8091": {
+			"label": "Nexus OSS (OrientDB)",
+			"protocol": "https",
+			"onAutoForward": "notify"
+		},
+		"9091": {
+			"label": "Nexus Pro (Postgres)",
+			"protocol": "https",
+			"onAutoForward": "notify"
+		},
+		"5432": {
+			"label": "Postgres",
+			"onAutoForward": "ignore"
+		}
 	}
 	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
 	// "remoteUser": "root"

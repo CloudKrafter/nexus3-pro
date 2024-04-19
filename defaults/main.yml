@@ -23,6 +23,19 @@ nexus_script_dir: "{{ nexus_installation_dir }}/nexus-{{ nexus_version }}/etc/sc
 nexus_plugin_urls: []
 nexus_onboarding_wizard: false
 
+# Nexus 3.21.0+ supports the ability to use PostgreSQL as the database
+# This is a one-time operation and should be done before starting Nexus
+# If you want to use PostgreSQL as the database for NEW installations, set the following to true
+nexus_use_postgres: false
+
+nexus_postgres_db_host: localhost
+nexus_postgres_db_name: nexus
+nexus_postgres_db_port: 5432
+nexus_postgres_db_username: nexus
+nexus_postgres_db_password: nexus
+nexus_postgres_max_lifetime: 840000
+nexus_postgres_max_pool_size: 85
+
 # These are the default values for JVM Ram
 # don't touch those unless you have read
 # https://help.sonatype.com/repomanager3/system-requirements#SystemRequirements-Memory
