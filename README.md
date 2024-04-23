@@ -26,6 +26,7 @@ _(Created with [gh-md-toc](https://github.com/ekalinin/github-markdown-toc))_
    * [Nexus Pro](#nexus-pro)
    * [Role Variables](#role-variables)
       * [General variables](#general-variables)
+      * [Postgres Database](#postgres-database)
       * [Download dir for nexus package](#download-dir-for-nexus-package)
       * [Nexus port, context path and listening IP](#nexus-port-context-path-and-listening-ip)
       * [Nexus OS user and group](#nexus-os-user-and-group)
@@ -174,6 +175,27 @@ you can set `nexus_download_ssl_verify: false`.
 `nexus_version_running` is a variable used internally. **As such, it should never be set directly**
 It will exist only if nexus is currently installed on the host and will register the current version prior to running
 the role. It can be used later in your playbook if needed (e.g. for an upgrade notification email)
+
+## Postgres database
+
+FOR PRO VERSION ONLY!!
+
+please review these steps first: https://help.sonatype.com/repomanager3/installation-and-upgrades/configuring-nexus-repository-pro-for-h2-or-postgresql#ConfiguringNexusRepositoryProforH2orPostgreSQL-ConfiguringforExternalPostgreSQL(Preferred)
+
+Then make sure your Postgres instance has the following requirements: https://help.sonatype.com/repomanager3/product-information/sonatype-nexus-repository-system-requirements#SonatypeNexusRepositorySystemRequirements-PostgreSQL(Recommended)BluePRO
+
+**NOTE:** You have to use a Pro license. It may look like Nexus will work with postgres without importing a license, but it doesn't. Nexus will start but you won't be able to login. See [Enabling Nexus Pro](#nexus-pro).
+
+When ready add the following variables to your playbook;
+Keep in mind this works for installing NEW Nexus instances only! This will **NOT** migrate your existing Orient/H2 database to Postgres!!
+```yaml
+nexus_use_postgres: true
+nexus_postgres_db_host: localhost
+nexus_postgres_db_name: nexus
+nexus_postgres_db_port: 5432
+nexus_postgres_db_username: nexus
+nexus_postgres_db_password: nexus
+```
 
 ### Download dir for nexus package
 ```yaml

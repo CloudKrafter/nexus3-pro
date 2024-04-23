@@ -2,22 +2,47 @@
 - name: Store Nexus properties in {{ nexus_data_dir }}/etc/nexus.properties file
   ansible.builtin.lineinfile:
     path: "{{ nexus_data_dir }}/etc/nexus.properties"
-    line: "nexus.datastore.enabled={{ nexus_use_postgres | bool }}"
+    line: "nexus.datastore.enabled={{ (nexus_use_postgres | bool or nexus_database_migration_done | default(false)) | ternary('true', 'false') }}"
     firstmatch: true
     insertafter: "EOF"
     state: present
-  tags: nexus-postgresql
+  tags: nexus-postgres,nexus-migrate
 
-- name: Add the username and password to the environment variables
+- name: Create {{ nexus_data_dir }}/etc/fabric directory
+  ansible.builtin.file:
+    state: directory
+    path: "{{ nexus_data_dir }}/etc/fabric"
+    owner: "{{ nexus_os_user }}"
+    group: "{{ nexus_os_group }}"
+    mode: "0750"
+  tags: nexus-postgres,nexus-migrate
+
+- name: Create {{ nexus_data_dir }}/etc/fabric/nexus-store.properties file
+  ansible.builtin.file:
+    state: touch
+    dest: "{{ nexus_data_dir }}/etc/fabric/nexus-store.properties"
+    owner: "{{ nexus_os_user }}"
+    group: "{{ nexus_os_group }}"
+    mode: "0640"
+  tags: nexus-postgres,nexus-migrate
+
+# Add username and password to the nexus-store.properties file in the etc directory
+- name: Add the username and password to the nexus-store.properties file
   ansible.builtin.lineinfile:
-    dest: "{{ nexus_os_user_home_dir }}/.bashrc"
+    path: "{{ nexus_data_dir }}/etc/fabric/nexus-store.properties"
     line: "{{ item }}"
     insertafter: "EOF"
     state: present
   loop:
-    - "export NEXUS_DATASTORE_NEXUS_USERNAME={{ nexus_postgres_db_username }}"
-    - "export NEXUS_DATASTORE_NEXUS_PASSWORD={{ nexus_postgres_db_password }}"
-    - "export NEXUS_DATASTORE_NEXUS_JDBCURL=jdbc:postgresql://{{ nexus_postgres_db_host }}:{{ nexus_postgres_db_port }}/{{ nexus_postgres_db_name }}"
-    - "export NEXUS_DATASTORE_NEXUS_ADVANCED='maximumPoolSize={{ nexus_postgres_max_pool_size }}'"
-    - "export NEXUS_DATASTORE_NEXUS_ADVANCED='maxLifetime={{ nexus_postgres_max_lifetime }}'"
-  tags: nexus-postgresql
+    - username={{ nexus_postgres_db_username }}
+    - password={{ nexus_postgres_db_password }}
+    - jdbcUrl=jdbc\:postgresql\://{{ nexus_postgres_db_host }}\:{{ nexus_postgres_db_port }}/{{ nexus_postgres_db_name }}
+    - maximumPoolSize={{ nexus_postgres_max_pool_size }}
+    - advanced=maxLifetime\={{ nexus_postgres_max_lifetime }}
+  tags: nexus-postgres,nexus-migrate
+
+- name: Start Nexus service
+  ansible.builtin.systemd:
+    name: nexus.service
+    state: started
+  tags: nexus-postgres,nexus-migrate
