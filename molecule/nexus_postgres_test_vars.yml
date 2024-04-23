@@ -8,6 +8,8 @@ nexus_pro_license_file: files/license.lic
 # Postgres settings
 #nexus_migrate_orientdb_to_postgres: true
 nexus_use_postgres: true
+# Using Postgres as the initial database? Set nexus_use_postgres to true
+nexus_use_postgres: false
 
 nexus_postgres_db_host: postgresql-server
 nexus_postgres_db_name: nexus
