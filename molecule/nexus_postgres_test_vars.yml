@@ -1,13 +1,19 @@
-nexus_purge: true
+nexus_purge: false
 nexus_run_provisionning: true
+
+nexus_db_migrator_version: 3.67.0-04
+nexus_db_migrator_download_url: https://download.sonatype.com/nexus/nxrm3-migrator
 
 # Enable Pro features
 nexus_enable_pro_version: true
 nexus_pro_license_file: files/license.lic
 
 # Postgres settings
-#nexus_migrate_orientdb_to_postgres: true
-nexus_use_postgres: true
+nexus_migrate_database: true
+nexus_migrate_tmp_dir: /tmp
+nexus_migrate_content_migration: true
+nexus_migrate_force: true
+
 # Using Postgres as the initial database? Set nexus_use_postgres to true
 nexus_use_postgres: false
 
