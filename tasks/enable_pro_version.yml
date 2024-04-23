@@ -3,7 +3,7 @@
   ansible.builtin.stat:
     path: "{{ nexus_data_dir }}/etc/nexus.properties"
   register: nexus_properties_file
-  tags: nexus-postgresql
+  tags: nexus-postgres,nexus-migrate,nexus-pro
 
 - name: Create {{ nexus_data_dir }}/etc directory
   ansible.builtin.file:
@@ -13,7 +13,7 @@
     group: "{{ nexus_os_group }}"
     mode: "0750"
   when: nexus_properties_file.stat.exists == false
-  tags: nexus-postgresql
+  tags: nexus-postgres,nexus-migrate,nexus-pro
 
 - name: Create {{ nexus_data_dir }}/etc/nexus.properties file
   ansible.builtin.file:
@@ -23,17 +23,16 @@
     group: "{{ nexus_os_group }}"
     mode: "0640"
   when: nexus_properties_file.stat.exists == false
-  tags: nexus-postgresql
+  tags: nexus-postgres,nexus-migrate,nexus-pro
 
-# copy file to target
 - name: Copy the license file to the target
   ansible.builtin.copy:
-    src: "license.lic"
+    src: "{{ nexus_pro_license_file }}"
     dest: "{{ nexus_data_dir }}/etc/license.lic"
     owner: "{{ nexus_os_user }}"
     group: "{{ nexus_os_group }}"
     mode: "0640"
-  tags: nexus-postgresql
+  tags: nexus-postgres,nexus-migrate,nexus-pro
 
 - name: Store license in {{ nexus_data_dir }}/etc/nexus.properties file
   ansible.builtin.lineinfile:
@@ -42,4 +41,6 @@
     firstmatch: true
     insertafter: "EOF"
     state: present
-  tags: nexus-postgresql
+  tags: nexus-postgres,nexus-migrate,nexus-pro
+  notify:
+    - nexus-service-restart
