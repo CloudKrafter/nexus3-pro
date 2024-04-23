@@ -23,6 +23,7 @@ _(Created with [gh-md-toc](https://github.com/ekalinin/github-markdown-toc))_
    * [Table of Contents](#table-of-contents)
    * [History / Credits](#history--credits)
    * [Requirements](#requirements)
+   * [Nexus Pro](#nexus-pro)
    * [Role Variables](#role-variables)
       * [General variables](#general-variables)
       * [Download dir for nexus package](#download-dir-for-nexus-package)
@@ -112,6 +113,19 @@ of new features if needed (and update meta/main.yml for minimum version)
     - The following modules must be enabled in your configuration: mod_ssl, mod_rewrite, mod_proxy, mod_proxy_http, mod_headers.
 
 (see [Dependencies](#dependencies) section below for matching roles on galaxy)
+
+## Nexus Pro
+
+**Note:** How you incorporate your license file within Ansible is up to you. You can base64 encode it and inject it as a secret into your CI/CD, or you can store it within an Ansible Vault. Thats up to you.
+
+This role expects a path to your license within your playbook. Then it will transfer your license (*.lic) file to the Nexus instance.
+
+**Note:** Enabling Nexus Pro will restart your instance!
+
+```yaml
+nexus_enable_pro_version: true
+nexus_pro_license_file: path/to/your/license.lic
+```
 
 ## Role Variables
 
