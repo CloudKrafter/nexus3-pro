@@ -1,5 +1,6 @@
 ---
 nexus_version: ""
+nexus_version_file: ""
 
 # This var is calculated dynamically by the role and
 # will hold the currently installed version if any
