@@ -56,6 +56,7 @@
   vars:
     version_info: |-
       Used version: {{ nexus_version }}
+      Java version: {{ nexus_java_version | default(8) }}
       Version detected from: {{ nexus_version_detected_from }}
       Upgrade allowed: {{ nexus_upgrade | default(false) | bool }}
       Current running version: {{ nexus_version_running | default('none') }}
@@ -64,7 +65,7 @@
 
 - name: Register nexus package name
   ansible.builtin.set_fact:
-    nexus_package: nexus-{{ nexus_version }}-unix.tar.gz
+    nexus_package: nexus-{{ nexus_version }}{{ (nexus_java_version > 8) | ternary('-java11', '-java8') }}-unix.tar.gz
 
 - name: Download nexus_package
   ansible.builtin.get_url:
