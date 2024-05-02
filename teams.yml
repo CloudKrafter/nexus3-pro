@@ -1,0 +1,16 @@
+#
+teams:
+  - ID: 1
+    name: Team 1
+    hosted_repo: [
+      repo1
+      repo2
+    ]
+    proxy_repo: [
+      proxy-repo1
+      proxy-repo2
+    ]
+    group_repo: [
+      group-repo-1
+      group-repo-2
+    ]

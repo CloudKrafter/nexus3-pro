@@ -3,12 +3,14 @@
   ansible.builtin.set_fact:
     nexus_version_detected_from: fixed
   when: nexus_version | length > 0
+  tags: nexus-install
 
 - name: Check nexus-latest link stat in {{ nexus_installation_dir }}
   ansible.builtin.stat:
     path: "{{ nexus_installation_dir }}/nexus-latest"
   register: nexus_latest_link
   check_mode: false
+  tags: nexus-install
 
 - name: Register current running version if any
   ansible.builtin.set_fact:
@@ -20,9 +22,11 @@
   when:
     - nexus_latest_link.stat.exists | default(false)
     - nexus_latest_link.stat.islnk | default(false)
+  tags: nexus-install
 
 - name: No version given => Version detection
   when: nexus_version | length == 0
+  tags: nexus-install
   block:
     - name: Register nexus_version from currently installed
       # Note: setting nexus_version here skips the next block task.
@@ -62,10 +66,12 @@
       Current running version: {{ nexus_version_running | default('none') }}
   ansible.builtin.debug:
     msg: "{{ version_info.split('\n') }}"
+  tags: nexus-install
 
 - name: Register nexus package name
   ansible.builtin.set_fact:
     nexus_package: nexus-{{ nexus_version }}{{ (nexus_java_version > 8) | ternary('-java11', '-java8') }}-unix.tar.gz
+  tags: nexus-install
 
 - name: Download nexus_package
   ansible.builtin.get_url:
@@ -81,6 +87,7 @@
   until: download_status.status_code == 200
   retries: "{{ nexus_download_retries }}"
   delay: "{{ nexus_download_delay }}"
+  tags: nexus-install
   notify:
     - nexus-service-stop
 
