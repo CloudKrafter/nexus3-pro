@@ -1,0 +1,41 @@
+{% for hosted_default in hosted_defaults %}
+{% for key, value in hosted_default.items() %}
+nexus_repos_{{ key }}_hosted:
+{% for team in teams %}
+{% for default in value %}
+  - repositoryName: {{ team.name }}
+    recipeName: {{ key }}
+    online: {{ team.online if team.name is defined else default.online }}
+    storage:
+      blobStoreName: {{ team.blob if team.blob is defined else default.blob }}
+      writePolicy: {{ team.writePolicy if team.writePolicy is defined else default.writePolicy }}
+    cleanup:
+{% if team.policy is defined %}
+{% for policy in team.cleanup_policies %}
+      - {{ policy }}
+{% endfor %}
+{% else %}
+{% for policy in default.cleanup_policies %}
+      - {{ policy }}
+{% endfor %}
+{% endif %}
+### Repo type specific parameters
+{% if key == 'apt' %}
+    distribution: {{ team.distribution if team.distribution is defined else default.distribution }}
+    aptSigning:
+      keypair: {{ team.keypair if team.keypair is defined else default.keypair }}
+      passphrase: {{ team.passphrase if team.passphrase is defined else default.passphrase }}
+{% endif %}
+{% if key == 'docker' %}
+    forceBasicAuth: {{ team.forceBasicAuth if team.forceBasicAuth is defined else default.forceBasicAuth }}
+    v1Enabled: {{ team.v1Enabled if team.v1Enabled is defined else default.v1Enabled }}
+    httpPort: {{ team.httpPort if team.httpPort is defined else default.httpPort }}
+    subdomain: {{ team.subdomain if team.subdomain is defined else default.subdomain }}
+{% endif %}
+{% if key == 'raw' %}
+    contentDisposition: {{ team.contentDisposition if team.contentDisposition is defined else default.contentDisposition }}
+{% endif %}
+{% endfor %}
+{% endfor %}
+{% endfor %}
+{% endfor %}
