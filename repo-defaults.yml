@@ -1,4 +1,4 @@
-hosted_default:
+hosted_defaults:
   apt:
     - repositoryName: <team>-repo
       recipeName: recipeName,

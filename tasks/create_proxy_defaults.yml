@@ -5,3 +5,9 @@
     dest: "/nexus-downloads/proxies-result.yml"
     #remote_src: true
   tags: transform
+- name: Transform hosted_defaults into nexus_repos
+  ansible.builtin.template:
+    src: "/workspaces/nexus3-pro/templates/hosted.yml.j2"
+    dest: "/nexus-downloads/hosted-result.yml"
+    #remote_src: true
+  tags: transform
