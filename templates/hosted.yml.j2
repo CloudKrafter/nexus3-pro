@@ -1,7 +1,9 @@
 {% for hosted_default in hosted_defaults %}
 {% for key, value in hosted_default.items() %}
 nexus_repos_{{ key }}_hosted:
+# Repo default parameters
 {% for team in teams %}
+{% for hosted_repo in team.repos.requestedBy.hosted | selectattr("format", "equalto", key) %}
 {% for default in value %}
   - repositoryName: {{ team.name }}
     recipeName: {{ key }}
@@ -35,6 +37,7 @@ nexus_repos_{{ key }}_hosted:
 {% if key == 'raw' %}
     contentDisposition: {{ team.contentDisposition if team.contentDisposition is defined else default.contentDisposition }}
 {% endif %}
+{% endfor %}
 {% endfor %}
 {% endfor %}
 {% endfor %}

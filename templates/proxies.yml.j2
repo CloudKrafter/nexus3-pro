@@ -1,29 +1,30 @@
 {% for proxy_default in proxy_defaults %}
 {% for key, value in proxy_default.items() %}
 nexus_repos_{{ key }}_proxy:
-{% for repo in value %}
-  - name: {{ repo.name }}
-    format: {{ repo.format }}
-    online: {{ repo.online }}
-    blocked: {{ repo.blocked }}
-    auto_block: {{ repo.auto_block }}
+{% for team in teams %}
+{% for default in value %}
+  - name: {{ team.name }}
+    format: {{ team.format }}
+    online: {{ default.online }}
+    blocked: {{ default.blocked }}
+    auto_block: {{ default.auto_block }}
     remote:
-      username: {{ repo.remote.username }}
-      password: {{ repo.remote.password }}
-    remoteUrl: {{ repo.remote.url }}
+      username: {{ default.remote.username }}
+      password: {{ default.remote.password }}
+    remoteUrl: {{ default.remote.url }}
     connection:
-      useTrustStore: {{ repo.connection.useTrustStore }}
-      retries: {{ repo.connection.retries }}
-      user_agent_suffix: {{ repo.connection.user_agent_suffix }}
-      enable_cookies: {{ repo.connection.enable_cookies }}
-      enable_circular_redirects: {{ repo.connection.enable_circular_redirects }}
-      timeout: {{ repo.connection.timeout }}
-    maximum_component_age: {{ repo.maximum_component_age }}
-    maximum_metadata_age: {{ repo.maximum_metadata_age }}
-    negative_cache_enabled: {{ repo.negative_cache_enabled }}
-    negative_cache_ttl: {{ repo.negative_cache_ttl }}
+      useTrustStore: {{ default.connection.useTrustStore }}
+      retries: {{ default.connection.retries }}
+      user_agent_suffix: {{ default.connection.user_agent_suffix }}
+      enable_cookies: {{ default.connection.enable_cookies }}
+      enable_circular_redirects: {{ default.connection.enable_circular_redirects }}
+      timeout: {{ default.connection.timeout }}
+    maximum_component_age: {{ default.maximum_component_age }}
+    maximum_metadata_age: {{ default.maximum_metadata_age }}
+    negative_cache_enabled: {{ default.negative_cache_enabled }}
+    negative_cache_ttl: {{ default.negative_cache_ttl }}
     cleanup_policies:
-{% for policy in repo.cleanup_policies %}
+{% for policy in default.cleanup_policies %}
       - {{ policy }}
 {% endfor %}
 {% endfor %}

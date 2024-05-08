@@ -10,6 +10,10 @@ teams:
             format: pypi
           - name: npm-repo1
             format: npm
+          - name: apt-repo1
+            format: apt
+            cleanup_policies:
+              - my_cleanup
         proxy:
           - name: proxy-repo1
             format: maven2
