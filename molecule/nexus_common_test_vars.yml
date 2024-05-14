@@ -658,109 +658,109 @@ nexus_proxy_exclude_hosts: # no_proxy env for shell does not obey java style
 
 hosted_defaults:
   apt:
-    - repositoryName: <team>-repo
-      recipeName: recipeName,
-      online: true
-      storage:
-        blobStoreName: blob
-        writePolicy: ALLOW_ONCE # ALLOW_ONCE or ALLOW
-      cleanup_policies:
-        - policy-1
-      distribution: dist
-      aptSigning:
-        keypair: null
-        passphrase: null
+    repositoryName: <team>-repo
+    recipeName: recipeName,
+    online: true
+    storage:
+      blobStoreName: blob
+      writePolicy: ALLOW_ONCE # ALLOW_ONCE or ALLOW
+    cleanup_policies:
+      - policy-1
+    distribution: dist
+    aptSigning:
+      keypair: null
+      passphrase: null
   docker:
-    - repositoryName: <team>-repo
-      recipeName: recipeName,
-      online: true
-      storage:
-        blobStoreName: blob
-        writePolicy: ALLOW_ONCE # ALLOW_ONCE or ALLOW
-        latestPolicy: null
-      cleanup_policies:
-        - policy-1
-      forceBasicAuth: ""
-      v1Enabled: true
-      httpPort: null
-      subdomain: null
+    repositoryName: <team>-repo
+    recipeName: recipeName,
+    online: true
+    storage:
+      blobStoreName: blob
+      writePolicy: ALLOW_ONCE # ALLOW_ONCE or ALLOW
+      latestPolicy: null
+    cleanup_policies:
+      - policy-1
+    forceBasicAuth: ""
+    v1Enabled: true
+    httpPort: null
+    subdomain: null
   gitlfs:
-    - repositoryName: <team>-repo
-      recipeName: recipeName,
-      online: true
-      storage:
-        blobStoreName: blob
-        writePolicy: ALLOW_ONCE # ALLOW_ONCE or ALLOW
-      cleanup_policies:
-        - policy-1
+    repositoryName: <team>-repo
+    recipeName: recipeName,
+    online: true
+    storage:
+      blobStoreName: blob
+      writePolicy: ALLOW_ONCE # ALLOW_ONCE or ALLOW
+    cleanup_policies:
+      - policy-1
   helm:
-    - repositoryName: <team>-repo
-      recipeName: recipeName,
-      online: true
-      storage:
-        blobStoreName: blob
-        writePolicy: ALLOW_ONCE # ALLOW_ONCE or ALLOW
-      cleanup_policies:
-        - policy-1
+    repositoryName: <team>-repo
+    recipeName: recipeName,
+    online: true
+    storage:
+      blobStoreName: blob
+      writePolicy: ALLOW_ONCE # ALLOW_ONCE or ALLOW
+    cleanup_policies:
+      - policy-1
   maven:
-    - repositoryName: <team>-repo
-      recipeName: recipeName,
-      online: true
-      storage:
-        blobStoreName: blob
-        writePolicy: ALLOW_ONCE # ALLOW_ONCE or ALLOW
-      cleanup_policies:
-        - policy-1
-      versionPolicy: release # release, snapshot or mixed
-      layoutPolicy: strict # strict or permissive
+    repositoryName: <team>-repo
+    recipeName: recipeName,
+    online: true
+    storage:
+      blobStoreName: blob
+      writePolicy: ALLOW_ONCE # ALLOW_ONCE or ALLOW
+    cleanup_policies:
+      - policy-1
+    versionPolicy: release # release, snapshot or mixed
+    layoutPolicy: strict # strict or permissive
   npm:
-    - repositoryName: <team>-repo
-      recipeName: recipeName,
-      online: true
-      storage:
-        blobStoreName: blob
-        writePolicy: ALLOW_ONCE # ALLOW_ONCE or ALLOW
-      cleanup_policies:
-        - policy-1
+    repositoryName: <team>-repo
+    recipeName: recipeName,
+    online: true
+    storage:
+      blobStoreName: blob
+      writePolicy: ALLOW_ONCE # ALLOW_ONCE or ALLOW
+    cleanup_policies:
+      - policy-1
   nuget:
-    - repositoryName: <team>-repo
-      recipeName: recipeName,
-      online: true
-      storage:
-        blobStoreName: blob
-        writePolicy: ALLOW_ONCE # ALLOW_ONCE or ALLOW
-      cleanup_policies:
-        - policy-1
+    repositoryName: <team>-repo
+    recipeName: recipeName,
+    online: true
+    storage:
+      blobStoreName: blob
+      writePolicy: ALLOW_ONCE # ALLOW_ONCE or ALLOW
+    cleanup_policies:
+      - policy-1
   python:
-    - repositoryName: <team>-repo
-      recipeName: recipeName,
-      online: true
-      storage:
-        blobStoreName: blob
-        writePolicy: ALLOW_ONCE # ALLOW_ONCE or ALLOW
-      cleanup_policies:
-        - policy-1
+    repositoryName: <team>-repo
+    recipeName: recipeName,
+    online: true
+    storage:
+      blobStoreName: blob
+      writePolicy: ALLOW_ONCE # ALLOW_ONCE or ALLOW
+    cleanup_policies:
+      - policy-1
   raw:
-    - repositoryName: <team>-repo
-      recipeName: recipeName,
-      online: true
-      storage:
-        blobStoreName: blob
-        writePolicy: ALLOW_ONCE # ALLOW_ONCE or ALLOW
-      cleanup_policies:
-        - policy-1
-      contentDisposition: INLINE
+    repositoryName: <team>-repo
+    recipeName: recipeName,
+    online: true
+    storage:
+      blobStoreName: blob
+      writePolicy: ALLOW_ONCE # ALLOW_ONCE or ALLOW
+    cleanup_policies:
+      - policy-1
+    contentDisposition: INLINE
   yum:
-    - repositoryName: <team>-repo
-      recipeName: recipeName,
-      online: true
-      storage:
-        blobStoreName: blob
-        writePolicy: ALLOW_ONCE # ALLOW_ONCE or ALLOW
-      cleanup_policies:
-        - policy-1
-      repodataDepth: 1
-      deployPolicy: strict # strict or permissive
+    repositoryName: <team>-repo
+    recipeName: recipeName,
+    online: true
+    storage:
+      blobStoreName: blob
+      writePolicy: ALLOW_ONCE # ALLOW_ONCE or ALLOW
+    cleanup_policies:
+      - policy-1
+    repodataDepth: 1
+    deployPolicy: strict # strict or permissive
 
 
 proxy_defaults:
@@ -1051,3 +1051,39 @@ proxy_defaults:
         cleanup_policies:
           - policy-1
 
+teams:
+  - ID: 1
+    name: Team 1
+    repos:
+      requestedBy:
+        hosted:
+          - name: maven-repo1
+            format: maven2
+          - name: python-repo1
+            format: pypi
+          - name: npm-repo1
+            format: npm
+          - name: apt-repo1
+            format: apt
+            cleanup_policies:
+              - my_cleanup
+        proxy:
+          - name: proxy-repo1
+            format: maven2
+        group:
+          - name: group-repo-1
+            members:
+              - maven-repo2
+              - npm-repo1
+          - name: group-repo-2
+            members:
+              - maven-repo2
+              - npm-repo1
+      sharedAccessTo:
+        hosted:
+          - name: maven-repo1
+        proxy:
+          - name: proxy_defaults.maven_defaults
+        group: []
+
+proxy_repos:

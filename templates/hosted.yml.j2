@@ -1,44 +1,38 @@
-{% for hosted_default in hosted_defaults %}
-{% for key, value in hosted_default.items() %}
+{% for key, value in hosted_defaults.items() %}
 nexus_repos_{{ key }}_hosted:
-# Repo default parameters
 {% for team in teams %}
-{% for hosted_repo in team.repos.requestedBy.hosted | selectattr("format", "equalto", key) %}
-{% for default in value %}
-  - repositoryName: {{ team.name }}
+{% for team_hosted_repo in team.repos.requestedBy.hosted | selectattr("format", "equalto", key) %}
+  - repositoryName: {{ team_hosted_repo.name }}
     recipeName: {{ key }}
-    online: {{ team.online if team.name is defined else default.online }}
+    online: {{ team_hosted_repo.online if team_hosted_repo.online is defined else value.online }}
     storage:
-      blobStoreName: {{ team.blob if team.blob is defined else default.blob }}
-      writePolicy: {{ team.writePolicy if team.writePolicy is defined else default.writePolicy }}
+      blobStoreName: {{ team_hosted_repo.blob if team_hosted_repo.blob is defined else value.storage.blobStoreName }}
+      writePolicy: {{ team_hosted_repo.writePolicy if team_hosted_repo.writePolicy is defined else value.storage.writePolicy }}
     cleanup:
 {% if team.policy is defined %}
 {% for policy in team.cleanup_policies %}
       - {{ policy }}
 {% endfor %}
 {% else %}
-{% for policy in default.cleanup_policies %}
+{% for policy in value.cleanup_policies %}
       - {{ policy }}
 {% endfor %}
 {% endif %}
-### Repo type specific parameters
 {% if key == 'apt' %}
-    distribution: {{ team.distribution if team.distribution is defined else default.distribution }}
+    distribution: {{ team_hosted_repo.distribution if team_hosted_repo.distribution is defined else value.distribution }}
     aptSigning:
-      keypair: {{ team.keypair if team.keypair is defined else default.keypair }}
-      passphrase: {{ team.passphrase if team.passphrase is defined else default.passphrase }}
+      keypair: {{ team_hosted_repo.keypair if team_hosted_repo.keypair is defined else value.aptSigning.keypair }}
+      passphrase: {{ team_hosted_repo.passphrase if team_hosted_repo.passphrase is defined else value.aptSigning.passphrase }}
 {% endif %}
 {% if key == 'docker' %}
-    forceBasicAuth: {{ team.forceBasicAuth if team.forceBasicAuth is defined else default.forceBasicAuth }}
-    v1Enabled: {{ team.v1Enabled if team.v1Enabled is defined else default.v1Enabled }}
-    httpPort: {{ team.httpPort if team.httpPort is defined else default.httpPort }}
-    subdomain: {{ team.subdomain if team.subdomain is defined else default.subdomain }}
+    forceBasicAuth: {{ team_hosted_repo.forceBasicAuth if team_hosted_repo.forceBasicAuth is defined else value.forceBasicAuth }}
+    v1Enabled: {{ team_hosted_repo.v1Enabled if team_hosted_repo.v1Enabled is defined else value.v1Enabled }}
+    httpPort: {{ team_hosted_repo.httpPort if team_hosted_repo.httpPort is defined else value.httpPort }}
+    subdomain: {{ team_hosted_repo.subdomain if team_hosted_repo.subdomain is defined else value.subdomain }}
 {% endif %}
 {% if key == 'raw' %}
-    contentDisposition: {{ team.contentDisposition if team.contentDisposition is defined else default.contentDisposition }}
+    contentDisposition: {{ team_hosted_repo.contentDisposition if team_hosted_repo.contentDisposition is defined else value.contentDisposition }}
 {% endif %}
-{% endfor %}
-{% endfor %}
 {% endfor %}
 {% endfor %}
 {% endfor %}
