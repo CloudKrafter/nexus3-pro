@@ -3,7 +3,6 @@ nexus_run_provisionning: true
 
 # Enable Pro features
 nexus_enable_pro_version: true
-nexus_pro_license_file: files/license.lic
 
 # Postgres settings
 #nexus_migrate_orientdb_to_postgres: true
