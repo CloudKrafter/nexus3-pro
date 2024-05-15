@@ -46,3 +46,6 @@
     name: nexus.service
     state: started
   tags: nexus-postgres,nexus-migrate
+  notify:
+    - wait-for-nexus
+    - wait-for-nexus-port
