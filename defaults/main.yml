@@ -28,6 +28,8 @@ nexus_java_version: 8
 # Enable Pro features
 nexus_enable_pro_version: false
 nexus_migration_type: postgres
+nexus_db_migrator_initial_memory: 4G
+nexus_db_migrator_maximum_memory: 4G
 
 # Nexus 3.21.0+ supports the ability to use PostgreSQL as the database
 # This is a one-time operation and should be done before starting Nexus
