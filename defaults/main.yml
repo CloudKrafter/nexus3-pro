@@ -23,10 +23,11 @@ nexus_tmp_dir: "{{ (ansible_os_family == 'RedHat') | ternary('/var/nexus-tmp', '
 nexus_script_dir: "{{ nexus_installation_dir }}/nexus-{{ nexus_version }}/etc/scripts"
 nexus_plugin_urls: []
 nexus_onboarding_wizard: false
+nexus_java_version: 8
 
 # Enable Pro features
 nexus_enable_pro_version: false
-nexus_pro_license_file: /path/to/license.lic
+nexus_migration_type: postgres
 
 # Nexus 3.21.0+ supports the ability to use PostgreSQL as the database
 # This is a one-time operation and should be done before starting Nexus

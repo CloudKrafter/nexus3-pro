@@ -92,6 +92,7 @@
   vars:
     version_info: |-
       Used version: {{ nexus_version }}
+      Java version: {{ nexus_java_version | default(8) }}
       Version detected from: {{ nexus_version_detected_from }}
       Upgrade allowed: {{ nexus_upgrade | default(false) | bool }}
       Current running version: {{ nexus_version_running | default('none') }}
@@ -100,7 +101,7 @@
 
 - name: Register nexus package name
   ansible.builtin.set_fact:
-    nexus_package: nexus-{{ nexus_version }}-unix.tar.gz
+    nexus_package: nexus-{{ nexus_version }}{{ (nexus_java_version > 8) | ternary('-java11', '-java8') }}-unix.tar.gz
 
 - name: Download nexus_package
   ansible.builtin.get_url:
@@ -272,7 +273,7 @@
   ansible.builtin.lineinfile:
     dest: "{{ nexus_installation_dir }}/nexus-latest/bin/nexus.vmoptions"
     regexp: ^-XX:LogFile=.*
-    line: -XX:LogFile={{ nexus_data_dir }}log/jvm.log
+    line: -XX:LogFile={{ nexus_data_dir }}/log/jvm.log
   notify:
     - nexus-service-stop
 
@@ -466,6 +467,7 @@
 - name: Enable Postgres
   ansible.builtin.include_tasks: enable_postgres.yml
   when: nexus_use_postgres | default(false) | bool
+  tags: nexus-postgres
 
 - name: Enable nexus systemd service and make sure it is started
   ansible.builtin.systemd:
