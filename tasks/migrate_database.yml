@@ -1,5 +1,5 @@
 ---
-  # TODO: Skip this task if the migration is already done or postgres is already used
+# TODO: Skip this task if the migration is already done or postgres is already used
 
 - name: Download the Nexus database migration tool
   get_url:
@@ -23,7 +23,7 @@
 
 - name: Healthcheck
   ansible.builtin.command:
-    cmd: 'java -Xmx16G -Xms16G -XX:+UseG1GC -XX:MaxDirectMemorySize=28672M -jar nexus-db-migrator-{{ nexus_db_migrator_version }}.jar --healthcheck --yes'
+    cmd: "java -Xmx{{ nexus_db_migrator_maximum_memory }} -Xms{{ nexus_db_migrator_initial_memory }} -XX:+UseG1GC -XX:MaxDirectMemorySize=28672M -jar nexus-db-migrator-{{ nexus_db_migrator_version }}.jar --healthcheck --yes"
     chdir: "{{ nexus_data_dir }}/db"
   become: true
   become_user: "{{ nexus_os_user }}"
@@ -39,7 +39,7 @@
 - name: Run migration
   ansible.builtin.command:
     cmd: >
-      java -Xmx16G -Xms16G -XX:+UseG1GC -XX:MaxDirectMemorySize=28672M
+      java -Xmx{{ nexus_db_migrator_maximum_memory }} -Xms{{ nexus_db_migrator_initial_memory }} -XX:+UseG1GC -XX:MaxDirectMemorySize=28672M
       -jar nexus-db-migrator-{{ nexus_db_migrator_version }}.jar --yes --tmpdir="{{ nexus_migrate_tmp_dir }}"
       --migration_type="{{ nexus_migration_type }}"
       --db_url="jdbc:postgresql://{{ nexus_postgres_db_host }}:{{ nexus_postgres_db_port }}/{{ nexus_postgres_db_name }}?user={{ nexus_postgres_db_username }}&password={{ nexus_postgres_db_password }}"
