@@ -6,7 +6,6 @@ nexus_db_migrator_download_url: https://download.sonatype.com/nexus/nxrm3-migrat
 
 # Enable Pro features
 nexus_enable_pro_version: true
-nexus_pro_license_file: files/license.lic
 
 # Postgres settings
 nexus_migrate_database: true
