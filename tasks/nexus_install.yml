@@ -217,11 +217,13 @@
   ansible.builtin.set_fact:
     nexus_rest_api_endpoint: service/siesta/rest/v1/script
   when: nexus_version is version_compare('3.8.0', '<')
+  tags: nexus-provisioning
 
 - name: Get rest API endpoint (v >= 3.8.0)
   ansible.builtin.set_fact:
     nexus_rest_api_endpoint: service/rest/v1/script
   when: nexus_version is version_compare('3.8.0', '>=')
+  tags: nexus-provisioning
 
 - name: Get path to database restore dir (v < 3.11.0)
   ansible.builtin.set_fact:
@@ -535,17 +537,20 @@
     validate_certs: "{{ nexus_api_validate_certs }}"
   register: nexus_api_head_with_defined_password
   check_mode: false
+  tags: nexus-provisioning
 
 - name: Register defined admin password for next operations
   ansible.builtin.set_fact:
     current_nexus_admin_password: "{{ nexus_admin_password }}"
   when: nexus_api_head_with_defined_password.status == 200
   no_log: true
+  tags: nexus-provisioning
 
 - name: Check if admin.password file exists
   ansible.builtin.stat:
     path: "{{ nexus_data_dir }}/admin.password"
   register: admin_password_file
+  tags: nexus-provisioning
 
 - name: Get generated admin password from file (nexus >= 3.17)
   when:
@@ -561,6 +566,7 @@
     - name: Set default password from slurped content
       ansible.builtin.set_fact:
         nexus_default_admin_password: "{{ _slurpedpass.content | b64decode }}"
+  tags: nexus-provisioning
 
 - name: Access scripts API endpoint with default admin password
   ansible.builtin.uri:
@@ -573,11 +579,13 @@
     validate_certs: "{{ nexus_api_validate_certs }}"
   register: nexus_api_head_with_default_password
   when: nexus_api_head_with_defined_password.status == 401
+  tags: nexus-provisioning
 
 - name: Register default admin password for next operations
   ansible.builtin.set_fact:
     current_nexus_admin_password: "{{ nexus_default_admin_password }}"
   when: (nexus_api_head_with_default_password.status | default(false)) == 200
+  tags: nexus-provisioning
 
 - name: Ensure current Nexus password is known
   ansible.builtin.fail:
@@ -589,12 +597,14 @@
       on the ansible-playbook command line.
       See https://github.com/ansible-ThoTeam/nexus3-oss/blob/master/README.md#change-admin-password-after-first-install
   when: current_nexus_admin_password is not defined
+  tags: nexus-provisioning
 
 - name: Force (re-)registration of groovy scripts (purge reference dir)
   ansible.builtin.file:
     path: "{{ nexus_data_dir }}/groovy-raw-scripts"
     state: absent
   when: nexus_force_groovy_scripts_registration | default(false)
+  tags: nexus-provisioning
 
 - name: Create directories to hold current groovy scripts for reference
   ansible.builtin.file:
@@ -606,6 +616,7 @@
   with_items:
     - "{{ nexus_data_dir }}/groovy-raw-scripts/current"
     - "{{ nexus_data_dir }}/groovy-raw-scripts/new"
+  tags: nexus-provisioning
 
 - name: Archive scripts
   become: false
@@ -616,12 +627,14 @@
   check_mode: false
   run_once: true
   delegate_to: localhost
+  tags: nexus-provisioning
 
 - name: Upload new scripts
   ansible.builtin.unarchive:
     src: /tmp/nexus-upload-groovy-scripts.tar.gz
     dest: "{{ nexus_data_dir }}/groovy-raw-scripts/new/"
     mode: "0644"
+  tags: nexus-provisioning
 
 - name: Upload scripts with meaningful message on failure
   block:
@@ -646,10 +659,12 @@
     - name: Fail on rsync error
       ansible.builtin.fail:
         msg: Rsync error - See debug message above
+  tags: nexus-provisioning
 
 - name: Declare new or changed groovy scripts in nexus
   ansible.builtin.include_tasks: declare_script_each.yml
   with_items: "{{ nexus_groovy_files_changed.stdout_lines }}"
+  tags: nexus-provisioning
 
 - name: Change admin password if we are still using default
   when: (nexus_api_head_with_default_password.status | default(false)) == 200
@@ -671,3 +686,4 @@
         path: "{{ nexus_data_dir }}/admin.password"
         state: absent
       when: nexus_version is version_compare('3.17.0', '>=')
+  tags: nexus-provisioning

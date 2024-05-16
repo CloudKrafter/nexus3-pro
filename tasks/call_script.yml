@@ -49,3 +49,4 @@
         msg: >-
           The script {{ script_name }} returned at least one of its
           actions has failed. See the debug message above for details
+  tags: nexus-provisioning

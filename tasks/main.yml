@@ -29,6 +29,7 @@
 
 - name: Run installation tasks
   ansible.builtin.import_tasks: nexus_install.yml
+  tags: nexus-provisioning
 
 - name: Configure apache reverse proxy
   ansible.builtin.include_tasks: httpd_reverse_proxy_config.yml
@@ -53,6 +54,7 @@
       nexus_http_proxy_timeout: "{{ nexus_http_proxy_timeout }}"
       nexus_http_proxy_retries: "{{ nexus_http_proxy_retries }}"
   when: nexus_with_http_proxy or nexus_with_https_proxy
+  tags: nexus-provisioning
 
 - name: Deleting default repositories
   ansible.builtin.include_tasks: delete_repo_each.yml
@@ -175,6 +177,7 @@
         script_name: setup_ldap_users_from_list
         call_args: "{{ nexus_ldap_users }}"
       when: nexus_ldap_users | length > 0
+  tags: nexus-provisioning
 
 - name: Configure anonymous access
   ansible.builtin.include_tasks: call_script.yml
