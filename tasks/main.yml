@@ -171,7 +171,7 @@
         var: __nexus_existing_repos__
       tags: provision-api
 
-    - name: Provision repositories
+    - name: Create Maven proxy repositories
       ansible.builtin.uri:
         url: "{{ nexus_api_scheme }}://{{ nexus_api_hostname }}:{{ nexus_api_port }}{{ nexus_api_context_path }}service/rest/v1/repositories/maven/proxy"
         user: admin
@@ -181,47 +181,45 @@
         validate_certs: "{{ nexus_api_validate_certs }}"
         body_format: json
         body:
-          name: "{{ item.name }}"
-          online: true
+          name: "{{ item.name }} | default(omit) }}"
+          online: "{{ item.online | default(true) }}"
           storage:
-            blobStoreName: "{{ nexus_blob_names.mvn.blob }}"
-            strictContentTypeValidation: true
+            blobStoreName: "{{ nexus_blob_names.mvn.blob | default('default') }}"
+            strictContentTypeValidation: "{{ item.strict_content_validation | default(omit) }}"
           cleanup:
-            policyNames: []
+            policyNames: "{{ item.cleanup_policies | default([]) }}"
           proxy:
-            remoteUrl: "{{ item.remote_url }}"
-            contentMaxAge: -1
-            metadataMaxAge: 1440
+            remoteUrl: "{{ item.remote_url | default(omit) }}"
+            contentMaxAge: "{{ item.maximum_component_age | default(omit) }}"
+            metadataMaxAge: "{{ item.maximum_metadata_age | default(omit) }}"
           negativeCache:
-            enabled: true
-            timeToLive: 1440
+            enabled: "{{ item.negative_cache_enabled | default(false) }}"
+            timeToLive: "{{ item.negative_cache_ttl | default(omit) }}"
           httpClient:
-            blocked: false
-            autoBlock: true
+            blocked: "{{ item.blocked | default(false) }}"
+            autoBlock: "{{ item.auto_block | default(true) }}"
             connection:
-              retries: 3
-              useTrustStore: true
-              blocked: false
-              autoBlock: true
-              timeout: 20
-              enableCircularRedirects: false
-              enableCookies: false
-              userAgentSuffix: "Nexus/3.30.0-01 (OSS)"
+              retries: "{{ item.connection_retries | default(omit) }}"
+              useTrustStore: "{{ item.use_trust_store | default(false) }}"
+              timeout: "{{ item.connection_timeout | default(omit) }}"
+              enableCircularRedirects: "{{ item.enable_circular_redirects | default(omit) }}"
+              enableCookies: "{{ item.enable_cookies | default(omit) }}"
+              userAgentSuffix: "{{ item.user_agent_suffix | default(omit) }}"
             authentication":
-              type: "username"
-              username: "string"
-              password: "string"
-              # ntlmHost: "string"
-              # ntlmDomain: "string"
-              preemptive: false
-          routingRule: "string"
+              type: "{{ item.remote_auth_type | default('omit') }}"
+              username: "{{ item.remote_username | default(omit) }}"
+              password: "{{ item.remote_password | default(omit) }}"
+              ntlmHost: "{{ item.ntlm_host | default(omit) }}"
+              ntlmDomain: "{{ item.ntlm_domain | default(omit) }}"
+              preemptive: "{{ item.preemptive | default(omit) }}"
+          routingRule: "{{ item.routing_rule | default(omit) }}"
           replication:
-            preemptivePullEnabled: false
-            # assetPathRegex: "string"
+            preemptivePullEnabled: "{{ item.replication_preemptive_pull_enabled | default(omit) }}"
+            assetPathRegex: "{{ item.replication_asset_path_regex | default(omit) }}"
           maven:
-            versionPolicy: "RELEASE"
-            layoutPolicy: "STRICT"
-            contentDisposition: "ATTACHMENT"
+            versionPolicy: "{{ item.version_policy | default('RELEASE') | upper }}"
+            layoutPolicy: "{{ item.layout_policy | default('STRICT') | upper }}"
+            contentDisposition: "{{ item.content_disposition | default('INLINE') | upper }}"
         status_code: 201
       loop: "{{ nexus_repos_maven_proxy }}"
       tags: provision-api
@@ -237,47 +235,45 @@
         validate_certs: "{{ nexus_api_validate_certs }}"
         body_format: json
         body:
-          name: "{{ item.name }}"
-          online: true
+          name: "{{ item.name | default(omit) }}"
+          online: "{{ item.online | default(true) }}"
           storage:
             blobStoreName: "{{ nexus_blob_names.mvn.blob }}"
-            strictContentTypeValidation: true
+            strictContentTypeValidation: "{{ item.strict_content_validation | default(omit) }}"
           cleanup:
-            policyNames: []
+            policyNames: "{{ item.cleanup_policies | default([]) }}"
           proxy:
-            remoteUrl: "{{ item.remote_url }}"
-            contentMaxAge: -1
-            metadataMaxAge: 1440
+            remoteUrl: "{{ item.remote_url | default(omit) }}"
+            contentMaxAge: "{{ item.maximum_component_age | default(omit) }}"
+            metadataMaxAge: "{{ item.maximum_metadata_age | default(omit) }}"
           negativeCache:
-            enabled: true
-            timeToLive: 1440
+            enabled: "{{ item.negative_cache_enabled | default(false) }}"
+            timeToLive: "{{ item.negative_cache_ttl | default(omit) }}"
           httpClient:
-            blocked: false
-            autoBlock: true
+            blocked: "{{ item.blocked | default(false) }}"
+            autoBlock: "{{ item.auto_block | default(true) }}"
             connection:
-              retries: 3
-              useTrustStore: true
-              blocked: false
-              autoBlock: true
-              timeout: 20
-              enableCircularRedirects: false
-              enableCookies: false
-              userAgentSuffix: "Nexus/3.30.0-01 (OSS)"
+              retries: "{{ item.connection_retries | default(omit) }}"
+              useTrustStore: "{{ item.use_trust_store | default(false) }}"
+              timeout: "{{ item.connection_timeout | default(omit) }}"
+              enableCircularRedirects: "{{ item.enable_circular_redirects | default(omit) }}"
+              enableCookies: "{{ item.enable_cookies | default(omit) }}"
+              userAgentSuffix: "{{ item.user_agent_suffix | default(omit) }}"
             authentication":
-              type: "username"
-              username: "string"
-              password: "string"
-              # ntlmHost: "string"
-              # ntlmDomain: "string"
-              preemptive: false
-          routingRule: "string"
+              type: "{{ item.remote_auth_type | default('omit') }}"
+              username: "{{ item.remote_username | default(omit) }}"
+              password: "{{ item.remote_password | default(omit) }}"
+              ntlmHost: "{{ item.ntlm_host | default(omit) }}"
+              ntlmDomain: "{{ item.ntlm_domain | default(omit) }}"
+              preemptive: "{{ item.preemptive | default(omit) }}"
+          routingRule: "{{ item.routing_rule | default(omit) }}"
           replication:
-            preemptivePullEnabled: false
-            # assetPathRegex: "string"
+            preemptivePullEnabled: "{{ item.replication_preemptive_pull_enabled | default(omit) }}"
+            assetPathRegex: "{{ item.replication_asset_path_regex | default(omit) }}"
           maven:
-            versionPolicy: "RELEASE"
-            layoutPolicy: "STRICT"
-            contentDisposition: "ATTACHMENT"
+            versionPolicy: "{{ item.version_policy | default('RELEASE') | upper }}"
+            layoutPolicy: "{{ item.layout_policy | default('STRICT') | upper }}"
+            contentDisposition: "{{ item.content_disposition | default('INLINE') | upper }}"
         status_code: 204
       loop: "{{ nexus_repos_maven_proxy }}"
       tags: provision-api

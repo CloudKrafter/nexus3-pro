@@ -210,15 +210,22 @@ nexus_repos_cleanup_policies:
       lastDownloaded: 120
       regexKey: "beta-*"
 nexus_repos_maven_proxy:
-  - name: central
+  - name: central-api
     remote_url: https://repo1.maven.org/maven2/
     layout_policy: permissive
     cleanup_policies:
       - mvn_cleanup
+      - all_cleanup
   - name: jboss
+    remote_url: https://repository.jboss.org/nexus/content/groups/public-jboss/updated
+    cleanup_policies:
+      - mvn_cleanup
+      - all_cleanup
+  - name: jboss-new
     remote_url: https://repository.jboss.org/nexus/content/groups/public-jboss/
     cleanup_policies:
       - mvn_cleanup
+      - all_cleanup
 
 nexus_repos_maven_hosted:
   - name: private-release
