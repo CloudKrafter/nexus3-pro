@@ -110,6 +110,7 @@ nexus_api_validate_certs: "{{ nexus_api_scheme == 'https' }}"
 nexus_api_context_path: "{{ nexus_default_context_path }}"
 nexus_api_port: "{{ nexus_default_port }}"
 nexus_api_timeout: 60
+nexus_use_api_for_provisioning: false
 
 # security realms
 nexus_nuget_api_key_realm: false
@@ -417,6 +418,8 @@ _nexus_repos_maven_defaults:
   maximum_metadata_age: 1440 # Nexus gui default. For proxies only
   negative_cache_enabled: true # Nexus gui default. For proxies only
   negative_cache_ttl: 1440 # Nexus gui default. For proxies only
+  connection_timeout: 200
+  connection_retries: 3
 
 # pypi support ...
 _nexus_repos_pypi_defaults:

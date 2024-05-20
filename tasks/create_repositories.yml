@@ -1,0 +1,30 @@
+---
+- name: Create {{ format }} {{ type }} repositories
+  ansible.builtin.uri:
+    url: "{{ nexus_api_scheme }}://{{ nexus_api_hostname }}:{{ nexus_api_port }}{{ nexus_api_context_path }}service/rest/v1/repositories/{{ format }}/{{ type }}"
+    user: admin
+    password: "{{ current_nexus_admin_password }}"
+    method: POST
+    force_basic_auth: true
+    validate_certs: "{{ nexus_api_validate_certs }}"
+    body_format: json
+    body: "{{ payload }}"
+    status_code: 201
+  tags: provision-api
+  loop: "{{ payload }}"
+  when: item.name not in __nexus_existing_repos__.json | map(attribute='name') | list
+
+- name: Update {{ format }} {{ type }} repositories when repository exists
+  ansible.builtin.uri:
+    url: "{{ nexus_api_scheme }}://{{ nexus_api_hostname }}:{{ nexus_api_port }}{{ nexus_api_context_path }}service/rest/v1/repositories/{{ format }}/{{ type }}/{{ item.name }}"
+    user: admin
+    password: "{{ current_nexus_admin_password }}"
+    method: PUT
+    force_basic_auth: true
+    validate_certs: "{{ nexus_api_validate_certs }}"
+    body_format: json
+    body: "{{ payload }}"
+    status_code: 204
+  loop: "{{ payload }}"
+  tags: provision-api
+  when: item.name in __nexus_existing_repos__.json | map(attribute='name') | list

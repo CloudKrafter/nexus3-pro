@@ -1,5 +1,6 @@
 nexus_purge: false
 nexus_run_provisionning: true
+nexus_use_api_for_provisioning: true
 
 nexus_db_migrator_version: 3.68.0-04
 nexus_db_migrator_download_url: https://download.sonatype.com/nexus/nxrm3-migrator

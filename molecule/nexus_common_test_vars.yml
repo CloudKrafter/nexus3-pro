@@ -213,15 +213,18 @@ nexus_repos_maven_proxy:
   - name: central-api
     remote_url: https://repo1.maven.org/maven2/
     layout_policy: permissive
+    connection_retries: 3
     cleanup_policies:
       - mvn_cleanup
       - all_cleanup
   - name: jboss
     remote_url: https://repository.jboss.org/nexus/content/groups/public-jboss/updated
+    connection_retries: 3
     cleanup_policies:
       - mvn_cleanup
       - all_cleanup
   - name: jboss-new
+    connection_retries: 3
     remote_url: https://repository.jboss.org/nexus/content/groups/public-jboss/
     cleanup_policies:
       - mvn_cleanup

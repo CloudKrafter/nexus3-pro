@@ -143,15 +143,17 @@
 
     - name: Apply defaults to repositories configurations and process a single list
       ansible.builtin.include_tasks: process_repos_list.yml
+      when: not nexus_use_api_for_provisioning | default(false) | bool
+
+    - name: Apply defaults to repositories configurations and process a single list for the API
+      ansible.builtin.include_tasks: process_repos_list_api.yml
+      when: nexus_use_api_for_provisioning | default(false) | bool
 
     # - name: Create configured repositories
     #   ansible.builtin.include_tasks: call_script.yml
     #   vars:
     #     script_name: create_repos_from_list
     #     call_args: "{{ _nexus_repos_global_list | d([]) }}"
-    # - name: Check for existing repositories
-    #   ansible.builtin.include_tasks: repos/get-repos.yml
-    #   tags: provision-api
     - name: Get all existing repositories
       ansible.builtin.uri:
         url: "{{ nexus_api_scheme }}://{{ nexus_api_hostname }}:{{ nexus_api_port }}{{ nexus_api_context_path }}service/rest/v1/repositories"
@@ -171,113 +173,13 @@
         var: __nexus_existing_repos__
       tags: provision-api
 
-    - name: Create Maven proxy repositories
-      ansible.builtin.uri:
-        url: "{{ nexus_api_scheme }}://{{ nexus_api_hostname }}:{{ nexus_api_port }}{{ nexus_api_context_path }}service/rest/v1/repositories/maven/proxy"
-        user: admin
-        password: "{{ current_nexus_admin_password }}"
-        method: POST
-        force_basic_auth: true
-        validate_certs: "{{ nexus_api_validate_certs }}"
-        body_format: json
-        body:
-          name: "{{ item.name }} | default(omit) }}"
-          online: "{{ item.online | default(true) }}"
-          storage:
-            blobStoreName: "{{ nexus_blob_names.mvn.blob | default('default') }}"
-            strictContentTypeValidation: "{{ item.strict_content_validation | default(omit) }}"
-          cleanup:
-            policyNames: "{{ item.cleanup_policies | default([]) }}"
-          proxy:
-            remoteUrl: "{{ item.remote_url | default(omit) }}"
-            contentMaxAge: "{{ item.maximum_component_age | default(omit) }}"
-            metadataMaxAge: "{{ item.maximum_metadata_age | default(omit) }}"
-          negativeCache:
-            enabled: "{{ item.negative_cache_enabled | default(false) }}"
-            timeToLive: "{{ item.negative_cache_ttl | default(omit) }}"
-          httpClient:
-            blocked: "{{ item.blocked | default(false) }}"
-            autoBlock: "{{ item.auto_block | default(true) }}"
-            connection:
-              retries: "{{ item.connection_retries | default(omit) }}"
-              useTrustStore: "{{ item.use_trust_store | default(false) }}"
-              timeout: "{{ item.connection_timeout | default(omit) }}"
-              enableCircularRedirects: "{{ item.enable_circular_redirects | default(omit) }}"
-              enableCookies: "{{ item.enable_cookies | default(omit) }}"
-              userAgentSuffix: "{{ item.user_agent_suffix | default(omit) }}"
-            authentication":
-              type: "{{ item.remote_auth_type | default('omit') }}"
-              username: "{{ item.remote_username | default(omit) }}"
-              password: "{{ item.remote_password | default(omit) }}"
-              ntlmHost: "{{ item.ntlm_host | default(omit) }}"
-              ntlmDomain: "{{ item.ntlm_domain | default(omit) }}"
-              preemptive: "{{ item.preemptive | default(omit) }}"
-          routingRule: "{{ item.routing_rule | default(omit) }}"
-          replication:
-            preemptivePullEnabled: "{{ item.replication_preemptive_pull_enabled | default(omit) }}"
-            assetPathRegex: "{{ item.replication_asset_path_regex | default(omit) }}"
-          maven:
-            versionPolicy: "{{ item.version_policy | default('RELEASE') | upper }}"
-            layoutPolicy: "{{ item.layout_policy | default('STRICT') | upper }}"
-            contentDisposition: "{{ item.content_disposition | default('INLINE') | upper }}"
-        status_code: 201
-      loop: "{{ nexus_repos_maven_proxy }}"
+    - name: Create configured repositories
+      ansible.builtin.include_tasks: create_repositories.yml
+      vars:
+        payload: "{{ nexus_repos_maven_proxy_transformed }}"
+        format: maven
+        type: proxy
       tags: provision-api
-      when: item.name not in __nexus_existing_repos__.json | map(attribute='name') | list
-
-    - name: Provision repositories update when repository exists
-      ansible.builtin.uri:
-        url: "{{ nexus_api_scheme }}://{{ nexus_api_hostname }}:{{ nexus_api_port }}{{ nexus_api_context_path }}service/rest/v1/repositories/maven/proxy/{{ item.name }}"
-        user: admin
-        password: "{{ current_nexus_admin_password }}"
-        method: PUT
-        force_basic_auth: true
-        validate_certs: "{{ nexus_api_validate_certs }}"
-        body_format: json
-        body:
-          name: "{{ item.name | default(omit) }}"
-          online: "{{ item.online | default(true) }}"
-          storage:
-            blobStoreName: "{{ nexus_blob_names.mvn.blob }}"
-            strictContentTypeValidation: "{{ item.strict_content_validation | default(omit) }}"
-          cleanup:
-            policyNames: "{{ item.cleanup_policies | default([]) }}"
-          proxy:
-            remoteUrl: "{{ item.remote_url | default(omit) }}"
-            contentMaxAge: "{{ item.maximum_component_age | default(omit) }}"
-            metadataMaxAge: "{{ item.maximum_metadata_age | default(omit) }}"
-          negativeCache:
-            enabled: "{{ item.negative_cache_enabled | default(false) }}"
-            timeToLive: "{{ item.negative_cache_ttl | default(omit) }}"
-          httpClient:
-            blocked: "{{ item.blocked | default(false) }}"
-            autoBlock: "{{ item.auto_block | default(true) }}"
-            connection:
-              retries: "{{ item.connection_retries | default(omit) }}"
-              useTrustStore: "{{ item.use_trust_store | default(false) }}"
-              timeout: "{{ item.connection_timeout | default(omit) }}"
-              enableCircularRedirects: "{{ item.enable_circular_redirects | default(omit) }}"
-              enableCookies: "{{ item.enable_cookies | default(omit) }}"
-              userAgentSuffix: "{{ item.user_agent_suffix | default(omit) }}"
-            authentication":
-              type: "{{ item.remote_auth_type | default('omit') }}"
-              username: "{{ item.remote_username | default(omit) }}"
-              password: "{{ item.remote_password | default(omit) }}"
-              ntlmHost: "{{ item.ntlm_host | default(omit) }}"
-              ntlmDomain: "{{ item.ntlm_domain | default(omit) }}"
-              preemptive: "{{ item.preemptive | default(omit) }}"
-          routingRule: "{{ item.routing_rule | default(omit) }}"
-          replication:
-            preemptivePullEnabled: "{{ item.replication_preemptive_pull_enabled | default(omit) }}"
-            assetPathRegex: "{{ item.replication_asset_path_regex | default(omit) }}"
-          maven:
-            versionPolicy: "{{ item.version_policy | default('RELEASE') | upper }}"
-            layoutPolicy: "{{ item.layout_policy | default('STRICT') | upper }}"
-            contentDisposition: "{{ item.content_disposition | default('INLINE') | upper }}"
-        status_code: 204
-      loop: "{{ nexus_repos_maven_proxy }}"
-      tags: provision-api
-      when: item.name in __nexus_existing_repos__.json | map(attribute='name') | list
 
     - name: Create/check privileges
       ansible.builtin.include_tasks: call_script.yml
