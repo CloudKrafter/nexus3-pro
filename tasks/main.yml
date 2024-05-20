@@ -144,11 +144,144 @@
     - name: Apply defaults to repositories configurations and process a single list
       ansible.builtin.include_tasks: process_repos_list.yml
 
-    - name: Create configured repositories
-      ansible.builtin.include_tasks: call_script.yml
-      vars:
-        script_name: create_repos_from_list
-        call_args: "{{ _nexus_repos_global_list | d([]) }}"
+    # - name: Create configured repositories
+    #   ansible.builtin.include_tasks: call_script.yml
+    #   vars:
+    #     script_name: create_repos_from_list
+    #     call_args: "{{ _nexus_repos_global_list | d([]) }}"
+    # - name: Check for existing repositories
+    #   ansible.builtin.include_tasks: repos/get-repos.yml
+    #   tags: provision-api
+    - name: Get all existing repositories
+      ansible.builtin.uri:
+        url: "{{ nexus_api_scheme }}://{{ nexus_api_hostname }}:{{ nexus_api_port }}{{ nexus_api_context_path }}service/rest/v1/repositories"
+        user: admin
+        password: "{{ current_nexus_admin_password }}"
+        method: GET
+        force_basic_auth: true
+        validate_certs: "{{ nexus_api_validate_certs }}"
+        body_format: json
+        return_content: yes
+        status_code: 200
+      register: __nexus_existing_repos__
+      tags: provision-api
+
+      # debug the existing repos
+    - debug:
+        var: __nexus_existing_repos__
+      tags: provision-api
+
+    - name: Provision repositories
+      ansible.builtin.uri:
+        url: "{{ nexus_api_scheme }}://{{ nexus_api_hostname }}:{{ nexus_api_port }}{{ nexus_api_context_path }}service/rest/v1/repositories/maven/proxy"
+        user: admin
+        password: "{{ current_nexus_admin_password }}"
+        method: POST
+        force_basic_auth: true
+        validate_certs: "{{ nexus_api_validate_certs }}"
+        body_format: json
+        body:
+          name: "{{ item.name }}"
+          online: true
+          storage:
+            blobStoreName: "{{ nexus_blob_names.mvn.blob }}"
+            strictContentTypeValidation: true
+          cleanup:
+            policyNames: []
+          proxy:
+            remoteUrl: "{{ item.remote_url }}"
+            contentMaxAge: -1
+            metadataMaxAge: 1440
+          negativeCache:
+            enabled: true
+            timeToLive: 1440
+          httpClient:
+            blocked: false
+            autoBlock: true
+            connection:
+              retries: 3
+              useTrustStore: true
+              blocked: false
+              autoBlock: true
+              timeout: 20
+              enableCircularRedirects: false
+              enableCookies: false
+              userAgentSuffix: "Nexus/3.30.0-01 (OSS)"
+            authentication":
+              type: "username"
+              username: "string"
+              password: "string"
+              # ntlmHost: "string"
+              # ntlmDomain: "string"
+              preemptive: false
+          routingRule: "string"
+          replication:
+            preemptivePullEnabled: false
+            # assetPathRegex: "string"
+          maven:
+            versionPolicy: "RELEASE"
+            layoutPolicy: "STRICT"
+            contentDisposition: "ATTACHMENT"
+        status_code: 201
+      loop: "{{ nexus_repos_maven_proxy }}"
+      tags: provision-api
+      when: item.name not in __nexus_existing_repos__.json | map(attribute='name') | list
+
+    - name: Provision repositories update when repository exists
+      ansible.builtin.uri:
+        url: "{{ nexus_api_scheme }}://{{ nexus_api_hostname }}:{{ nexus_api_port }}{{ nexus_api_context_path }}service/rest/v1/repositories/maven/proxy/{{ item.name }}"
+        user: admin
+        password: "{{ current_nexus_admin_password }}"
+        method: PUT
+        force_basic_auth: true
+        validate_certs: "{{ nexus_api_validate_certs }}"
+        body_format: json
+        body:
+          name: "{{ item.name }}"
+          online: true
+          storage:
+            blobStoreName: "{{ nexus_blob_names.mvn.blob }}"
+            strictContentTypeValidation: true
+          cleanup:
+            policyNames: []
+          proxy:
+            remoteUrl: "{{ item.remote_url }}"
+            contentMaxAge: -1
+            metadataMaxAge: 1440
+          negativeCache:
+            enabled: true
+            timeToLive: 1440
+          httpClient:
+            blocked: false
+            autoBlock: true
+            connection:
+              retries: 3
+              useTrustStore: true
+              blocked: false
+              autoBlock: true
+              timeout: 20
+              enableCircularRedirects: false
+              enableCookies: false
+              userAgentSuffix: "Nexus/3.30.0-01 (OSS)"
+            authentication":
+              type: "username"
+              username: "string"
+              password: "string"
+              # ntlmHost: "string"
+              # ntlmDomain: "string"
+              preemptive: false
+          routingRule: "string"
+          replication:
+            preemptivePullEnabled: false
+            # assetPathRegex: "string"
+          maven:
+            versionPolicy: "RELEASE"
+            layoutPolicy: "STRICT"
+            contentDisposition: "ATTACHMENT"
+        status_code: 204
+      loop: "{{ nexus_repos_maven_proxy }}"
+      tags: provision-api
+      when: item.name in __nexus_existing_repos__.json | map(attribute='name') | list
 
     - name: Create/check privileges
       ansible.builtin.include_tasks: call_script.yml
