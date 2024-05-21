@@ -12,8 +12,10 @@ teams:
             format: npm
           - name: apt-repo1
             format: apt
-            cleanup_policies:
-              - my_cleanup
+          - name: docker-repo1
+            format: docker
+          - name: helm-repo1
+            format: helm
         proxy:
           - name: proxy-repo1
             format: maven2

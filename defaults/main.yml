@@ -513,7 +513,7 @@ nexus_repos_docker_proxy:
     # maximum_component_age: 1440
     # maximum_metadata_age: 1440
     # negative_cache_enabled: true
-    # negative_cache_ttl: 1440
+    # negative_cache_ttl: 1440x
 
 nexus_repos_docker_group:
   - name: docker-group

@@ -1,108 +1,112 @@
 hosted_defaults:
   apt:
-    - repositoryName: <team>-repo
-      recipeName: recipeName,
-      online: true
-      storage:
-        blobStoreName: blob
-        writePolicy: ALLOW_ONCE # ALLOW_ONCE or ALLOW
-      cleanup_policies:
-        - policy-1
-      distribution: dist
-      aptSigning:
-        keypair: null
-        passphrase: null
+    blob_store: blob-apt
+    online: true
+    distribution: dist
+    keypair: 'none'
+    passphrase: 'none'
+    strict_content_validation: true
+    layout_policy: strict # strict or permissive
+    write_policy: allow_once # one of "allow", "allow_once" or "deny"
+    cleanup_policies:
+      - apt_cleanup
   docker:
-    - repositoryName: <team>-repo
-      recipeName: recipeName,
-      online: true
-      storage:
-        blobStoreName: blob
-        writePolicy: ALLOW_ONCE # ALLOW_ONCE or ALLOW
-        latestPolicy: null
-      cleanup_policies:
-        - policy-1
-      forceBasicAuth: ""
-      v1Enabled: true
-      httpPort: null
-      subdomain: null
+    online: true
+    blob_store: blob-docker
+    force_basic_auth: true
+    strict_content_validation: true
+    allow_redeploy_latest: false
+    version_policy: release # release, snapshot or mixed
+    write_policy: allow_once
+    layout_policy: strict # strict or permissive
+    http_port: null
+    https_port: null
+    sub_domain: ''
+    v1_enabled: false
+    cleanup_policies:
+      - docker_cleanup
   gitlfs:
-    - repositoryName: <team>-repo
-      recipeName: recipeName,
-      online: true
-      storage:
-        blobStoreName: blob
-        writePolicy: ALLOW_ONCE # ALLOW_ONCE or ALLOW
-      cleanup_policies:
-        - policy-1
+    repositoryName: <team>-repo
+    recipeName: recipeName,
+    online: true
+    blob_store: blob-gitlfs
+    layout_policy: strict # strict or permissive
+    write_policy: allow_once # ALLOW_ONCE or ALLOW
+    strict_content_validation: true
+    cleanup_policies:
+      - gitlfs_cleanup
   helm:
-    - repositoryName: <team>-repo
-      recipeName: recipeName,
-      online: true
-      storage:
-        blobStoreName: blob
-        writePolicy: ALLOW_ONCE # ALLOW_ONCE or ALLOW
-      cleanup_policies:
-        - policy-1
-  maven:
-    - repositoryName: <team>-repo
-      recipeName: recipeName,
-      online: true
-      storage:
-        blobStoreName: blob
-        writePolicy: ALLOW_ONCE # ALLOW_ONCE or ALLOW
-      cleanup_policies:
-        - policy-1
-      versionPolicy: release # release, snapshot or mixed
-      layoutPolicy: strict # strict or permissive
+    repositoryName: <team>-repo
+    recipeName: recipeName,
+    online: true
+    blob_store: blob-helm
+    layout_policy: strict # strict or permissive
+    write_policy: allow_once # ALLOW_ONCE or ALLOW
+    strict_content_validation: true
+    cleanup_policies:
+      - helm_cleanup
+  maven2:
+    online: true
+    blob_store: blob-mvn
+    strict_content_validation: true
+    version_policy: release # release, snapshot or mixed
+    layout_policy: strict # strict or permissive
+    write_policy: allow_once # one of "allow", "allow_once" or "deny"
+    cleanup_policies:
+      - mvn_cleanup
   npm:
-    - repositoryName: <team>-repo
-      recipeName: recipeName,
-      online: true
-      storage:
-        blobStoreName: blob
-        writePolicy: ALLOW_ONCE # ALLOW_ONCE or ALLOW
-      cleanup_policies:
-        - policy-1
+    repositoryName: <team>-repo
+    recipeName: recipeName,
+    online: true
+    blob_store: blob-npm
+    layout_policy: strict # strict or permissive
+    write_policy: allow_once # ALLOW_ONCE or ALLOW
+    strict_content_validation: true
+    cleanup_policies:
+      - npm_cleanup
   nuget:
-    - repositoryName: <team>-repo
-      recipeName: recipeName,
-      online: true
-      storage:
-        blobStoreName: blob
-        writePolicy: ALLOW_ONCE # ALLOW_ONCE or ALLOW
-      cleanup_policies:
-        - policy-1
-  python:
-    - repositoryName: <team>-repo
-      recipeName: recipeName,
-      online: true
-      storage:
-        blobStoreName: blob
-        writePolicy: ALLOW_ONCE # ALLOW_ONCE or ALLOW
-      cleanup_policies:
-        - policy-1
+    repositoryName: <team>-repo
+    recipeName: recipeName,
+    online: true
+    blob_store: blob-nuget
+    layout_policy: strict # strict or permissive
+    write_policy: allow_once # ALLOW_ONCE or ALLOW
+    strict_content_validation: true
+    cleanup_policies:
+      - nuget_cleanup
+  pypi:
+    repositoryName: <team>-repo
+    recipeName: recipeName,
+    online: true
+    blob_store: blob-pypi
+    layout_policy: strict # strict or permissive
+    write_policy: allow_once # ALLOW_ONCE or ALLOW
+    strict_content_validation: true
+    cleanup_policies:
+      - python_cleanup
   raw:
-    - repositoryName: <team>-repo
-      recipeName: recipeName,
-      online: true
-      storage:
-        blobStoreName: blob
-        writePolicy: ALLOW_ONCE # ALLOW_ONCE or ALLOW
-      cleanup_policies:
-        - policy-1
-      contentDisposition: INLINE
+    repositoryName: <team>-repo
+    recipeName: recipeName,
+    online: true
+    blob_store: blob-raw
+    layout_policy: strict # strict or permissive
+    write_policy: allow_once # ALLOW_ONCE or ALLOW
+    strict_content_validation: true
+    cleanup_policies:
+      - raw_cleanup
+    contentDisposition: INLINE
   yum:
-    - repositoryName: <team>-repo
-      recipeName: recipeName,
-      online: true
-      storage:
-        blobStoreName: blob
-        writePolicy: ALLOW_ONCE # ALLOW_ONCE or ALLOW
-      cleanup_policies:
-        - policy-1
-      repodataDepth: 1
-      deployPolicy: strict # strict or permissive
+    repositoryName: <team>-repo
+    recipeName: recipeName,
+    online: true
+    blob_store: blob-yum
+    layout_policy: strict # strict or permissive
+    write_policy: allow_once # ALLOW_ONCE or ALLOW
+    strict_content_validation: true
+    cleanup_policies:
+      - yum_cleanup
+    repodataDepth: 1
+    deployPolicy: strict # strict or permissive
 
 proxy_defaults:
   maven:
