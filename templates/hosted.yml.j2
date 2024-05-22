@@ -1,14 +1,12 @@
 {% for key, value in hosted_defaults.items() %}
-{% set hadData = false %}
 {% for team in teams %}
 {% for team_hosted_repo in team.repos.requestedBy.hosted | selectattr("format", "equalto", key) %}
-{% if team_hosted_repo|length > 0 and hadData == false %}
+{% if team_hosted_repo|length > 0 and loop.first %}
 {% if key == 'maven2' %}
 nexus_repos_{{ key[:-1] }}_hosted:
 {% else %}
 nexus_repos_{{ key }}_hosted:
 {% endif %}
-{% set hadData = true %}
 {% endif %}
   - name: {{ team_hosted_repo.name }}
     recipeName: {{ key }}

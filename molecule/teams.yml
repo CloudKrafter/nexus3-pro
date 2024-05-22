@@ -6,6 +6,8 @@ teams:
         hosted:
           - name: maven-repo1
             format: maven2
+          - name: maven-repo2
+            format: maven2
           - name: python-repo1
             format: pypi
           - name: npm-repo1
@@ -16,6 +18,8 @@ teams:
             format: docker
           - name: helm-repo1
             format: helm
+          - name: raw-repo1
+            format: raw
         proxy:
           - name: proxy-repo1
             format: maven2
