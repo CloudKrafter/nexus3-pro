@@ -16,45 +16,46 @@
           {%- set result = [] -%}
           {%- for repo in nexus_repos_maven_proxy -%}
             {%- set combined_repo = _nexus_repos_maven_defaults | combine(repo) -%}
+            {%- set authentication = {
+                'type': combined_repo.remote_auth_type,
+                'username': combined_repo.remote_username | default('username'),
+                'password': combined_repo.remote_password | default('password'),
+                'ntlmHost': combined_repo.ntlm_host | default(omit),
+                'ntlmDomain': combined_repo.ntlm_domain | default(omit),
+                'preemptive': combined_repo.preemptive | default(omit)
+            } if combined_repo.remote_auth_type is defined else omit -%}
             {%- set transformed_repo = {
               'name': combined_repo.name,
               'online': combined_repo.online | default(true),
               'storage': {
                 'blobStoreName': combined_repo.blob_store | default('default'),
-                'strictContentTypeValidation': combined_repo.strict_content_validation | default(false),
+                'strictContentTypeValidation': combined_repo.strict_content_validation | default(omit),
                 'writePolicy': combined_repo.write_policy | default('ALLOW_ONCE') | upper
               },
               'cleanup': {
                 'policyNames': combined_repo.cleanup_policies | default([])
               },
               'proxy': {
-                'remoteUrl': combined_repo.remote_url | default('https://google.com'),
-                'contentMaxAge': combined_repo.maximum_component_age | default(1140),
-                'metadataMaxAge': combined_repo.maximum_metadata_age | default(1140)
+                'remoteUrl': combined_repo.remote_url | default(omit),
+                'contentMaxAge': combined_repo.maximum_component_age | default(omit),
+                'metadataMaxAge': combined_repo.maximum_metadata_age | default(omit)
               },
               'negativeCache': {
-                'enabled': combined_repo.negative_cache_enabled | default(true),
-                'timeToLive': combined_repo.negative_cache_ttl | default(1140)
+                'enabled': combined_repo.negative_cache_enabled | default(omit),
+                'timeToLive': combined_repo.negative_cache_ttl | default(omit)
               },
               'httpClient': {
                 'blocked': combined_repo.blocked | default(false),
                 'autoBlock': combined_repo.auto_block | default(true),
                 'connection': {
-                  'retries': combined_repo.connection_retries | default(3),
-                  'useTrustStore': combined_repo.use_trust_store | default(false),
-                  'userAgentSuffix': combined_repo.user_agent_suffix | default('suffix'),
-                  'timeout': combined_repo.connection_timeout | default(30),
-                  'enableCircularRedirects': combined_repo.enable_circular_redirects | default(false),
-                  'enableCookies': combined_repo.enable_cookies | default(false)
+                  'retries': combined_repo.connection_retries | default(omit),
+                  'useTrustStore': combined_repo.use_trust_store | default(omit),
+                  'userAgentSuffix': combined_repo.user_agent_suffix | default(omit),
+                  'timeout': combined_repo.connection_timeout | default(omit),
+                  'enableCircularRedirects': combined_repo.enable_circular_redirects | default(omit),
+                  'enableCookies': combined_repo.enable_cookies | default(omit)
                 },
-                'authentication': {
-                  'type': combined_repo.remote_auth_type | default('username'),
-                  'username': combined_repo.remote_username | default('username'),
-                  'password': combined_repo.remote_password | default('password'),
-                  'ntlmHost': combined_repo.ntlm_host | default(omit),
-                  'ntlmDomain': combined_repo.ntlm_domain | default(omit),
-                  'preemptive': combined_repo.preemptive | default(omit)
-                }
+                'authentication': authentication | default(omit)
               },
               'replication': {
                 'preemptivePullEnabled': combined_repo.replication_preemptive_pull_enabled | default(omit),
