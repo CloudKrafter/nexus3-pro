@@ -324,7 +324,21 @@ nexus_repos_docker_hosted:
     write_policy: deny # will be effective when allow_redeploy_latest is false
     allow_redeploy_latest: false
 
-nexus_repos_docker_proxy: []
+nexus_repos_docker_proxy:
+  - name: docker-hub
+    remote_url: https://registry-1.docker.io/
+    index_type: HUB
+    index_url: http://docker.io
+    http_port: "5001"
+    force_basic_auth: true
+    v1_enabled: true
+    write_policy: allow
+
+nexus_repos_docker_group:
+  - name: docker-all
+    member_repos:
+      - docker-private
+      - docker-hub
 nexus_repos_apt_hosted:
   - name: private_apt
     distribution: all
