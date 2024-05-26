@@ -131,7 +131,25 @@
             +
             (nexus_repos_maven_group | map('combine', {"format": "maven2", "type": "group"}) | list)
           }}
-      when: not nexus_use_api_for_provisioning | default(false) | bool
+        _nexus_repos_maven_proxy: >-
+          {{
+            _nexus_repos_maven_proxy | default([])
+            +
+            (nexus_repos_maven_proxy | map('combine', {"format": "maven", "type": "proxy"}) | list)
+          }}
+        _nexus_repos_maven_hosted: >-
+          {{
+            _nexus_repos_maven_hosted | default([])
+            +
+            (nexus_repos_maven_hosted | map('combine', {"format": "maven", "type": "hosted"}) | list)
+          }}
+        _nexus_repos_maven_group: >-
+          {{
+            _nexus_repos_maven_group | default([])
+            +
+            (nexus_repos_maven_group | map('combine', {"format": "maven", "type": "group"}) | list)
+          }}
+      #when: not nexus_use_api_for_provisioning | default(false) | bool
 
 # - name: Process definitions for docker
 #   when: nexus_config_docker | bool
