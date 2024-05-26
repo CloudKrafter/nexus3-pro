@@ -339,6 +339,24 @@ nexus_repos_docker_group:
     member_repos:
       - docker-private
       - docker-hub
+nexus_repos_pypi_proxy:
+  - name: pypi-proxy
+    remote_url: https://pypi.python.org/simple/
+    http_port: "5002"
+    force_basic_auth: true
+    v1_enabled: true
+    write_policy: allow
+nexus_repos_pypi_hosted:
+  - name: pypi-hosted
+    http_port: "5003"
+    force_basic_auth: true
+    v1_enabled: true
+    write_policy: allow
+nexus_repos_pypi_group:
+  - name: pypi-all
+    member_repos:
+      - pypi-hosted
+      - pypi-proxy
 nexus_repos_apt_hosted:
   - name: private_apt
     distribution: all
