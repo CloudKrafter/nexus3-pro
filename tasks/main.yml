@@ -157,7 +157,7 @@
       vars:
         api_payload: "{{ item | default([]) }}"
       loop:
-        - "{{ nexus_repos_maven_proxy }}"
+        - "{{ _nexus_repos_maven_proxy }}"
         - "{{ _nexus_repos_maven_hosted }}"
         - "{{ _nexus_repos_maven_group }}"
       when: nexus_use_api_for_provisioning | default(false) | bool
