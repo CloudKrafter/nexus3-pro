@@ -477,6 +477,21 @@ nexus_repos_raw_group:
     member_repos:
       - raw-hosted
       - raw-proxy
+
+nexus_repos_rubygems_proxy:
+  - name: rubygems-proxy
+    remote_url: https://rubygems.org/
+
+nexus_repos_rubygems_hosted:
+  - name: rubygems-hosted
+    write_policy: allow
+
+nexus_repos_rubygems_group:
+  - name: rubygems-all
+    member_repos:
+      - rubygems-hosted
+      - rubygems-proxy
+
 nexus_repos_bower_proxy:
   - name: bower-proxy
     remote_url: https://bower.herokuapp.com/
