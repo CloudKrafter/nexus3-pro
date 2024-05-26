@@ -160,6 +160,7 @@
         - "{{ _nexus_repos_maven_proxy }}"
         - "{{ _nexus_repos_maven_hosted }}"
         - "{{ _nexus_repos_maven_group }}"
+        - "{{ _nexus_repos_docker_proxy }}"
       when: nexus_use_api_for_provisioning | default(false) | bool
 
     - name: Create/check privileges
