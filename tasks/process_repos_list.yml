@@ -11,65 +11,66 @@
   when: nexus_config_maven | bool
   block:
     - name: Apply defaults to maven proxy repos
-    # TODO: defaults are not applied properly yet!
       ansible.builtin.set_fact:
         nexus_repos_maven_proxy: >-
           {%- set result = [] -%}
           {%- for repo in nexus_repos_maven_proxy -%}
-            {%- if use_api -%}
-              {{ result.append({
-                'name': repo.name,
-                'online': repo.online | default(true),
-                'storage': {
-                  'blobStoreName': repo.blob_store | default('default'),
-                  'strictContentTypeValidation': repo.strict_content_type_validation | default(false),
-                  'writePolicy': repo.write_policy | default('ALLOW_ONCE') | upper
+            {%- set combined_repo = _nexus_repos_maven_defaults | combine(repo) -%}
+            {%- set transformed_repo = {
+              'name': combined_repo.name,
+              'online': combined_repo.online | default(true),
+              'storage': {
+                'blobStoreName': combined_repo.blob_store | default('default'),
+                'strictContentTypeValidation': combined_repo.strict_content_validation | default(false),
+                'writePolicy': combined_repo.write_policy | default('ALLOW_ONCE') | upper
+              },
+              'cleanup': {
+                'policyNames': combined_repo.cleanup_policies | default([])
+              },
+              'proxy': {
+                'remoteUrl': combined_repo.remote_url | default('https://google.com'),
+                'contentMaxAge': combined_repo.maximum_component_age | default(1140),
+                'metadataMaxAge': combined_repo.maximum_metadata_age | default(1140)
+              },
+              'negativeCache': {
+                'enabled': combined_repo.negative_cache_enabled | default(true),
+                'timeToLive': combined_repo.negative_cache_ttl | default(1140)
+              },
+              'httpClient': {
+                'blocked': combined_repo.blocked | default(false),
+                'autoBlock': combined_repo.auto_block | default(true),
+                'connection': {
+                  'retries': combined_repo.connection_retries | default(3),
+                  'useTrustStore': combined_repo.use_trust_store | default(false),
+                  'userAgentSuffix': combined_repo.user_agent_suffix | default('suffix'),
+                  'timeout': combined_repo.connection_timeout | default(30),
+                  'enableCircularRedirects': combined_repo.enable_circular_redirects | default(false),
+                  'enableCookies': combined_repo.enable_cookies | default(false)
                 },
-                'cleanup': {
-                  'policyNames': repo.cleanup_policies | default([])
-                },
-                'proxy': {
-                  'remoteUrl': repo.remote_url | default('https://google.com'),
-                  'contentMaxAge': repo.maximum_component_age | default(1140),
-                  'metadataMaxAge': repo.maximum_metadata_age | default(1140)
-                },
-                'negativeCache': {
-                  'enabled': repo.negative_cache_enabled | default(true),
-                  'timeToLive': repo.negative_cache_ttl | default(1140)
-                },
-                'httpClient': {
-                  'blocked': repo.blocked | default(false),
-                  'autoBlock': repo.auto_block | default(true),
-                  'connection': {
-                    'retries': repo.connection_retries | default(3),
-                    'useTrustStore': repo.use_trust_store | default(false),
-                    'userAgentSuffix': repo.user_agent_suffix | default('suffix'),
-                    'timeout': repo.connection_timeout | default(30),
-                    'enableCircularRedirects': repo.enable_circular_redirects | default(false),
-                    'enableCookies': repo.enable_cookies | default(false)
-                  },
-                  'authentication': {
-                    'type': repo.remote_auth_type | default('username'),
-                    'username': repo.remote_username | default('username'),
-                    'password': repo.remote_password | default('password'),
-                    'ntlmHost': repo.ntlm_host | default(omit),
-                    'ntlmDomain': repo.ntlm_domain | default(omit),
-                    'preemptive': repo.preemptive | default(omit)
-                  }
-                },
-                'replication': {
-                  'preemptivePullEnabled': repo.replication_preemptive_pull_enabled | default(omit),
-                  'assetPathRegex': repo.replication_asset_path_regex | default(omit)
-                },
-                'routingRule': repo.routing_rule | default(omit),
-                'maven': {
-                  'versionPolicy': repo.version_policy | default('RELEASE') | upper,
-                  'layoutPolicy': repo.layout_policy | default('STRICT') | upper,
-                  'contentDisposition': repo.content_disposition | default('INLINE') | upper
+                'authentication': {
+                  'type': combined_repo.remote_auth_type | default('username'),
+                  'username': combined_repo.remote_username | default('username'),
+                  'password': combined_repo.remote_password | default('password'),
+                  'ntlmHost': combined_repo.ntlm_host | default(omit),
+                  'ntlmDomain': combined_repo.ntlm_domain | default(omit),
+                  'preemptive': combined_repo.preemptive | default(omit)
                 }
-              }) }}
+              },
+              'replication': {
+                'preemptivePullEnabled': combined_repo.replication_preemptive_pull_enabled | default(omit),
+                'assetPathRegex': combined_repo.replication_asset_path_regex | default(omit)
+              },
+              'routingRule': combined_repo.routing_rule | default(omit),
+              'maven': {
+                'versionPolicy': combined_repo.version_policy | default('RELEASE') | upper,
+                'layoutPolicy': combined_repo.layout_policy | default('STRICT') | upper,
+                'contentDisposition': combined_repo.content_disposition | default('INLINE') | upper
+              }
+            } -%}
+            {%- if use_api -%}
+              {{ result.append(transformed_repo) }}
             {%- else -%}
-              {{ result.append(_nexus_repos_maven_defaults | combine(repo)) }}
+              {{ result.append(combined_repo) }}
             {%- endif -%}
           {%- endfor -%}
           {{ result | to_json | from_json }}
