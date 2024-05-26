@@ -33,6 +33,8 @@ nexus_blob_names:
     blob: "{{ nexus_blob_prefix }}conda"
   go:
     blob: "{{ nexus_blob_prefix }}go"
+  cocoapods:
+    blob: "{{ nexus_blob_prefix }}cocoapods"
 
 nexus_blobstores:
   - name: "{{ nexus_blob_prefix }}raw"
@@ -67,3 +69,5 @@ nexus_blobstores:
     path: "{{ nexus_data_dir }}/blobs/{{ nexus_blob_names.conda.blob }}"
   - name: "{{ nexus_blob_prefix }}go"
     path: "{{ nexus_data_dir }}/blobs/{{ nexus_blob_names.go.blob }}"
+  - name: "{{ nexus_blob_prefix }}cocoapods"
+    path: "{{ nexus_data_dir }}/blobs/{{ nexus_blob_names.cocoapods.blob }}"
