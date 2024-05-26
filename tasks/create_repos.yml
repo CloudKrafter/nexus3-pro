@@ -16,7 +16,7 @@
 # TODO: add support to accept type and format
 - name: Create repositories
   ansible.builtin.uri:
-    url: "{{ nexus_api_scheme }}://{{ nexus_api_hostname }}:{{ nexus_api_port }}{{ nexus_api_context_path }}service/rest/v1/repositories/maven/proxy"
+    url: "{{ nexus_api_scheme }}://{{ nexus_api_hostname }}:{{ nexus_api_port }}{{ nexus_api_context_path }}service/rest/v1/repositories/{{ repo.format }}/{{ repo.type}}"
     user: admin
     password: "{{ current_nexus_admin_password }}"
     method: POST
@@ -34,7 +34,7 @@
 # TODO: add support to accept type and format
 - name: Update repositories when repository exists
   ansible.builtin.uri:
-    url: "{{ nexus_api_scheme }}://{{ nexus_api_hostname }}:{{ nexus_api_port }}{{ nexus_api_context_path }}service/rest/v1/repositories/maven/proxy/{{ repo.name }}"
+    url: "{{ nexus_api_scheme }}://{{ nexus_api_hostname }}:{{ nexus_api_port }}{{ nexus_api_context_path }}service/rest/v1/repositories/{{ repo.format }}/{{ repo.type}}/{{ repo.name }}"
     user: admin
     password: "{{ current_nexus_admin_password }}"
     method: PUT
