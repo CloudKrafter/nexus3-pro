@@ -17,13 +17,13 @@
           {%- for repo in nexus_repos_maven_proxy -%}
             {%- set combined_repo = _nexus_repos_maven_defaults | combine(repo) -%}
             {%- set authentication = {
-                'type': combined_repo.remote_auth_type,
+                'type': combined_repo.remote_auth_type | default('username'),
                 'username': combined_repo.remote_username | default('username'),
                 'password': combined_repo.remote_password | default('password'),
                 'ntlmHost': combined_repo.ntlm_host | default(omit),
                 'ntlmDomain': combined_repo.ntlm_domain | default(omit),
                 'preemptive': combined_repo.preemptive | default(omit)
-            } if combined_repo.remote_auth_type is defined else omit -%}
+            } if combined_repo.remote_auth_type is defined or combined_repo.remote_username is defined else omit -%}
             {%- set transformed_repo = {
               'name': combined_repo.name,
               'online': combined_repo.online | default(true),
