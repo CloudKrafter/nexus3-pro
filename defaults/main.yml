@@ -216,6 +216,7 @@ nexus_config_r: false
 nexus_config_p2: false
 nexus_config_conda: false
 nexus_config_go: false
+nexus_config_cocoapods: false
 
 nexus_content_selectors: []
 # example selector item :
@@ -300,6 +301,8 @@ nexus_blob_names: # Splited blob name list @ blob_vars.yml
   conda:
     blob: default
   go:
+    blob: default
+  cocoapods:
     blob: default
 
 nexus_blobstores: []
@@ -791,3 +794,14 @@ _nexus_repos_go_defaults:
 
 nexus_repos_go_group: []
 nexus_repos_go_proxy: []
+
+_nexus_repos_cocoapods_defaults:
+  blob_store: "{{ nexus_blob_names.cocoapods.blob }}"
+  strict_content_validation: true
+  write_policy: allow_once # one of "allow", "allow_once" or "deny"
+  maximum_component_age: 1440 # Nexus gui default. For proxies only
+  maximum_metadata_age: 1440 # Nexus gui default. For proxies only
+  negative_cache_enabled: true # Nexus gui default. For proxies only
+  negative_cache_ttl: 1440 # Nexus gui default. For proxies only
+
+nexus_repos_cocoapods_proxy: []

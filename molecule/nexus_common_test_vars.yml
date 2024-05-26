@@ -37,6 +37,7 @@ nexus_config_helm: true
 nexus_config_r: true
 nexus_config_conda: true
 nexus_config_go: true
+nexus_config_cocoapods: true
 
 nexus_anonymous_access: true
 
@@ -442,6 +443,10 @@ nexus_repos_nuget_proxy:
     nuget_version: v2
   - name: nuget-proxy-default
     remote_url: https://api.nuget.org/v3/index.json
+
+nexus_repos_cocoapods_proxy:
+  - name: cocoapods-proxy
+    remote_url: https://cdn.cocoapods.org/
 
 nexus_content_selectors:
   # Docker by namespace. For mode details see:

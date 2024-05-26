@@ -163,6 +163,7 @@
         - "{{ _nexus_repos_docker_proxy }}"
         - "{{ _nexus_repos_docker_hosted }}"
         - "{{ _nexus_repos_docker_group }}"
+        - "{{ _nexus_repos_cocoapods_proxy }}"
       when: nexus_use_api_for_provisioning | default(false) | bool
 
     - name: Create/check privileges
