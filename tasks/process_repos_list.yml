@@ -295,7 +295,7 @@
               },
               'group': {
                 'memberNames': combined_repo.member_repos | default([]),
-                'writableMember': combined_repo.writable_member_repo | default(false)
+                'writableMember': combined_repo.writable_member_repo | default(omit)
               },
               'docker': {
                 'v1Enabled': combined_repo.v1_enabled | default(false),
