@@ -76,14 +76,39 @@
           {%- endfor -%}
           {{ result | to_json | from_json }}
 
-    # - name: Apply defaults to maven hosted repos
-    #   ansible.builtin.set_fact:
-    #     nexus_repos_maven_hosted: >-
-    #       {%- set result = [] -%}
-    #       {%- for repo in nexus_repos_maven_hosted -%}
-    #         {{ result.append(_nexus_repos_maven_defaults | combine(repo)) }}
-    #       {%- endfor -%}
-    #       {{ result | to_json | from_json }}
+    - name: Apply defaults to maven hosted repos
+      ansible.builtin.set_fact:
+        nexus_repos_maven_hosted: >-
+          {%- set result = [] -%}
+          {%- for repo in nexus_repos_maven_hosted -%}
+            {%- set combined_repo = _nexus_repos_maven_defaults | combine(repo) -%}
+            {%- set transformed_repo = {
+              'name': combined_repo.name,
+              'online': combined_repo.online | default(true),
+              'storage': {
+                'blobStoreName': combined_repo.blob_store | default('default'),
+                'strictContentTypeValidation': combined_repo.strict_content_validation | default(omit),
+                'writePolicy': combined_repo.write_policy | default('ALLOW_ONCE') | upper
+              },
+              'cleanup': {
+                'policyNames': combined_repo.cleanup_policies | default([])
+              },
+              'component': {
+                'proprietaryComponents': true
+              },
+              'maven': {
+                'versionPolicy': combined_repo.version_policy | default('RELEASE') | upper,
+                'layoutPolicy': combined_repo.layout_policy | default('STRICT') | upper,
+                'contentDisposition': combined_repo.content_disposition | default('INLINE') | upper
+              }
+            } -%}
+            {%- if use_api -%}
+              {{ result.append(transformed_repo) }}
+            {%- else -%}
+              {{ result.append(combined_repo) }}
+            {%- endif -%}
+          {%- endfor -%}
+          {{ result | to_json | from_json }}
 
     # - name: Apply defaults to maven group repos
     #   ansible.builtin.set_fact:
