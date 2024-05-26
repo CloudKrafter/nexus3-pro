@@ -300,6 +300,8 @@ nexus_blob_names: # Splited blob name list @ blob_vars.yml
     blob: default
   conda:
     blob: default
+  conan:
+    blob: default
   go:
     blob: default
   cocoapods:
@@ -794,6 +796,17 @@ _nexus_repos_go_defaults:
 
 nexus_repos_go_group: []
 nexus_repos_go_proxy: []
+
+_nexus_repos_conan_defaults:
+  blob_store: "{{ nexus_blob_names.conan.blob }}"
+  strict_content_validation: true
+  write_policy: allow_once # one of "allow", "allow_once" or "deny"
+  maximum_component_age: 1440 # Nexus gui default. For proxies only
+  maximum_metadata_age: 1440 # Nexus gui default. For proxies only
+  negative_cache_enabled: true # Nexus gui default. For proxies only
+  negative_cache_ttl: 1440 # Nexus gui default. For proxies only
+
+nexus_repos_conan_proxy: []
 
 _nexus_repos_cocoapods_defaults:
   blob_store: "{{ nexus_blob_names.cocoapods.blob }}"
