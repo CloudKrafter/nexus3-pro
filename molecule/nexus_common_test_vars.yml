@@ -39,6 +39,7 @@ nexus_config_conda: true
 nexus_config_conan: true
 nexus_config_go: true
 nexus_config_bower: true
+nexus_config_p2: true
 nexus_config_cocoapods: true
 
 nexus_anonymous_access: true
@@ -463,6 +464,10 @@ nexus_repos_nuget_proxy:
     nuget_version: v2
   - name: nuget-proxy-default
     remote_url: https://api.nuget.org/v3/index.json
+
+nexus_repos_p2_proxy:
+  - name: p2-proxy
+    remote_url: http://download.eclipse.org/technology/epp/packages/oxygen/
 
 nexus_repos_cocoapods_proxy:
   - name: cocoapods-proxy
