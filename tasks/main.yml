@@ -199,6 +199,8 @@
         - "{{ _nexus_repos_yum_proxy }}"
         - "{{ _nexus_repos_yum_hosted }}"
         - "{{ _nexus_repos_yum_group }}"
+        - "{{ _nexus_repos_apt_proxy }}"
+        - "{{ _nexus_repos_apt_hosted }}"
         - "{{ _nexus_repos_p2_proxy }}"
         - "{{ _nexus_repos_conan_proxy }}"
         - "{{ _nexus_repos_cocoapods_proxy }}"
