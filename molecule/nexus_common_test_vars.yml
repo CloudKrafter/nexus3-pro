@@ -775,3 +775,16 @@ nexus_proxy_exclude_hosts: # no_proxy env for shell does not obey java style
   - localhost
   - 127.*
   - "[::1]"
+
+_nexus_repos_maven_defaults:
+  blob_store: "{{ nexus_blob_names.mvn.blob }}"
+  strict_content_validation: true
+  version_policy: release # release, snapshot or mixed
+  layout_policy: strict # strict or permissive
+  write_policy: allow_once # one of "allow", "allow_once" or "deny"
+  maximum_component_age: -1 # Nexus gui default. For proxies only
+  maximum_metadata_age: 1440 # Nexus gui default. For proxies only
+  negative_cache_enabled: true # Nexus gui default. For proxies only
+  negative_cache_ttl: 1440 # Nexus gui default. For proxies only
+  cleanup_policies:
+    - all_cleanup
