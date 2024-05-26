@@ -214,7 +214,7 @@
                 },
               'routingRule': combined_repo.routing_rule | default(omit),
               'docker': {
-                'v1Enabled': combined_repo.v1_enabled | default(omit),
+                'v1Enabled': combined_repo.v1_enabled | default(false),
                 'forceBasicAuth': combined_repo.force_basic_auth | default(omit),
                 'httpPort': combined_repo.http_port | default(omit),
                 'httpsPort': combined_repo.https_port | default(omit),
@@ -235,23 +235,75 @@
           {%- endfor -%}
           {{ result | to_json | from_json }}
 
-#     - name: Apply defaults to docker hosted repos
-#       ansible.builtin.set_fact:
-#         nexus_repos_docker_hosted: >-
-#           {%- set result = [] -%}
-#           {%- for repo in nexus_repos_docker_hosted -%}
-#             {{ result.append(_nexus_repos_docker_defaults | combine(repo)) }}
-#           {%- endfor -%}
-#           {{ result | to_json | from_json }}
+    - name: Apply defaults to docker hosted repos
+      ansible.builtin.set_fact:
+        nexus_repos_docker_hosted: >-
+          {%- set result = [] -%}
+          {%- for repo in nexus_repos_docker_hosted -%}
+            {%- set combined_repo = _nexus_repos_docker_defaults | combine(repo) -%}
+            {%- set transformed_repo = {
+              'name': combined_repo.name,
+              'online': combined_repo.online | default(true),
+              'storage': {
+                'blobStoreName': combined_repo.blob_store | default('default'),
+                'strictContentTypeValidation': combined_repo.strict_content_validation | default(omit),
+                'writePolicy': combined_repo.write_policy | default('ALLOW_ONCE') | upper,
+                'latestPolicy': combined_repo.lallow_redeploy_latest | default(omit)
+              },
+              'cleanup': {
+                'policyNames': combined_repo.cleanup_policies | default([])
+              },
+              'component': {
+                'proprietaryComponents': true
+              },
+              'docker': {
+                'v1Enabled': combined_repo.v1_enabled | default(false),
+                'forceBasicAuth': combined_repo.force_basic_auth | default(omit),
+                'httpPort': combined_repo.http_port | default(omit),
+                'httpsPort': combined_repo.https_port | default(omit),
+                'subdomain': combined_repo.sub_domain | default(omit)
+              }
+            } -%}
+            {%- if use_api -%}
+              {{ result.append(transformed_repo) }}
+            {%- else -%}
+              {{ result.append(combined_repo) }}
+            {%- endif -%}
+          {%- endfor -%}
+          {{ result | to_json | from_json }}
 
-#     - name: Apply defaults to docker group repos
-#       ansible.builtin.set_fact:
-#         nexus_repos_docker_group: >-
-#           {%- set result = [] -%}
-#           {%- for repo in nexus_repos_docker_group -%}
-#             {{ result.append(_nexus_repos_docker_defaults | combine(repo)) }}
-#           {%- endfor -%}
-#           {{ result | to_json | from_json }}
+    - name: Apply defaults to docker group repos
+      ansible.builtin.set_fact:
+        nexus_repos_docker_group: >-
+          {%- set result = [] -%}
+          {%- for repo in nexus_repos_docker_group -%}
+            {%- set combined_repo = _nexus_repos_docker_defaults | combine(repo) -%}
+            {%- set transformed_repo = {
+              'name': combined_repo.name,
+              'online': combined_repo.online | default(true),
+              'storage': {
+                'blobStoreName': combined_repo.blob_store | default('default'),
+                'strictContentTypeValidation': combined_repo.strict_content_validation | default(omit)
+              },
+              'group': {
+                'memberNames': combined_repo.member_repos | default([]),
+                'writableMember': combined_repo.writable_member_repo | default(false)
+              },
+              'docker': {
+                'v1Enabled': combined_repo.v1_enabled | default(false),
+                'forceBasicAuth': combined_repo.force_basic_auth | default(omit),
+                'httpPort': combined_repo.http_port | default(omit),
+                'httpsPort': combined_repo.https_port | default(omit),
+                'subdomain': combined_repo.sub_domain | default(omit)
+              }
+            } -%}
+            {%- if use_api -%}
+              {{ result.append(transformed_repo) }}
+            {%- else -%}
+              {{ result.append(combined_repo) }}
+            {%- endif -%}
+          {%- endfor -%}
+          {{ result | to_json | from_json }}
 
     - name: Add docker repositories to global repos list
       ansible.builtin.set_fact:
@@ -270,6 +322,18 @@
             _nexus_repos_docker_proxy | default([])
             +
             (nexus_repos_docker_proxy | map('combine', {"format": "docker", "type": "proxy"}) | list)
+          }}
+        _nexus_repos_docker_hosted: >-
+          {{
+            _nexus_repos_docker_hosted | default([])
+            +
+            (nexus_repos_docker_hosted | map('combine', {"format": "docker", "type": "hosted"}) | list)
+          }}
+        _nexus_repos_docker_group: >-
+          {{
+            _nexus_repos_docker_group | default([])
+            +
+            (nexus_repos_docker_group | map('combine', {"format": "docker", "type": "group"}) | list)
           }}
 
 # - name: Process definitions for pypi
