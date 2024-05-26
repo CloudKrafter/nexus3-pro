@@ -151,6 +151,7 @@
         call_args: "{{ _nexus_repos_global_list | d([]) }}"
       when: not nexus_use_api_for_provisioning | default(false) | bool
 
+    # TODO: add support to passthrough type and format
     - name: Create configured repositories using Nexus API
       ansible.builtin.include_tasks: create_repos.yml
       vars:
