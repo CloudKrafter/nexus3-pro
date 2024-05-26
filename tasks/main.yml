@@ -208,6 +208,8 @@
         - "{{ _nexus_repos_r_group }}"
         - "{{ _nexus_repos_p2_proxy }}"
         - "{{ _nexus_repos_conda_proxy }}"
+        - "{{ _nexus_repos_go_proxy }}"
+        - "{{ _nexus_repos_go_group }}"
         - "{{ _nexus_repos_conan_proxy }}"
         - "{{ _nexus_repos_cocoapods_proxy }}"
       when: nexus_use_api_for_provisioning | default(false) | bool
