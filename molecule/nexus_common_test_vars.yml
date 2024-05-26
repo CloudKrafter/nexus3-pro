@@ -554,7 +554,7 @@ nexus_repos_nuget_group:
     blob_store: "{{ nexus_blob_names.nuget.blob }}"
     member_repos:
       - nuget-internal
-      - nuget-proxy
+      - nuget-proxy-with-version
 
 nexus_repos_nuget_proxy:
   - name: nuget-proxy-with-version
