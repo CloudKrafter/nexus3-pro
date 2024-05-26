@@ -540,6 +540,11 @@ nexus_repos_go_proxy:
   - name: go-proxy
     remote_url: https://golang.org/pkg/
 
+nexus_repos_go_group:
+  - name: go-all
+    member_repos:
+      - go-proxy
+
 nexus_repos_nuget_hosted:
   - name: nuget-internal
     blob_store: "{{ nexus_blob_names.nuget.blob }}"
