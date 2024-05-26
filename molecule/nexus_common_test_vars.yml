@@ -459,6 +459,24 @@ nexus_repos_apt_proxy:
     maximum_metadata_age: -1
     negative_cache_ttl: 60
 
+nexus_repos_raw_proxy:
+  - name: raw-proxy
+    remote_url: https://raw.githubusercontent.com/
+    negative_cache_enabled: false
+    enable_circular_redirects: true
+    enable_cookies: true
+    connection_timeout: 300
+    connection_retries: 5
+
+nexus_repos_raw_hosted:
+  - name: raw-hosted
+    write_policy: allow
+
+nexus_repos_raw_group:
+  - name: raw-all
+    member_repos:
+      - raw-hosted
+      - raw-proxy
 nexus_repos_bower_proxy:
   - name: bower-proxy
     remote_url: https://bower.herokuapp.com/
