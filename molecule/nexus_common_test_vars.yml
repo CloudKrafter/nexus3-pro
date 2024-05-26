@@ -257,11 +257,25 @@ nexus_repos_maven_group:
     layout_policy: permissive
     version_policy: mixed
 
-nexus_repos_npm_hosted: []
+nexus_repos_npm_hosted:
+  - name: npm-registry-hosted
+    http_port: "5000"
+    force_basic_auth: true
+    v1_enabled: true
+    write_policy: allow
+  - name: npm-registry-blocked-hosted
+    http_port: "5001"
+    force_basic_auth: true
+    v1_enabled: true
+    write_policy: deny
+    blocked: true
+    auto_block: false
 nexus_repos_npm_group:
   - name: npm-public
     member_repos:
       - npm-registry
+      - npm-registry-blocked
+      - npm-registry-hosted
 nexus_repos_npm_proxy:
   - name: npm-registry
     remote_url: https://registry.npmjs.org/
