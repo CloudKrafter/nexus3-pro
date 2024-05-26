@@ -290,6 +290,10 @@ nexus_repos_npm_proxy:
     auto_block: false
     user_agent_suffix: custom-agent
 
+nexus_repos_gitlfs_hosted:
+  - name: gitlfs-hosted
+    write_policy: allow
+
 nexus_repos_yum_hosted:
   - name: private_yum_centos_7
     repodata_depth: 1
