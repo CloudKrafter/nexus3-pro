@@ -1,18 +1,4 @@
 ---
-- name: Get all existing repositories
-  ansible.builtin.uri:
-    url: "{{ nexus_api_scheme }}://{{ nexus_api_hostname }}:{{ nexus_api_port }}{{ nexus_api_context_path }}service/rest/v1/repositories"
-    user: admin
-    password: "{{ current_nexus_admin_password }}"
-    method: GET
-    force_basic_auth: true
-    validate_certs: "{{ nexus_api_validate_certs }}"
-    body_format: json
-    return_content: yes
-    status_code: 200
-  register: __nexus_existing_repos__
-  tags: provision-api
-
 - name: Create repositories
   ansible.builtin.uri:
     url: "{{ nexus_api_scheme }}://{{ nexus_api_hostname }}:{{ nexus_api_port }}{{ nexus_api_context_path }}service/rest/v1/repositories/{{ repo.format }}/{{ repo.type}}"

@@ -151,7 +151,21 @@
         call_args: "{{ _nexus_repos_global_list | d([]) }}"
       when: not nexus_use_api_for_provisioning | default(false) | bool
 
-    # TODO: add support to passthrough type and format
+    - name: Get all existing repositories
+      ansible.builtin.uri:
+        url: "{{ nexus_api_scheme }}://{{ nexus_api_hostname }}:{{ nexus_api_port }}{{ nexus_api_context_path }}service/rest/v1/repositories"
+        user: admin
+        password: "{{ current_nexus_admin_password }}"
+        method: GET
+        force_basic_auth: true
+        validate_certs: "{{ nexus_api_validate_certs }}"
+        body_format: json
+        return_content: yes
+        status_code: 200
+      register: __nexus_existing_repos__
+      tags: provision-api
+      when: nexus_use_api_for_provisioning | default(false) | bool
+
     - name: Create configured repositories using Nexus API
       ansible.builtin.include_tasks: create_repos.yml
       vars:
