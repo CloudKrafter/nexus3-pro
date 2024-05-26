@@ -720,8 +720,20 @@
     dest: "{{ nexus_download_dir }}/_nexus_repos_global_list_api_{{ nexus_use_api_for_provisioning }}.json"
   when: not nexus_use_api_for_provisioning | default(false) | bool
 
-- name: Write nexus_repos_maven_proxy to file
+- name: Write _nexus_repos_maven_proxy to file
   ansible.builtin.copy:
-    content: "{{ nexus_repos_maven_proxy | to_nice_json }}"
+    content: "{{ _nexus_repos_maven_proxy | to_nice_json }}"
     dest: "{{ nexus_download_dir }}/nexus_repos_maven_proxy.json"
+  when: nexus_use_api_for_provisioning | default(false) | bool
+
+- name: Write _nexus_repos_maven_hosted to file
+  ansible.builtin.copy:
+    content: "{{ _nexus_repos_maven_hosted | to_nice_json }}"
+    dest: "{{ nexus_download_dir }}/nexus_repos_maven_hosted.json"
+  when: nexus_use_api_for_provisioning | default(false) | bool
+
+- name: Write _nexus_repos_maven_group to file
+  ansible.builtin.copy:
+    content: "{{ _nexus_repos_maven_group | to_nice_json }}"
+    dest: "{{ nexus_download_dir }}/nexus_repos_maven_group.json"
   when: nexus_use_api_for_provisioning | default(false) | bool
