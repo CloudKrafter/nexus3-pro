@@ -790,54 +790,157 @@
 #   when: nexus_config_conda | bool
 #   block:
 #     - name: Apply defaults to conda proxy repos
-#       ansible.builtin.set_fact:
-#         nexus_repos_r_proxy: >-
-#           {%- set result = [] -%}
-#           {%- for repo in nexus_repos_conda_proxy -%}
-#             {{ result.append(_nexus_repos_conda_defaults | combine(repo)) }}
-#           {%- endfor -%}
-#           {{ result | to_json | from_json }}
+- name: Process definitions for bower repositories
+  when: nexus_config_bower | bool
+  block:
+    - name: Apply defaults to bower proxy repos
+      ansible.builtin.set_fact:
+        nexus_repos_bower_proxy: >-
+          {%- set result = [] -%}
+          {%- for repo in nexus_repos_bower_proxy -%}
+            {%- set combined_repo = _nexus_repos_bower_defaults | combine(repo) -%}
+            {%- set authentication = {
+                'type': combined_repo.remote_auth_type | default('username'),
+                'username': combined_repo.remote_username | default('username'),
+                'password': combined_repo.remote_password | default('password'),
+                'ntlmHost': combined_repo.ntlm_host | default(omit),
+                'ntlmDomain': combined_repo.ntlm_domain | default(omit),
+                'preemptive': combined_repo.preemptive | default(omit)
+            } if combined_repo.remote_auth_type is defined or combined_repo.remote_username is defined else omit -%}
+            {%- set transformed_repo = {
+              'name': combined_repo.name,
+              'online': combined_repo.online | default(true),
+              'storage': {
+                'blobStoreName': combined_repo.blob_store | default('default'),
+                'strictContentTypeValidation': combined_repo.strict_content_validation | default(omit)
+              },
+              'cleanup': {
+                'policyNames': combined_repo.cleanup_policies | default([])
+              },
+              'proxy': {
+                'remoteUrl': combined_repo.remote_url | default(omit),
+                'contentMaxAge': combined_repo.maximum_component_age | default(omit),
+                'metadataMaxAge': combined_repo.maximum_metadata_age | default(omit)
+              },
+              'negativeCache': {
+                'enabled': combined_repo.negative_cache_enabled | default(omit),
+                'timeToLive': combined_repo.negative_cache_ttl | default(omit)
+              },
+              'httpClient': {
+                'blocked': combined_repo.blocked | default(false),
+                'autoBlock': combined_repo.auto_block | default(true),
+                'connection': {
+                  'retries': combined_repo.connection_retries | default(omit),
+                  'useTrustStore': combined_repo.use_trust_store | default(omit),
+                  'userAgentSuffix': combined_repo.user_agent_suffix | default(omit),
+                  'timeout': combined_repo.connection_timeout | default(omit),
+                  'enableCircularRedirects': combined_repo.enable_circular_redirects | default(omit),
+                  'enableCookies': combined_repo.enable_cookies | default(omit)
+                },
+                'authentication': authentication | default(omit)
+              },
+              'replication': {
+                'preemptivePullEnabled': combined_repo.replication_preemptive_pull_enabled | default(omit),
+                'assetPathRegex': combined_repo.replication_asset_path_regex | default(omit)
+              },
+              'routingRule': combined_repo.routing_rule | default(omit),
+              'bower': {
+                'rewritePackageUrls': combined_repo.rewrite_package_urls | default(true)
+              }
+            } -%}
+            {%- if use_api -%}
+              {{ result.append(transformed_repo) }}
+            {%- else -%}
+              {{ result.append(combined_repo) }}
+            {%- endif -%}
+          {%- endfor -%}
+          {{ result | to_json | from_json }}
 
-#     - name: Add conda repositories to global repos list
-#       ansible.builtin.set_fact:
-#         _nexus_repos_global_list: >-
-#           {{
-#             _nexus_repos_global_list | default([])
-#             +
-#             (nexus_repos_r_proxy | map('combine', {"format": "conda", "type": "proxy"}) | list)
-#           }}
+    - name: Apply defaults to bower hosted repos
+      ansible.builtin.set_fact:
+        nexus_repos_bower_hosted: >-
+          {%- set result = [] -%}
+          {%- for repo in nexus_repos_bower_hosted -%}
+            {%- set combined_repo = _nexus_repos_bower_defaults | combine(repo) -%}
+            {%- set transformed_repo = {
+              'name': combined_repo.name,
+              'online': combined_repo.online | default(true),
+              'storage': {
+                'blobStoreName': combined_repo.blob_store | default('default'),
+                'strictContentTypeValidation': combined_repo.strict_content_validation | default(omit),
+                'writePolicy': combined_repo.write_policy | default('ALLOW_ONCE') | upper
+              },
+              'cleanup': {
+                'policyNames': combined_repo.cleanup_policies | default([])
+              },
+              'component': {
+                'proprietaryComponents': true
+              }
+            } -%}
+            {%- if use_api -%}
+              {{ result.append(transformed_repo) }}
+            {%- else -%}
+              {{ result.append(combined_repo) }}
+            {%- endif -%}
+          {%- endfor -%}
+          {{ result | to_json | from_json }}
 
-# - name: Process definitions for go repositories
-#   when: nexus_config_go | bool
-#   block:
-#     - name: Apply defaults to go proxy repos
-#       ansible.builtin.set_fact:
-#         nexus_repos_go_proxy: >-
-#           {%- set result = [] -%}
-#           {%- for repo in nexus_repos_go_proxy -%}
-#             {{ result.append(_nexus_repos_go_defaults | combine(repo)) }}
-#           {%- endfor -%}
-#           {{ result | to_json | from_json }}
+    - name: Apply defaults to bower group repos
+      ansible.builtin.set_fact:
+        nexus_repos_bower_group: >-
+          {%- set result = [] -%}
+          {%- for repo in nexus_repos_bower_group -%}
+            {%- set combined_repo = _nexus_repos_bower_defaults | combine(repo) -%}
+            {%- set transformed_repo = {
+              'name': combined_repo.name,
+              'online': combined_repo.online | default(true),
+              'storage': {
+                'blobStoreName': combined_repo.blob_store | default('default'),
+                'strictContentTypeValidation': combined_repo.strict_content_validation | default(omit)
+              },
+              'group': {
+                'memberNames': combined_repo.member_repos | default([])
+              }
+            } -%}
+            {%- if use_api -%}
+              {{ result.append(transformed_repo) }}
+            {%- else -%}
+              {{ result.append(combined_repo) }}
+            {%- endif -%}
+          {%- endfor -%}
+          {{ result | to_json | from_json }}
 
-#     - name: Apply defaults to go group repos
-#       ansible.builtin.set_fact:
-#         nexus_repos_go_group: >-
-#           {%- set result = [] -%}
-#           {%- for repo in nexus_repos_go_group -%}
-#             {{ result.append(_nexus_repos_go_defaults | combine(repo)) }}
-#           {%- endfor -%}
-#           {{ result | to_json | from_json }}
+    - name: Add bower repositories to global repos list
+      ansible.builtin.set_fact:
+        _nexus_repos_global_list: >-
+          {{
+            _nexus_repos_global_list | default([])
+            +
+            (nexus_repos_bower_proxy | map('combine', {"format": "bower", "type": "proxy"}) | list)
+            +
+            (nexus_repos_bower_hosted | map('combine', {"format": "bower", "type": "hosted"}) | list)
+            +
+            (nexus_repos_bower_group | map('combine', {"format": "bower", "type": "group"}) | list)
+          }}
+        _nexus_repos_bower_proxy: >-
+          {{
+            _nexus_repos_bower_proxy | default([])
+            +
+            (nexus_repos_bower_proxy | map('combine', {"format": "bower", "type": "proxy"}) | list)
+          }}
+        _nexus_repos_bower_hosted: >-
+          {{
+            _nexus_repos_bower_hosted | default([])
+            +
+            (nexus_repos_bower_hosted | map('combine', {"format": "bower", "type": "hosted"}) | list)
+          }}
+        _nexus_repos_bower_group: >-
+          {{
+            _nexus_repos_bower_group | default([])
+            +
+            (nexus_repos_bower_group | map('combine', {"format": "bower", "type": "group"}) | list)
+          }}
 
-#     - name: Add go repositories to global repos list
-#       ansible.builtin.set_fact:
-#         _nexus_repos_global_list: >-
-#           {{
-#             _nexus_repos_global_list | default([])
-#             +
-#             (nexus_repos_go_proxy | map('combine', {"format": "go", "type": "proxy"}) | list)
-#             +
-#             (nexus_repos_go_group | map('combine', {"format": "go", "type": "group"}) | list)
-#           }}
 - name: Process definitions for cocoapods repositories
   when: nexus_config_cocoapods | bool
   block:

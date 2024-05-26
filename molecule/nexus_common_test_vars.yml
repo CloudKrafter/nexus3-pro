@@ -38,6 +38,7 @@ nexus_config_r: true
 nexus_config_conda: true
 nexus_config_conan: true
 nexus_config_go: true
+nexus_config_bower: true
 nexus_config_cocoapods: true
 
 nexus_anonymous_access: true
@@ -395,6 +396,20 @@ nexus_repos_apt_proxy:
     maximum_component_age: -1
     maximum_metadata_age: -1
     negative_cache_ttl: 60
+
+nexus_repos_bower_proxy:
+  - name: bower-proxy
+    remote_url: https://bower.herokuapp.com/
+
+nexus_repos_bower_hosted:
+  - name: bower-hosted
+    write_policy: allow
+
+nexus_repos_bower_group:
+  - name: bower-all
+    member_repos:
+      - bower-hosted
+      - bower-proxy
 
 nexus_repos_helm_hosted:
   - name: helm-hosted
