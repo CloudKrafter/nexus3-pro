@@ -36,6 +36,7 @@ nexus_config_apt: true
 nexus_config_helm: true
 nexus_config_r: true
 nexus_config_conda: true
+nexus_config_conan: true
 nexus_config_go: true
 nexus_config_cocoapods: true
 
@@ -420,6 +421,10 @@ nexus_repos_r_group:
 nexus_repos_conda_proxy:
   - name: conda-proxy
     remote_url: https://repo.continuum.io/pkgs/
+
+nexus_repos_conan_proxy:
+  - name: conan-proxy
+    remote_url: https://api.bintray.com/conan/conan-community/conan
 
 nexus_repos_go_proxy:
   - name: go-proxy
