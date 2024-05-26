@@ -798,38 +798,6 @@
             (nexus_repos_rubygems_group | map('combine', {"format": "rubygems", "type": "group"}) | list)
           }}
 
-#             (nexus_repos_r_proxy | map('combine', {"format": "r", "type": "proxy"}) | list)
-#             +
-#             (nexus_repos_r_hosted | map('combine', {"format": "r", "type": "hosted"}) | list)
-#             +
-#             (nexus_repos_r_group | map('combine', {"format": "r", "type": "group"}) | list)
-#           }}
-
-# - name: Process definitions for p2 repositories
-#   when: nexus_config_p2 | bool
-#   block:
-#     - name: Apply defaults to p2 proxy repos
-#       ansible.builtin.set_fact:
-#         nexus_repos_p2_proxy: >-
-#           {%- set result = [] -%}
-#           {%- for repo in nexus_repos_p2_proxy -%}
-#             {{ result.append(_nexus_repos_p2_defaults | combine(repo)) }}
-#           {%- endfor -%}
-#           {{ result | to_json | from_json }}
-
-#     - name: Add p2 repositories to global repos list
-#       ansible.builtin.set_fact:
-#         _nexus_repos_global_list: >-
-#           {{
-#             _nexus_repos_global_list | default([])
-#             +
-#             (nexus_repos_p2_proxy | map('combine', {"format": "p2", "type": "proxy"}) | list)
-#           }}
-
-# - name: Process definitions for conda
-#   when: nexus_config_conda | bool
-#   block:
-#     - name: Apply defaults to conda proxy repos
 - name: Process definitions for bower repositories
   when: nexus_config_bower | bool
   block:
@@ -2036,6 +2004,7 @@
             +
             (nexus_repos_conda_proxy | map('combine', {"format": "conda", "type": "proxy"}) | list)
           }}
+
 - name: Process definitions for cocoapods repositories
   when: nexus_config_cocoapods | bool
   block:
