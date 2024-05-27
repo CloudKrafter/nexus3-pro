@@ -2271,34 +2271,3 @@
             +
             (nexus_repos_go_group | map('combine', {"format": "go", "type": "group"}) | list)
           }}
-
-# write _nexus_repos_global_list to file for inspection
-- name: Write _nexus_repos_global_list to file
-  ansible.builtin.copy:
-    content: "{{ _nexus_repos_global_list | to_nice_json }}"
-    dest: "{{ nexus_download_dir }}/_nexus_repos_global_list_api_{{ nexus_use_api_for_provisioning }}.json"
-  when: not nexus_use_api_for_provisioning | default(false) | bool
-
-- name: Write _nexus_repos_maven_proxy to file
-  ansible.builtin.copy:
-    content: "{{ _nexus_repos_maven_proxy | to_nice_json }}"
-    dest: "{{ nexus_download_dir }}/nexus_repos_maven_proxy.json"
-  when: nexus_use_api_for_provisioning | default(false) | bool
-
-- name: Write _nexus_repos_maven_hosted to file
-  ansible.builtin.copy:
-    content: "{{ _nexus_repos_maven_hosted | to_nice_json }}"
-    dest: "{{ nexus_download_dir }}/nexus_repos_maven_hosted.json"
-  when: nexus_use_api_for_provisioning | default(false) | bool
-
-- name: Write _nexus_repos_maven_group to file
-  ansible.builtin.copy:
-    content: "{{ _nexus_repos_maven_group | to_nice_json }}"
-    dest: "{{ nexus_download_dir }}/nexus_repos_maven_group.json"
-  when: nexus_use_api_for_provisioning | default(false) | bool
-
-- name: Write _nexus_repos_docker_proxy to file
-  ansible.builtin.copy:
-    content: "{{ _nexus_repos_docker_proxy | to_nice_json }}"
-    dest: "{{ nexus_download_dir }}/nexus_repos_docker_proxy.json"
-  when: nexus_use_api_for_provisioning | default(false) | bool
