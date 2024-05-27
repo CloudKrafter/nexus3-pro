@@ -10,7 +10,6 @@
     body_format: json
     body: "{{ repo }}"
     status_code: 201
-  tags: provision-api
   loop: "{{ api_payload }}"
   loop_control:
     loop_var: repo
@@ -30,5 +29,4 @@
   loop: "{{ api_payload }}"
   loop_control:
     loop_var: repo
-  tags: provision-api
   when: repo.name in __nexus_existing_repos__.json | map(attribute='name') | list
