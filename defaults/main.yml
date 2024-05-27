@@ -217,6 +217,7 @@ nexus_config_p2: false
 nexus_config_conda: false
 nexus_config_go: false
 nexus_config_cocoapods: false
+nexus_config_conan: false
 
 nexus_content_selectors: []
 # example selector item :
