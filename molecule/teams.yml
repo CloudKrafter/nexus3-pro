@@ -21,8 +21,12 @@ teams:
           - name: raw-repo1
             format: raw
         proxy:
-          - name: proxy-repo1
+          - name: mvn-proxy-repo1
             format: maven2
+          - name: yum-proxy-repo1
+            format: yum
+          # - name: docker-proxy-repo1
+          #   format: docker
         group:
           - name: group-repo-1
             members:

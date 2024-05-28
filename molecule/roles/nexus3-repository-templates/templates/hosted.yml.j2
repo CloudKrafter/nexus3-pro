@@ -9,7 +9,6 @@ nexus_repos_{{ key }}_hosted:
 {% endif %}
 {% endif %}
   - name: {{ team_hosted_repo.name }}
-    recipeName: {{ key }}
     online: {{ team_hosted_repo.online if team_hosted_repo.online is defined else value.online }}
     blob_store: {{ team_hosted_repo.blob_store if team_hosted_repo.blob_store is defined else value.blob_store }}
     layout_policy: {{ team_hosted_repo.layout_policy if team_hosted_repo.layout_policy is defined else value.layout_policy }}
@@ -21,7 +20,7 @@ nexus_repos_{{ key }}_hosted:
 {% endfor %}
 {% else %}
 {% for policy in value.cleanup_policies %}
-    - {{ policy }}
+      - {{ policy }}
 {% endfor %}
 {% endif %}
 {% if key == 'apt' %}
