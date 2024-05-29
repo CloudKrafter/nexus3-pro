@@ -27,8 +27,8 @@ teams:
             format: maven2
           - name: yum-proxy-repo1
             format: yum
-          # - name: docker-proxy-repo1
-          #   format: docker
+          - name: docker-proxy-repo1
+            format: docker
         group:
           - name: group-repo-1
             members:
@@ -158,8 +158,6 @@ hosted_defaults:
 
 proxy_defaults:
   maven2:
-    name: maven-central
-    format: maven2
     online: true
     blocked: false
     auto_block: true
@@ -186,27 +184,24 @@ proxy_defaults:
     cleanup_policies:
       - mvn_cleanup
   docker:
-    name: maven-central
-    format: maven2
     online: true
     blocked: false
     auto_block: true
-    blob_store: blob-mvn
+    blob_store: blob-docker
     strict_content_validation: true
     force_basic_auth: true
     v1_enabled: false
-    http_port: NaN
-    sub_domain: ''
+    http_port:
     remote:
-      url: https://repo.maven.apache.org/maven2
-      username: ''
-      password: ''
+      url: https://registry-1.docker.io
+      username:
+      password:
     connection:
       retries: 5
-      user_agent_suffix: ''
+      user_agent_suffix:
       enable_cookies: false
       enable_circular_redirects: false
-      timeout: ''
+      timeout:
     maximum_component_age: -1
     maximum_metadata_age: 1440
     negative_cache_enabled: true
@@ -215,8 +210,12 @@ proxy_defaults:
     layout_policy: strict
     write_policy: allow_once
     content_disposition: inline
+    index_type: HUB
+    use_nexus_certificates_to_access_index: false
+    cache_foreign_layers: true
+    foreign_layer_url_whitelist: []
     cleanup_policies:
-      - mvn_cleanup
+      - docker_cleanup
   python:
     name: pypi-central
     format: pypi

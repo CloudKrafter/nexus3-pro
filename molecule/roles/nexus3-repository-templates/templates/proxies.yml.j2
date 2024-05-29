@@ -9,7 +9,6 @@ nexus_repos_{{ key }}_proxy:
 {% endif %}
 {% endif %}
   - name: {{ team_proxy_repo.name }}
-    recipeName: {{ key }}
     online: {{ team_proxy_repo.online if team_proxy_repo.online is defined else value.online }}
     blob_store: {{ team_proxy_repo.blob_store if team_proxy_repo.blob_store is defined else value.blob_store }}
     layout_policy: {{ team_proxy_repo.layout_policy if team_proxy_repo.layout_policy is defined else value.layout_policy }}
@@ -37,7 +36,7 @@ nexus_repos_{{ key }}_proxy:
 {% endfor %}
 {% else %}
 {% for policy in value.cleanup_policies %}
-    - {{ policy }}
+      - {{ policy }}
 {% endfor %}
 {% endif %}
 {% if key == 'apt' %}
@@ -49,7 +48,11 @@ nexus_repos_{{ key }}_proxy:
     force_basic_auth: {{ team_proxy_repo.force_basic_auth if team_proxy_repo.force_basic_auth is defined else value.force_basic_auth }}
     v1_enabled: {{ team_proxy_repo.v1_enabled if team_proxy_repo.v1_enabled is defined else value.v1_enabled }}
     http_port: {{ team_proxy_repo.http_port if team_proxy_repo.http_port is defined else value.http_port }}
-    sub_domain: {{ team_proxy_repo.sub_domain if team_proxy_repo.sub_domain is defined else value.sub_domain }}
+{# sub_domain: {{ team_proxy_repo.sub_domain if team_proxy_repo.sub_domain is defined else value.sub_domain }} #}
+    index_type: {{ team_proxy_repo.index_type if team_proxy_repo.index_type is defined else value.index_type }}
+    use_nexus_certificates_to_access_index: {{ team_proxy_repo.use_nexus_certificates_to_access_index if team_proxy_repo.use_nexus_certificates_to_access_index is defined else value.use_nexus_certificates_to_access_index }}
+    cache_foreign_layers: {{ team_proxy_repo.cache_foreign_layers if team_proxy_repo.cache_foreign_layers is defined else value.cache_foreign_layers }}
+    foreign_layer_url_whitelist: {{ team_proxy_repo.foreign_layer_url_whitelist if team_proxy_repo.foreign_layer_url_whitelist is defined else value.foreign_layer_url_whitelist }}
 {% endif %}
 {% if key == 'raw' %}
     contentDisposition: {{ team_proxy_repo.contentDisposition if team_proxy_repo.contentDisposition is defined else value.contentDisposition }}

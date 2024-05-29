@@ -302,8 +302,3 @@
   ansible.builtin.include_tasks: migrate_database.yml
   tags: nexus-migrate, nexus-healthcheck
   when: nexus_migrate_database | default(false) | bool
-
-- name: Transform default proxies to yml
-  ansible.builtin.include_tasks: create_proxy_defaults.yml
-  tags: transform
-  when: nexus_transform | default(false) | bool
