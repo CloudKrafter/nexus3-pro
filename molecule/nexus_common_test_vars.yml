@@ -236,6 +236,7 @@ nexus_repos_maven_proxy:
 nexus_repos_maven_hosted:
   - name: private-release-cleanup-mvn-cleanup
     version_policy: release
+    proprietary_components: false
     write_policy: allow_once # one of "allow", "allow_once" or "deny"
     cleanup_policies:
       - mvn_cleanup
@@ -259,6 +260,7 @@ nexus_repos_maven_group:
 
 nexus_repos_npm_hosted:
   - name: npm-registry-hosted
+    proprietary_components: false
     http_port: "5000"
     force_basic_auth: true
     v1_enabled: true
@@ -267,6 +269,7 @@ nexus_repos_npm_hosted:
     http_port: "5001"
     force_basic_auth: true
     v1_enabled: true
+    proprietary_components: true
     write_policy: deny
     blocked: true
     auto_block: false
@@ -360,6 +363,7 @@ nexus_repos_pypi_group:
 nexus_repos_apt_hosted:
   - name: private_apt
     distribution: all
+    proprietary_components: false
     keypair: |-
       -----BEGIN PGP PRIVATE KEY BLOCK-----
 
@@ -471,6 +475,7 @@ nexus_repos_raw_proxy:
 nexus_repos_raw_hosted:
   - name: raw-hosted
     write_policy: allow
+    proprietary_components: false
 
 nexus_repos_raw_group:
   - name: raw-all
@@ -791,5 +796,6 @@ _nexus_repos_maven_defaults:
   maximum_metadata_age: 1440 # Nexus gui default. For proxies only
   negative_cache_enabled: true # Nexus gui default. For proxies only
   negative_cache_ttl: 1440 # Nexus gui default. For proxies only
+  proprietary_components: true
   cleanup_policies:
     - all_cleanup
