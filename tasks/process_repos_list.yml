@@ -37,12 +37,12 @@
               },
               'proxy': {
                 'remoteUrl': combined_repo.remote_url | default(omit),
-                'contentMaxAge': combined_repo.maximum_component_age | default(omit),
-                'metadataMaxAge': combined_repo.maximum_metadata_age | default(omit)
+                'contentMaxAge': combined_repo.maximum_component_age | default(1440),
+                'metadataMaxAge': combined_repo.maximum_metadata_age | default(1440)
               },
               'negativeCache': {
-                'enabled': combined_repo.negative_cache_enabled | default(omit),
-                'timeToLive': combined_repo.negative_cache_ttl | default(omit)
+                'enabled': combined_repo.negative_cache_enabled | default(true),
+                'timeToLive': combined_repo.negative_cache_ttl | default(1440)
               },
               'httpClient': {
                 'blocked': combined_repo.blocked | default(false),
@@ -196,12 +196,12 @@
               },
               'proxy': {
                 'remoteUrl': combined_repo.remote_url | default(omit),
-                'contentMaxAge': combined_repo.maximum_component_age | default(omit),
-                'metadataMaxAge': combined_repo.maximum_metadata_age | default(omit)
+                'contentMaxAge': combined_repo.maximum_component_age | default(1440),
+                'metadataMaxAge': combined_repo.maximum_metadata_age | default(1440)
               },
               'negativeCache': {
-                'enabled': combined_repo.negative_cache_enabled | default(omit),
-                'timeToLive': combined_repo.negative_cache_ttl | default(omit)
+                'enabled': combined_repo.negative_cache_enabled | default(true),
+                'timeToLive': combined_repo.negative_cache_ttl | default(1)
               },
               'httpClient': {
                 'blocked': combined_repo.blocked | default(false),
@@ -373,12 +373,12 @@
               },
               'proxy': {
                 'remoteUrl': combined_repo.remote_url | default(omit),
-                'contentMaxAge': combined_repo.maximum_component_age | default(omit),
-                'metadataMaxAge': combined_repo.maximum_metadata_age | default(omit)
+                'contentMaxAge': combined_repo.maximum_component_age | default(1440),
+                'metadataMaxAge': combined_repo.maximum_metadata_age | default(1440)
               },
               'negativeCache': {
-                'enabled': combined_repo.negative_cache_enabled | default(omit),
-                'timeToLive': combined_repo.negative_cache_ttl | default(omit)
+                'enabled': combined_repo.negative_cache_enabled | default(true),
+                'timeToLive': combined_repo.negative_cache_ttl | default(1440)
               },
               'httpClient': {
                 'blocked': combined_repo.blocked | default(false),
@@ -525,12 +525,12 @@
               },
               'proxy': {
                 'remoteUrl': combined_repo.remote_url | default(omit),
-                'contentMaxAge': combined_repo.maximum_component_age | default(omit),
-                'metadataMaxAge': combined_repo.maximum_metadata_age | default(omit)
+                'contentMaxAge': combined_repo.maximum_component_age | default(1440),
+                'metadataMaxAge': combined_repo.maximum_metadata_age | default(1440)
               },
               'negativeCache': {
-                'enabled': combined_repo.negative_cache_enabled | default(omit),
-                'timeToLive': combined_repo.negative_cache_ttl | default(omit)
+                'enabled': combined_repo.negative_cache_enabled | default(true),
+                'timeToLive': combined_repo.negative_cache_ttl | default(1440)
               },
               'httpClient': {
                 'blocked': combined_repo.blocked | default(false),
@@ -679,12 +679,12 @@
               },
               'proxy': {
                 'remoteUrl': combined_repo.remote_url | default(omit),
-                'contentMaxAge': combined_repo.maximum_component_age | default(omit),
-                'metadataMaxAge': combined_repo.maximum_metadata_age | default(omit)
+                'contentMaxAge': combined_repo.maximum_component_age | default(1440),
+                'metadataMaxAge': combined_repo.maximum_metadata_age | default(1440)
               },
               'negativeCache': {
-                'enabled': combined_repo.negative_cache_enabled | default(omit),
-                'timeToLive': combined_repo.negative_cache_ttl | default(omit)
+                'enabled': combined_repo.negative_cache_enabled | default(true),
+                'timeToLive': combined_repo.negative_cache_ttl | default(1440)
               },
               'httpClient': {
                 'blocked': combined_repo.blocked | default(false),
@@ -827,12 +827,12 @@
               },
               'proxy': {
                 'remoteUrl': combined_repo.remote_url | default(omit),
-                'contentMaxAge': combined_repo.maximum_component_age | default(omit),
-                'metadataMaxAge': combined_repo.maximum_metadata_age | default(omit)
+                'contentMaxAge': combined_repo.maximum_component_age | default(1440),
+                'metadataMaxAge': combined_repo.maximum_metadata_age | default(1440)
               },
               'negativeCache': {
-                'enabled': combined_repo.negative_cache_enabled | default(omit),
-                'timeToLive': combined_repo.negative_cache_ttl | default(omit)
+                'enabled': combined_repo.negative_cache_enabled | default(true),
+                'timeToLive': combined_repo.negative_cache_ttl | default(1440)
               },
               'httpClient': {
                 'blocked': combined_repo.blocked | default(false),
@@ -978,12 +978,12 @@
               },
               'proxy': {
                 'remoteUrl': combined_repo.remote_url | default(omit),
-                'contentMaxAge': combined_repo.maximum_component_age | default(omit),
-                'metadataMaxAge': combined_repo.maximum_metadata_age | default(omit)
+                'contentMaxAge': combined_repo.maximum_component_age | default(1440),
+                'metadataMaxAge': combined_repo.maximum_metadata_age | default(1440)
               },
               'negativeCache': {
-                'enabled': combined_repo.negative_cache_enabled | default(omit),
-                'timeToLive': combined_repo.negative_cache_ttl | default(omit)
+                'enabled': combined_repo.negative_cache_enabled | default(true),
+                'timeToLive': combined_repo.negative_cache_ttl | default(1440)
               },
               'httpClient': {
                 'blocked': combined_repo.blocked | default(false),
@@ -1130,12 +1130,12 @@
               },
               'proxy': {
                 'remoteUrl': combined_repo.remote_url | default(omit),
-                'contentMaxAge': combined_repo.maximum_component_age | default(omit),
-                'metadataMaxAge': combined_repo.maximum_metadata_age | default(omit)
+                'contentMaxAge': combined_repo.maximum_component_age | default(1440),
+                'metadataMaxAge': combined_repo.maximum_metadata_age | default(1440)
               },
               'negativeCache': {
-                'enabled': combined_repo.negative_cache_enabled | default(omit),
-                'timeToLive': combined_repo.negative_cache_ttl | default(omit)
+                'enabled': combined_repo.negative_cache_enabled | default(true),
+                'timeToLive': combined_repo.negative_cache_ttl | default(1440)
               },
               'httpClient': {
                 'blocked': combined_repo.blocked | default(false),
@@ -1329,12 +1329,12 @@
               },
               'proxy': {
                 'remoteUrl': combined_repo.remote_url | default(omit),
-                'contentMaxAge': combined_repo.maximum_component_age | default(omit),
-                'metadataMaxAge': combined_repo.maximum_metadata_age | default(omit)
+                'contentMaxAge': combined_repo.maximum_component_age | default(1440),
+                'metadataMaxAge': combined_repo.maximum_metadata_age | default(1440)
               },
               'negativeCache': {
-                'enabled': combined_repo.negative_cache_enabled | default(omit),
-                'timeToLive': combined_repo.negative_cache_ttl | default(omit)
+                'enabled': combined_repo.negative_cache_enabled | default(true),
+                'timeToLive': combined_repo.negative_cache_ttl | default(1440)
               },
               'httpClient': {
                 'blocked': combined_repo.blocked | default(false),
@@ -1489,12 +1489,12 @@
               },
               'proxy': {
                 'remoteUrl': combined_repo.remote_url | default(omit),
-                'contentMaxAge': combined_repo.maximum_component_age | default(omit),
-                'metadataMaxAge': combined_repo.maximum_metadata_age | default(omit)
+                'contentMaxAge': combined_repo.maximum_component_age | default(1440),
+                'metadataMaxAge': combined_repo.maximum_metadata_age | default(1440)
               },
               'negativeCache': {
-                'enabled': combined_repo.negative_cache_enabled | default(omit),
-                'timeToLive': combined_repo.negative_cache_ttl | default(omit)
+                'enabled': combined_repo.negative_cache_enabled | default(true),
+                'timeToLive': combined_repo.negative_cache_ttl | default(1440)
               },
               'httpClient': {
                 'blocked': combined_repo.blocked | default(false),
@@ -1615,12 +1615,12 @@
               },
               'proxy': {
                 'remoteUrl': combined_repo.remote_url | default(omit),
-                'contentMaxAge': combined_repo.maximum_component_age | default(omit),
-                'metadataMaxAge': combined_repo.maximum_metadata_age | default(omit)
+                'contentMaxAge': combined_repo.maximum_component_age | default(1440),
+                'metadataMaxAge': combined_repo.maximum_metadata_age | default(1440)
               },
               'negativeCache': {
-                'enabled': combined_repo.negative_cache_enabled | default(omit),
-                'timeToLive': combined_repo.negative_cache_ttl | default(omit)
+                'enabled': combined_repo.negative_cache_enabled | default(true),
+                'timeToLive': combined_repo.negative_cache_ttl | default(1440)
               },
               'httpClient': {
                 'blocked': combined_repo.blocked | default(false),
@@ -1730,12 +1730,12 @@
               },
               'proxy': {
                 'remoteUrl': combined_repo.remote_url | default(omit),
-                'contentMaxAge': combined_repo.maximum_component_age | default(omit),
-                'metadataMaxAge': combined_repo.maximum_metadata_age | default(omit)
+                'contentMaxAge': combined_repo.maximum_component_age | default(1440),
+                'metadataMaxAge': combined_repo.maximum_metadata_age | default(1440)
               },
               'negativeCache': {
-                'enabled': combined_repo.negative_cache_enabled | default(omit),
-                'timeToLive': combined_repo.negative_cache_ttl | default(omit)
+                'enabled': combined_repo.negative_cache_enabled | default(true),
+                'timeToLive': combined_repo.negative_cache_ttl | default(1440)
               },
               'httpClient': {
                 'blocked': combined_repo.blocked | default(false),
@@ -1878,12 +1878,12 @@
               },
               'proxy': {
                 'remoteUrl': combined_repo.remote_url | default(omit),
-                'contentMaxAge': combined_repo.maximum_component_age | default(omit),
-                'metadataMaxAge': combined_repo.maximum_metadata_age | default(omit)
+                'contentMaxAge': combined_repo.maximum_component_age | default(1440),
+                'metadataMaxAge': combined_repo.maximum_metadata_age | default(1440)
               },
               'negativeCache': {
-                'enabled': combined_repo.negative_cache_enabled | default(omit),
-                'timeToLive': combined_repo.negative_cache_ttl | default(omit)
+                'enabled': combined_repo.negative_cache_enabled | default(true),
+                'timeToLive': combined_repo.negative_cache_ttl | default(1440)
               },
               'httpClient': {
                 'blocked': combined_repo.blocked | default(false),
@@ -1956,12 +1956,12 @@
               },
               'proxy': {
                 'remoteUrl': combined_repo.remote_url | default(omit),
-                'contentMaxAge': combined_repo.maximum_component_age | default(omit),
-                'metadataMaxAge': combined_repo.maximum_metadata_age | default(omit)
+                'contentMaxAge': combined_repo.maximum_component_age | default(1440),
+                'metadataMaxAge': combined_repo.maximum_metadata_age | default(1440)
               },
               'negativeCache': {
-                'enabled': combined_repo.negative_cache_enabled | default(omit),
-                'timeToLive': combined_repo.negative_cache_ttl | default(omit)
+                'enabled': combined_repo.negative_cache_enabled | default(true),
+                'timeToLive': combined_repo.negative_cache_ttl | default(1440)
               },
               'httpClient': {
                 'blocked': combined_repo.blocked | default(false),
@@ -2034,12 +2034,12 @@
               },
               'proxy': {
                 'remoteUrl': combined_repo.remote_url | default(omit),
-                'contentMaxAge': combined_repo.maximum_component_age | default(omit),
-                'metadataMaxAge': combined_repo.maximum_metadata_age | default(omit)
+                'contentMaxAge': combined_repo.maximum_component_age | default(1440),
+                'metadataMaxAge': combined_repo.maximum_metadata_age | default(1440)
               },
               'negativeCache': {
-                'enabled': combined_repo.negative_cache_enabled | default(omit),
-                'timeToLive': combined_repo.negative_cache_ttl | default(omit)
+                'enabled': combined_repo.negative_cache_enabled | default(true),
+                'timeToLive': combined_repo.negative_cache_ttl | default(1440)
               },
               'httpClient': {
                 'blocked': combined_repo.blocked | default(false),
@@ -2112,12 +2112,12 @@
               },
               'proxy': {
                 'remoteUrl': combined_repo.remote_url | default(omit),
-                'contentMaxAge': combined_repo.maximum_component_age | default(omit),
-                'metadataMaxAge': combined_repo.maximum_metadata_age | default(omit)
+                'contentMaxAge': combined_repo.maximum_component_age | default(1440),
+                'metadataMaxAge': combined_repo.maximum_metadata_age | default(1440)
               },
               'negativeCache': {
-                'enabled': combined_repo.negative_cache_enabled | default(omit),
-                'timeToLive': combined_repo.negative_cache_ttl | default(omit)
+                'enabled': combined_repo.negative_cache_enabled | default(true),
+                'timeToLive': combined_repo.negative_cache_ttl | default(1440)
               },
               'httpClient': {
                 'blocked': combined_repo.blocked | default(false),
@@ -2190,12 +2190,12 @@
               },
               'proxy': {
                 'remoteUrl': combined_repo.remote_url | default(omit),
-                'contentMaxAge': combined_repo.maximum_component_age | default(omit),
-                'metadataMaxAge': combined_repo.maximum_metadata_age | default(omit)
+                'contentMaxAge': combined_repo.maximum_component_age | default(1440),
+                'metadataMaxAge': combined_repo.maximum_metadata_age | default(1440)
               },
               'negativeCache': {
-                'enabled': combined_repo.negative_cache_enabled | default(omit),
-                'timeToLive': combined_repo.negative_cache_ttl | default(omit)
+                'enabled': combined_repo.negative_cache_enabled | default(true),
+                'timeToLive': combined_repo.negative_cache_ttl | default(1440)
               },
               'httpClient': {
                 'blocked': combined_repo.blocked | default(false),
