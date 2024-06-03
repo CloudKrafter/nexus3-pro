@@ -223,7 +223,7 @@
               'routingRule': combined_repo.routing_rule | default(omit),
               'docker': {
                 'v1Enabled': combined_repo.v1_enabled | default(false),
-                'forceBasicAuth': combined_repo.force_basic_auth | default(omit),
+                'forceBasicAuth': combined_repo.force_basic_auth | default(false),
                 'httpPort': combined_repo.http_port | default(omit),
                 'httpsPort': combined_repo.https_port | default(omit),
                 'subdomain': combined_repo.sub_domain | default(omit)
@@ -266,7 +266,7 @@
               },
               'docker': {
                 'v1Enabled': combined_repo.v1_enabled | default(false),
-                'forceBasicAuth': combined_repo.force_basic_auth | default(omit),
+                'forceBasicAuth': combined_repo.force_basic_auth | default(false),
                 'httpPort': combined_repo.http_port | default(omit),
                 'httpsPort': combined_repo.https_port | default(omit),
                 'subdomain': combined_repo.sub_domain | default(omit)
@@ -299,7 +299,7 @@
               },
               'docker': {
                 'v1Enabled': combined_repo.v1_enabled | default(false),
-                'forceBasicAuth': combined_repo.force_basic_auth | default(omit),
+                'forceBasicAuth': combined_repo.force_basic_auth | default(false),
                 'httpPort': combined_repo.http_port | default(omit),
                 'httpsPort': combined_repo.https_port | default(omit),
                 'subdomain': combined_repo.sub_domain | default(omit)
