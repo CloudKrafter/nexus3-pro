@@ -29,7 +29,7 @@
               'online': combined_repo.online | default(true),
               'storage': {
                 'blobStoreName': combined_repo.blob_store | default('default'),
-                'strictContentTypeValidation': combined_repo.strict_content_validation | default(omit),
+                'strictContentTypeValidation': combined_repo.strict_content_validation | default(true),
                 'writePolicy': combined_repo.write_policy | default('ALLOW_ONCE') | upper
               },
               'cleanup': {
@@ -87,7 +87,7 @@
               'online': combined_repo.online | default(true),
               'storage': {
                 'blobStoreName': combined_repo.blob_store | default('default'),
-                'strictContentTypeValidation': combined_repo.strict_content_validation | default(omit),
+                'strictContentTypeValidation': combined_repo.strict_content_validation | default(true),
                 'writePolicy': combined_repo.write_policy | default('ALLOW_ONCE') | upper
               },
               'cleanup': {
@@ -121,7 +121,7 @@
               'online': combined_repo.online | default(true),
               'storage': {
                 'blobStoreName': combined_repo.blob_store | default('default'),
-                'strictContentTypeValidation': combined_repo.strict_content_validation | default(omit)
+                'strictContentTypeValidation': combined_repo.strict_content_validation | default(true)
               },
               'group': {
                 'memberNames': combined_repo.member_repos | default([])
@@ -188,7 +188,7 @@
               'online': combined_repo.online | default(true),
               'storage': {
                 'blobStoreName': combined_repo.blob_store | default('default'),
-                'strictContentTypeValidation': combined_repo.strict_content_validation | default(omit),
+                'strictContentTypeValidation': combined_repo.strict_content_validation | default(true),
                 'writePolicy': combined_repo.write_policy | default('ALLOW_ONCE') | upper
               },
               'cleanup': {
@@ -254,7 +254,7 @@
               'online': combined_repo.online | default(true),
               'storage': {
                 'blobStoreName': combined_repo.blob_store | default('default'),
-                'strictContentTypeValidation': combined_repo.strict_content_validation | default(omit),
+                'strictContentTypeValidation': combined_repo.strict_content_validation | default(true),
                 'writePolicy': combined_repo.write_policy | default('ALLOW_ONCE') | upper,
                 'latestPolicy': combined_repo.lallow_redeploy_latest | default(omit)
               },
@@ -291,7 +291,7 @@
               'online': combined_repo.online | default(true),
               'storage': {
                 'blobStoreName': combined_repo.blob_store | default('default'),
-                'strictContentTypeValidation': combined_repo.strict_content_validation | default(omit)
+                'strictContentTypeValidation': combined_repo.strict_content_validation | default(true)
               },
               'group': {
                 'memberNames': combined_repo.member_repos | default([]),
@@ -366,7 +366,7 @@
               'online': combined_repo.online | default(true),
               'storage': {
                 'blobStoreName': combined_repo.blob_store | default('default'),
-                'strictContentTypeValidation': combined_repo.strict_content_validation | default(omit)
+                'strictContentTypeValidation': combined_repo.strict_content_validation | default(true)
               },
               'cleanup': {
                 'policyNames': combined_repo.cleanup_policies | default([])
@@ -421,7 +421,7 @@
               'online': combined_repo.online | default(true),
               'storage': {
                 'blobStoreName': combined_repo.blob_store | default('default'),
-                'strictContentTypeValidation': combined_repo.strict_content_validation | default(omit),
+                'strictContentTypeValidation': combined_repo.strict_content_validation | default(true),
                 'writePolicy': combined_repo.write_policy | default('ALLOW_ONCE') | upper
               },
               'cleanup': {
@@ -450,7 +450,7 @@
               'online': combined_repo.online | default(true),
               'storage': {
                 'blobStoreName': combined_repo.blob_store | default('default'),
-                'strictContentTypeValidation': combined_repo.strict_content_validation | default(omit)
+                'strictContentTypeValidation': combined_repo.strict_content_validation | default(true)
               },
               'group': {
                 'memberNames': combined_repo.member_repos | default([])
@@ -517,7 +517,7 @@
               'online': combined_repo.online | default(true),
               'storage': {
                 'blobStoreName': combined_repo.blob_store | default('default'),
-                'strictContentTypeValidation': combined_repo.strict_content_validation | default(omit),
+                'strictContentTypeValidation': combined_repo.strict_content_validation | default(true),
                 'writePolicy': combined_repo.write_policy | default('ALLOW_ONCE') | upper
               },
               'cleanup': {
@@ -573,7 +573,7 @@
               'online': combined_repo.online | default(true),
               'storage': {
                 'blobStoreName': combined_repo.blob_store | default('default'),
-                'strictContentTypeValidation': combined_repo.strict_content_validation | default(omit),
+                'strictContentTypeValidation': combined_repo.strict_content_validation | default(true),
                 'writePolicy': combined_repo.write_policy | default('ALLOW_ONCE') | upper
               },
               'cleanup': {
@@ -605,7 +605,7 @@
               'online': combined_repo.online | default(true),
               'storage': {
                 'blobStoreName': combined_repo.blob_store | default('default'),
-                'strictContentTypeValidation': combined_repo.strict_content_validation | default(omit)
+                'strictContentTypeValidation': combined_repo.strict_content_validation | default(true)
               },
               'group': {
                 'memberNames': combined_repo.member_repos | default([])
@@ -672,7 +672,7 @@
               'online': combined_repo.online | default(true),
               'storage': {
                 'blobStoreName': combined_repo.blob_store | default('default'),
-                'strictContentTypeValidation': combined_repo.strict_content_validation | default(omit)
+                'strictContentTypeValidation': combined_repo.strict_content_validation | default(true)
               },
               'cleanup': {
                 'policyNames': combined_repo.cleanup_policies | default([])
@@ -724,7 +724,7 @@
               'online': combined_repo.online | default(true),
               'storage': {
                 'blobStoreName': combined_repo.blob_store | default('default'),
-                'strictContentTypeValidation': combined_repo.strict_content_validation | default(omit),
+                'strictContentTypeValidation': combined_repo.strict_content_validation | default(true),
                 'writePolicy': combined_repo.write_policy | default('ALLOW_ONCE') | upper
               },
               'cleanup': {
@@ -753,7 +753,7 @@
               'online': combined_repo.online | default(true),
               'storage': {
                 'blobStoreName': combined_repo.blob_store | default('default'),
-                'strictContentTypeValidation': combined_repo.strict_content_validation | default(omit)
+                'strictContentTypeValidation': combined_repo.strict_content_validation | default(true)
               },
               'group': {
                 'memberNames': combined_repo.member_repos | default([])
@@ -820,7 +820,7 @@
               'online': combined_repo.online | default(true),
               'storage': {
                 'blobStoreName': combined_repo.blob_store | default('default'),
-                'strictContentTypeValidation': combined_repo.strict_content_validation | default(omit)
+                'strictContentTypeValidation': combined_repo.strict_content_validation | default(true)
               },
               'cleanup': {
                 'policyNames': combined_repo.cleanup_policies | default([])
@@ -875,7 +875,7 @@
               'online': combined_repo.online | default(true),
               'storage': {
                 'blobStoreName': combined_repo.blob_store | default('default'),
-                'strictContentTypeValidation': combined_repo.strict_content_validation | default(omit),
+                'strictContentTypeValidation': combined_repo.strict_content_validation | default(true),
                 'writePolicy': combined_repo.write_policy | default('ALLOW_ONCE') | upper
               },
               'cleanup': {
@@ -904,7 +904,7 @@
               'online': combined_repo.online | default(true),
               'storage': {
                 'blobStoreName': combined_repo.blob_store | default('default'),
-                'strictContentTypeValidation': combined_repo.strict_content_validation | default(omit)
+                'strictContentTypeValidation': combined_repo.strict_content_validation | default(true)
               },
               'group': {
                 'memberNames': combined_repo.member_repos | default([])
@@ -971,7 +971,7 @@
               'online': combined_repo.online | default(true),
               'storage': {
                 'blobStoreName': combined_repo.blob_store | default('default'),
-                'strictContentTypeValidation': combined_repo.strict_content_validation | default(omit)
+                'strictContentTypeValidation': combined_repo.strict_content_validation | default(true)
               },
               'cleanup': {
                 'policyNames': combined_repo.cleanup_policies | default([])
@@ -1026,7 +1026,7 @@
               'online': combined_repo.online | default(true),
               'storage': {
                 'blobStoreName': combined_repo.blob_store | default('default'),
-                'strictContentTypeValidation': combined_repo.strict_content_validation | default(omit),
+                'strictContentTypeValidation': combined_repo.strict_content_validation | default(true),
                 'writePolicy': combined_repo.write_policy | default('ALLOW_ONCE') | upper
               },
               'cleanup': {
@@ -1055,7 +1055,7 @@
               'online': combined_repo.online | default(true),
               'storage': {
                 'blobStoreName': combined_repo.blob_store | default('default'),
-                'strictContentTypeValidation': combined_repo.strict_content_validation | default(omit)
+                'strictContentTypeValidation': combined_repo.strict_content_validation | default(true)
               },
               'group': {
                 'memberNames': combined_repo.member_repos | default([])
@@ -1123,7 +1123,7 @@
               'online': combined_repo.online | default(true),
               'storage': {
                 'blobStoreName': combined_repo.blob_store | default('default'),
-                'strictContentTypeValidation': combined_repo.strict_content_validation | default(omit)
+                'strictContentTypeValidation': combined_repo.strict_content_validation | default(true)
               },
               'cleanup': {
                 'policyNames': combined_repo.cleanup_policies | default([])
@@ -1179,7 +1179,7 @@
               'online': combined_repo.online | default(true),
               'storage': {
                 'blobStoreName': combined_repo.blob_store | default('default'),
-                'strictContentTypeValidation': combined_repo.strict_content_validation | default(omit),
+                'strictContentTypeValidation': combined_repo.strict_content_validation | default(true),
                 'writePolicy': combined_repo.write_policy | default('ALLOW_ONCE') | upper
               },
               'cleanup': {
@@ -1208,7 +1208,7 @@
               'online': combined_repo.online | default(true),
               'storage': {
                 'blobStoreName': combined_repo.blob_store | default('default'),
-                'strictContentTypeValidation': combined_repo.strict_content_validation | default(omit)
+                'strictContentTypeValidation': combined_repo.strict_content_validation | default(true)
               },
               'group': {
                 'memberNames': combined_repo.member_repos | default([])
@@ -1267,7 +1267,7 @@
               'online': combined_repo.online | default(true),
               'storage': {
                 'blobStoreName': combined_repo.blob_store | default('default'),
-                'strictContentTypeValidation': combined_repo.strict_content_validation | default(omit),
+                'strictContentTypeValidation': combined_repo.strict_content_validation | default(true),
                 'writePolicy': combined_repo.write_policy | default('ALLOW_ONCE') | upper
               },
               'cleanup': {
@@ -1322,7 +1322,7 @@
               'online': combined_repo.online | default(true),
               'storage': {
                 'blobStoreName': combined_repo.blob_store | default('default'),
-                'strictContentTypeValidation': combined_repo.strict_content_validation | default(omit)
+                'strictContentTypeValidation': combined_repo.strict_content_validation | default(true)
               },
               'cleanup': {
                 'policyNames': combined_repo.cleanup_policies | default([])
@@ -1378,7 +1378,7 @@
               'online': combined_repo.online | default(true),
               'storage': {
                 'blobStoreName': combined_repo.blob_store | default('default'),
-                'strictContentTypeValidation': combined_repo.strict_content_validation | default(omit),
+                'strictContentTypeValidation': combined_repo.strict_content_validation | default(true),
                 'writePolicy': combined_repo.write_policy | default('ALLOW_ONCE') | upper
               },
               'cleanup': {
@@ -1411,7 +1411,7 @@
               'online': combined_repo.online | default(true),
               'storage': {
                 'blobStoreName': combined_repo.blob_store | default('default'),
-                'strictContentTypeValidation': combined_repo.strict_content_validation | default(omit)
+                'strictContentTypeValidation': combined_repo.strict_content_validation | default(true)
               },
               'group': {
                 'memberNames': combined_repo.member_repos | default([])
@@ -1482,7 +1482,7 @@
               'online': combined_repo.online | default(true),
               'storage': {
                 'blobStoreName': combined_repo.blob_store | default('default'),
-                'strictContentTypeValidation': combined_repo.strict_content_validation | default(omit)
+                'strictContentTypeValidation': combined_repo.strict_content_validation | default(true)
               },
               'cleanup': {
                 'policyNames': combined_repo.cleanup_policies | default([])
@@ -1538,7 +1538,7 @@
               'online': combined_repo.online | default(true),
               'storage': {
                 'blobStoreName': combined_repo.blob_store | default('default'),
-                'strictContentTypeValidation': combined_repo.strict_content_validation | default(omit),
+                'strictContentTypeValidation': combined_repo.strict_content_validation | default(true),
                 'writePolicy': combined_repo.write_policy | default('ALLOW_ONCE') | upper
               },
               'cleanup': {
@@ -1608,7 +1608,7 @@
               'online': combined_repo.online | default(true),
               'storage': {
                 'blobStoreName': combined_repo.blob_store | default('default'),
-                'strictContentTypeValidation': combined_repo.strict_content_validation | default(omit)
+                'strictContentTypeValidation': combined_repo.strict_content_validation | default(true)
               },
               'cleanup': {
                 'policyNames': combined_repo.cleanup_policies | default([])
@@ -1660,7 +1660,7 @@
               'online': combined_repo.online | default(true),
               'storage': {
                 'blobStoreName': combined_repo.blob_store | default('default'),
-                'strictContentTypeValidation': combined_repo.strict_content_validation | default(omit),
+                'strictContentTypeValidation': combined_repo.strict_content_validation | default(true),
                 'writePolicy': combined_repo.write_policy | default('ALLOW_ONCE') | upper
               },
               'cleanup': {
@@ -1723,7 +1723,7 @@
               'online': combined_repo.online | default(true),
               'storage': {
                 'blobStoreName': combined_repo.blob_store | default('default'),
-                'strictContentTypeValidation': combined_repo.strict_content_validation | default(omit)
+                'strictContentTypeValidation': combined_repo.strict_content_validation | default(true)
               },
               'cleanup': {
                 'policyNames': combined_repo.cleanup_policies | default([])
@@ -1775,7 +1775,7 @@
               'online': combined_repo.online | default(true),
               'storage': {
                 'blobStoreName': combined_repo.blob_store | default('default'),
-                'strictContentTypeValidation': combined_repo.strict_content_validation | default(omit),
+                'strictContentTypeValidation': combined_repo.strict_content_validation | default(true),
                 'writePolicy': combined_repo.write_policy | default('ALLOW_ONCE') | upper
               },
               'cleanup': {
@@ -1804,7 +1804,7 @@
               'online': combined_repo.online | default(true),
               'storage': {
                 'blobStoreName': combined_repo.blob_store | default('default'),
-                'strictContentTypeValidation': combined_repo.strict_content_validation | default(omit)
+                'strictContentTypeValidation': combined_repo.strict_content_validation | default(true)
               },
               'group': {
                 'memberNames': combined_repo.member_repos | default([])
@@ -1871,7 +1871,7 @@
               'online': combined_repo.online | default(true),
               'storage': {
                 'blobStoreName': combined_repo.blob_store | default('default'),
-                'strictContentTypeValidation': combined_repo.strict_content_validation | default(omit)
+                'strictContentTypeValidation': combined_repo.strict_content_validation | default(true)
               },
               'cleanup': {
                 'policyNames': combined_repo.cleanup_policies | default([])
@@ -1949,7 +1949,7 @@
               'online': combined_repo.online | default(true),
               'storage': {
                 'blobStoreName': combined_repo.blob_store | default('default'),
-                'strictContentTypeValidation': combined_repo.strict_content_validation | default(omit)
+                'strictContentTypeValidation': combined_repo.strict_content_validation | default(true)
               },
               'cleanup': {
                 'policyNames': combined_repo.cleanup_policies | default([])
@@ -2027,7 +2027,7 @@
               'online': combined_repo.online | default(true),
               'storage': {
                 'blobStoreName': combined_repo.blob_store | default('default'),
-                'strictContentTypeValidation': combined_repo.strict_content_validation | default(omit)
+                'strictContentTypeValidation': combined_repo.strict_content_validation | default(true)
               },
               'cleanup': {
                 'policyNames': combined_repo.cleanup_policies | default([])
@@ -2105,7 +2105,7 @@
               'online': combined_repo.online | default(true),
               'storage': {
                 'blobStoreName': combined_repo.blob_store | default('default'),
-                'strictContentTypeValidation': combined_repo.strict_content_validation | default(omit)
+                'strictContentTypeValidation': combined_repo.strict_content_validation | default(true)
               },
               'cleanup': {
                 'policyNames': combined_repo.cleanup_policies | default([])
@@ -2183,7 +2183,7 @@
               'online': combined_repo.online | default(true),
               'storage': {
                 'blobStoreName': combined_repo.blob_store | default('default'),
-                'strictContentTypeValidation': combined_repo.strict_content_validation | default(omit)
+                'strictContentTypeValidation': combined_repo.strict_content_validation | default(true)
               },
               'cleanup': {
                 'policyNames': combined_repo.cleanup_policies | default([])
@@ -2235,7 +2235,7 @@
               'online': combined_repo.online | default(true),
               'storage': {
                 'blobStoreName': combined_repo.blob_store | default('default'),
-                'strictContentTypeValidation': combined_repo.strict_content_validation | default(omit)
+                'strictContentTypeValidation': combined_repo.strict_content_validation | default(true)
               },
               'group': {
                 'memberNames': combined_repo.member_repos | default([])
