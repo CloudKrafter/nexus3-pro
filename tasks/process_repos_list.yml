@@ -94,7 +94,7 @@
                 'policyNames': combined_repo.cleanup_policies | default([])
               },
               'component': {
-                'proprietaryComponents': true
+                'proprietaryComponents': combined_repo.proprietary_components | default(omit)
               },
               'maven': {
                 'versionPolicy': combined_repo.version_policy | default('RELEASE') | upper,
@@ -262,7 +262,7 @@
                 'policyNames': combined_repo.cleanup_policies | default([])
               },
               'component': {
-                'proprietaryComponents': true
+                'proprietaryComponents': combined_repo.proprietary_components | default(omit)
               },
               'docker': {
                 'v1Enabled': combined_repo.v1_enabled | default(false),
@@ -428,7 +428,7 @@
                 'policyNames': combined_repo.cleanup_policies | default([])
               },
               'component': {
-                'proprietaryComponents': true
+                'proprietaryComponents': combined_repo.proprietary_components | default(omit)
               }
             } -%}
             {%- if use_api -%}
@@ -580,7 +580,7 @@
                 'policyNames': combined_repo.cleanup_policies | default([])
               },
               'component': {
-                'proprietaryComponents': true
+                'proprietaryComponents': combined_repo.proprietary_components | default(omit)
               },
               'raw': {
                 'contentDisposition': combined_repo.content_disposition | default('INLINE') | upper
@@ -731,7 +731,7 @@
                 'policyNames': combined_repo.cleanup_policies | default([])
               },
               'component': {
-                'proprietaryComponents': true
+                'proprietaryComponents': combined_repo.proprietary_components | default(omit)
               }
             } -%}
             {%- if use_api -%}
@@ -882,7 +882,7 @@
                 'policyNames': combined_repo.cleanup_policies | default([])
               },
               'component': {
-                'proprietaryComponents': true
+                'proprietaryComponents': combined_repo.proprietary_components | default(omit)
               }
             } -%}
             {%- if use_api -%}
@@ -1033,7 +1033,7 @@
                 'policyNames': combined_repo.cleanup_policies | default([])
               },
               'component': {
-                'proprietaryComponents': true
+                'proprietaryComponents': combined_repo.proprietary_components | default(omit)
               }
             } -%}
             {%- if use_api -%}
@@ -1186,7 +1186,7 @@
                 'policyNames': combined_repo.cleanup_policies | default([])
               },
               'component': {
-                'proprietaryComponents': true
+                'proprietaryComponents': combined_repo.proprietary_components | default(omit)
               }
             } -%}
             {%- if use_api -%}
@@ -1274,7 +1274,7 @@
                 'policyNames': combined_repo.cleanup_policies | default([])
               },
               'component': {
-                'proprietaryComponents': true
+                'proprietaryComponents': combined_repo.proprietary_components | default(omit)
               }
             } -%}
             {%- if use_api -%}
@@ -1385,7 +1385,7 @@
                 'policyNames': combined_repo.cleanup_policies | default([])
               },
               'component': {
-                'proprietaryComponents': true
+                'proprietaryComponents': combined_repo.proprietary_components | default(omit)
               },
               'yum': {
                 'repodataDepth': combined_repo.repodata_depth | default(omit),
@@ -1545,7 +1545,7 @@
                 'policyNames': combined_repo.cleanup_policies | default([])
               },
               'component': {
-                'proprietaryComponents': true
+                'proprietaryComponents': combined_repo.proprietary_components | default(omit)
               },
               'apt': {
                 'distribution': combined_repo.distribution | default(omit)
@@ -1667,7 +1667,7 @@
                 'policyNames': combined_repo.cleanup_policies | default([])
               },
               'component': {
-                'proprietaryComponents': true
+                'proprietaryComponents': combined_repo.proprietary_components | default(omit)
               }
             } -%}
             {%- if use_api -%}
@@ -1782,7 +1782,7 @@
                 'policyNames': combined_repo.cleanup_policies | default([])
               },
               'component': {
-                'proprietaryComponents': true
+                'proprietaryComponents': combined_repo.proprietary_components | default(omit)
               }
             } -%}
             {%- if use_api -%}

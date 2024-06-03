@@ -78,6 +78,7 @@ parsed_args.each { currentRepo ->
         // Configs for all hosted repos
         if (currentRepo.type == 'hosted') {
             configuration.attributes['storage']['writePolicy'] = currentRepo.write_policy.toUpperCase()
+            configuration.attributes['component']['proprietaryComponents'] = currentRepo.get('proprietary_components', false)
         }
 
         // Configs for yum hosted repos
