@@ -1516,7 +1516,7 @@
               'routingRule': combined_repo.routing_rule | default(omit),
               'apt': {
                 'distribution': combined_repo.distribution | default(omit),
-                'flat': combined_repo.flat | default(omit)
+                'flat': combined_repo.flat | default(false)
               }
             } -%}
             {%- if use_api -%}
