@@ -1156,8 +1156,8 @@
               },
               'routingRule': combined_repo.routing_rule | default(omit),
               'nugetProxy': {
-                'queryCacheItemMaxAge': combined_repo.query_cache_item_max_age | default(omit),
-                'nugetVersion': combined_repo.nuget_version | default(omit)
+                'queryCacheItemMaxAge': combined_repo.query_cache_item_max_age | default(3600),
+                'nugetVersion': combined_repo.nuget_version | default('V3')
               }
             } -%}
             {%- if use_api -%}
