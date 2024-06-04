@@ -69,15 +69,12 @@
   tags: nexus-migrate
   when: nexus_migrate_database | default(false) | bool
 
-- name: Set fact to enable Postgres
+- name: Set fact to enable Postgres right after migration
   set_fact:
-    nexus_database_migration_done: true
+    nexus_use_postgres_after_migration: true
   tags: nexus-migrate
-  when: nexus_migrate_database | default(false) | bool and nexus_database_migration_done is not defined
+  when: nexus_use_postgres_after_migration is not defined
 
-- name: Enable Postgres as datastore
+- name: Configure Postgres as datastore
   ansible.builtin.include_tasks: enable_postgres.yml
   tags: nexus-migrate
-  when:
-    - nexus_migrate_database | default(false) | bool
-    - nexus_database_migration_done | default(false) | bool
