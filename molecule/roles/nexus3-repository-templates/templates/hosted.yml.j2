@@ -35,7 +35,7 @@ nexus_repos_{{ key }}_hosted:
     sub_domain: {{ team_hosted_repo.sub_domain if team_hosted_repo.sub_domain is defined else value.sub_domain }}
 {% endif %}
 {% if key == 'raw' %}
-    contentDisposition: {{ team_hosted_repo.contentDisposition if team_hosted_repo.contentDisposition is defined else value.contentDisposition }}
+    content_disposition: {{ team_hosted_repo.content_disposition if team_hosted_repo.content_disposition is defined else value.content_disposition }}
 {% endif %}
 {% endfor %}
 {% endfor %}

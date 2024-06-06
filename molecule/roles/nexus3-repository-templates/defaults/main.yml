@@ -29,6 +29,14 @@ teams:
             format: yum
           - name: docker-proxy-repo1
             format: docker
+          - name: raw-proxy-repo1
+            format: raw
+          - name: helm-proxy-repo1
+            format: helm
+          - name: python-proxy-repo1
+            format: pypi
+          - name: npm-proxy-repo1
+            format: npm
         group:
           - name: group-repo-1
             members:
@@ -142,7 +150,7 @@ hosted_defaults:
     strict_content_validation: true
     cleanup_policies:
       - raw_cleanup
-    contentDisposition: INLINE
+    content_disposition: INLINE
   yum:
     repositoryName: <team>-repo
     recipeName: recipeName,
@@ -214,11 +222,13 @@ proxy_defaults:
     use_nexus_certificates_to_access_index: false
     cache_foreign_layers: true
     foreign_layer_url_whitelist: []
+    sub_domain:
     cleanup_policies:
       - docker_cleanup
   python:
     name: pypi-central
     format: pypi
+    blob_store: blob-pypi
     online: true
     blocked: false
     auto_block: true
@@ -233,16 +243,17 @@ proxy_defaults:
       enable_cookies:
       enable_circular_redirects:
       timeout:
-    maximum_component_age:
-    maximum_metadata_age:
-    negative_cache_enabled:
-    negative_cache_ttl:
+    maximum_component_age: -1
+    maximum_metadata_age: 1440
+    negative_cache_enabled: True
+    negative_cache_ttl: 1440
     cleanup_policies:
       - policy-1
   npm:
     name: npm-registry
     format: npm
     online: true
+    blob_store: blob-npm
     blocked: false
     auto_block: true
     remote:
@@ -257,16 +268,20 @@ proxy_defaults:
       enable_cookies:
       enable_circular_redirects:
       timeout:
-    maximum_component_age:
-    maximum_metadata_age:
-    negative_cache_enabled:
-    negative_cache_ttl:
+    strict_content_validation: true
+    layout_policy: strict
+    write_policy: allow_once # one of "allow", "allow_once" or "deny"
+    maximum_component_age: -1
+    maximum_metadata_age: 1440
+    negative_cache_enabled: True
+    negative_cache_ttl: 1440
     cleanup_policies:
       - policy-1
   nuget:
     name: nuget-gallery
     format: nuget
     online: true
+    blob_store: blob-nuget
     blocked: false
     auto_block: true
     nuget_version: v3
@@ -281,16 +296,17 @@ proxy_defaults:
       enable_cookies:
       enable_circular_redirects:
       timeout:
-    maximum_component_age:
-    maximum_metadata_age:
-    negative_cache_enabled:
-    negative_cache_ttl:
+    maximum_component_age: -1
+    maximum_metadata_age: 1440
+    negative_cache_enabled: True
+    negative_cache_ttl: 1440
     cleanup_policies:
       - policy-1
   apt:
     name: ubuntu-apt
     format: apt
     online: true
+    blob_store: blob-apt
     blocked: false
     auto_block: true
     distribution: bionic
@@ -306,16 +322,17 @@ proxy_defaults:
       enable_cookies:
       enable_circular_redirects:
       timeout:
-    maximum_component_age:
-    maximum_metadata_age:
-    negative_cache_enabled:
-    negative_cache_ttl:
+    maximum_component_age: -1
+    maximum_metadata_age: 1440
+    negative_cache_enabled: True
+    negative_cache_ttl: 1440
     cleanup_policies:
       - policy-1
   helm:
     name: helm-proxy
     format: helm
     online: true
+    blob_store: blob-helm
     blocked: false
     auto_block: true
     remote:
@@ -329,10 +346,13 @@ proxy_defaults:
       enable_cookies:
       enable_circular_redirects:
       timeout:
-    maximum_component_age:
-    maximum_metadata_age:
-    negative_cache_enabled:
-    negative_cache_ttl:
+    strict_content_validation: true
+    layout_policy: strict # strict or permissive
+    write_policy: allow_once # one of "allow", "allow_once" or "deny"
+    maximum_component_age: -1
+    maximum_metadata_age: 1440
+    negative_cache_enabled: True
+    negative_cache_ttl: 1440
     cleanup_policies:
       - policy-1
   r:
@@ -340,6 +360,7 @@ proxy_defaults:
     format: r
     online: true
     blocked: false
+    blob_store: blob-r
     auto_block: true
     remote:
       url: https://cran.r-project.org
@@ -352,14 +373,15 @@ proxy_defaults:
       enable_cookies:
       enable_circular_redirects:
       timeout:
-    maximum_component_age:
-    maximum_metadata_age:
-    negative_cache_enabled:
-    negative_cache_ttl:
+    maximum_component_age: -1
+    maximum_metadata_age: 1440
+    negative_cache_enabled: True
+    negative_cache_ttl: 1440
     cleanup_policies:
       - policy-1
   raw:
     name: raw-proxy
+    blob_store: blob-raw
     format: raw
     online: true
     blocked: false
@@ -375,15 +397,17 @@ proxy_defaults:
       enable_cookies:
       enable_circular_redirects:
       timeout:
-    maximum_component_age:
-    maximum_metadata_age:
-    negative_cache_enabled:
-    negative_cache_ttl:
+    layout_policy: strict
+    maximum_component_age: -1
+    maximum_metadata_age: 1440
+    negative_cache_enabled: True
+    negative_cache_ttl: 1440
     cleanup_policies:
       - policy-1
-    contentDisposition:
+    content_disposition: inline
   conda:
     name: conda-proxy
+    blob_store: blob-conda
     format: conda
     online: true
     blocked: false
@@ -399,14 +423,15 @@ proxy_defaults:
       enable_cookies:
       enable_circular_redirects:
       timeout:
-    maximum_component_age:
-    maximum_metadata_age:
-    negative_cache_enabled:
-    negative_cache_ttl:
+    maximum_component_age: -1
+    maximum_metadata_age: 1440
+    negative_cache_enabled: True
+    negative_cache_ttl: 1440
     cleanup_policies:
       - policy-1
   go:
     name: go-proxy
+    blob_store: blob-go
     format: go
     online: true
     blocked: false
@@ -422,10 +447,10 @@ proxy_defaults:
       enable_cookies:
       enable_circular_redirects:
       timeout:
-    maximum_component_age:
-    maximum_metadata_age:
-    negative_cache_enabled:
-    negative_cache_ttl:
+    maximum_component_age: -1
+    maximum_metadata_age: 1440
+    negative_cache_enabled: True
+    negative_cache_ttl: 1440
     cleanup_policies:
       - policy-1
   yum:
