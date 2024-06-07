@@ -1,0 +1,170 @@
+---
+nexus_content_selectors:
+{% for item in docker_repo_teams | selectattr("repo", "equalto", "true") %}
+  - name: {{ item.team }}-container-content
+    description: {{ item.team }}-repo push conventions
+    search_expression: format == 'docker' and path=^ "/v2/{{ item.team }}/"
+{% endfor %}
+  - name: all-gitlfs
+    description: Selector for Git LFS repositories
+    search_expression: format=='gitlfs'
+  - name: container-content
+    description: only allowed to download images
+    search_expression: format == 'docker'
+  - name: amos-container-content
+    description: amos-repo push conventions
+    search_expression: format == 'docker' and ( path =^ "/v2/pet-system/" or path =^ "/v2/amos-pet/" )
+  - name: sens-container-content
+    description: sens-repo push conventions
+    search_expression: format == 'docker' and ( path =^ "/v2/sens/" or path =^ "/v2/viz/" or path =^ "/v2/anpr/" or path =^ "/v2/kolibrie/" )
+
+nexus_privileges:
+{#INIT: START NECESSITIES FIRST#}
+  - name: docker-group-read-browse # used as key to update a privilege
+    type: repository-content-selector
+    description: Read & Browse access for docker-group
+    repository: docker-group
+    contentSelector: container-content
+    actions: # can be add, browse, create, delete, edit, read or  * (all)
+      - read
+      - browse
+{#INIT: END#}
+{% for item in docker_repo_teams | selectattr("gitlfs", "equalto", "true") %}
+  - name: {{ item.team }}-gitlfs-add-delete-edit-read-browse
+    description: {{ item.team }} Git LFS privileges
+    repository: {{ item.team }}-gitlfs
+    format: gitlfs
+    actions:
+      - add
+      - delete
+      - edit
+      - read
+      - browse
+{% endfor %}
+{% for item in group_repo_teams %}
+  - name: {{ item.team }}-docker-group-all-privileges # used as key to update a privilege
+    type: repository-content-selector
+    description: All privileges for {{ item.team }}-repo
+    repository: {{ item.team }}-docker-group
+    contentSelector: {{ item.team }}-container-content
+    actions:
+      - add
+      - delete
+      - edit
+      - read
+      - browse
+  - name: {{ item.team }}-docker-group-read-browse # used as key to update a privilege
+    type: repository-content-selector
+    description: Read & Browse access for {{ item.team }}-repo
+    repository: {{ item.team }}-docker-group
+    contentSelector: container-content
+    actions: # can be add, browse, create, delete, edit, read or * (all)
+      - read
+      - browse
+{% endfor %}
+{% for item in docker_repo_teams | selectattr("repo", "equalto", "true") %}
+  - name: {{ item.team }}-docker-all-privileges # used as key to update a privilege
+    type: repository-content-selector
+    description: All privileges for {{ item.team }}-repo
+    repository: {{ item.team }}-repo
+    contentSelector: {{ item.team }}-container-content
+    actions:
+      - add
+      - delete
+      - edit
+      - read
+      - browse
+  - name: {{ item.team }}-docker-read-browse # used as key to update a privilege
+    type: repository-content-selector
+    description: Read & Browse access for {{ item.team }}-repo
+    repository: {{ item.team }}-repo
+    contentSelector: container-content
+    actions: # can be add, browse, create, delete, edit, read or * (all)
+      - read
+      - browse
+{% endfor %}
+
+nexus_roles:
+{#INIT: NECESSITIES FIRST#}
+  - id: nx-deployment
+    name: nx-deployment
+    description: nx-deployment (legacy)
+    privileges:
+      - nx-apikey-all
+      - nx-component-upload
+      - nx-search-read
+      - nx-repository-view-docker-*-read
+      - nx-usertoken-current
+    roles: []
+{#INIT: END
+#STANDARD AUTOMATED: START #}
+{% for item in docker_repo_teams %}
+  - id: {{ item.team|upper }}-members
+    name: {{ item.team|upper }}-members
+    description: {{ item.team|upper }}-members
+    privileges:
+{% if item.repo == "true" %}
+      - {{ item.team }}-docker-read-browse
+      - {{ item.team }}-docker-all-privileges
+      - docker-group-read-browse
+{% endif %}
+{% if item.gitlfs == "true" %}
+      - nx-search-read
+      - {{ item.team }}-gitlfs-add-delete-edit-read-browse
+{% endif %}
+{% for proxyitem in group_repo_teams %}
+{% if item.team == proxyitem.team %}
+      - {{ proxyitem.team }}-docker-group-read-browse
+      - {{ proxyitem.team }}-docker-group-all-privileges
+{% endif %}
+{% endfor %}
+    roles:
+{% if item.repo == "true" %}
+      - nx-deployment
+{% endif %}
+{% endfor %}
+{#  STANDARD AUTOMATED: END
+SPECIAL CASES: START #}
+  - id: TPE-members
+    name: TPE-members
+    description: TPE-members
+    privileges:
+      - tpe-docker-read-browse
+      - bettyblocks-docker-read-browse
+      - tpe-docker-all-privileges
+      - bettyblocks-docker-all-privileges
+      - bettyblocks-docker-group-all-privileges
+      - tpe-gitlfs-add-delete-edit-read-browse
+      - docker-group-read-browse
+      - nx-search-read
+    roles:
+      - nx-admin
+      - nx-deployment
+  - id: BHT-members
+    name: BHT-members
+    description: BHT-members
+    privileges:
+      - bht-docker-read-browse
+      - bht-docker-all-privileges
+      - bht-docker-group-read-browse
+      - bht-docker-group-all-privileges
+      - docker-group-read-browse
+      - laas-docker-read-browse
+      - laas-docker-all-privileges
+      - laas-docker-group-read-browse
+      - laas-docker-group-all-privileges
+    roles:
+      - nx-deployment
+  - id: BVI-BV-members
+    name: BVI-BV-members
+    description: BVI-BV-members special case
+    privileges:
+      - bvibv-docker-all-privileges
+      - bvibv-docker-group-all-privileges
+      - bvibv-docker-read-browse
+      - bvibv-docker-group-read-browse
+      - docker-group-read-browse
+    roles:
+      - nx-deployment
+{#SPECIAL CASES: END #}
+...

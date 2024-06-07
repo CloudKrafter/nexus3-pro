@@ -1,0 +1,219 @@
+---
+nexus_blobstores:
+  - name: dockerhub-blob
+    path: {{ nexus_nfs_mount_path }}/sonatype-work/nexus3/blobs/dockerhub-blob
+  - name: proxy-blob
+    path: {{ nexus_nfs_mount_path }}/sonatype-work/nexus3/blobs/proxy-blob
+{% for item in docker_repo_teams | selectattr("repo", "equalto", "true") %}
+  - name: {{ item.team }}-blob
+    path: {{ nexus_nfs_mount_path }}/sonatype-work/nexus3/blobs/{{ item.team }}-blob
+{% endfor %}
+{% for item in docker_repo_teams | selectattr("gitlfs", "equalto", "true") %}
+  - name: {{ item.team }}
+    path: {{ nexus_nfs_mount_path }}/sonatype-work/nexus3/blobs/{{ item.team }}
+{% endfor %}
+
+nexus_repos_gitlfs_hosted:
+{% for item in docker_repo_teams | selectattr("gitlfs", "equalto", "true") %}
+  - name: {{ item.team }}-gitlfs
+    blob_store: {{ item.team }}
+{% endfor %}
+
+### START: Docker repositories
+
+nexus_repos_docker_hosted:
+{% for item in docker_repo_teams | selectattr("repo", "equalto", "true") %}
+  - name: {{ item.team }}-repo
+{% if item.port_suffix is defined  %}
+    http_port: 8{{ item.port_suffix }}
+{% endif %}
+    blob_store: {{ item.team }}-blob
+    v1_enabled: False
+{% if item.redeploy | default('true') == 'true' %}
+    write_policy: allow
+{% elif item.redeploy | default('true') == 'false' %}
+    write_policy: allow_once
+{% endif %}
+{% if item.cleanup == "BASE" %}
+    cleanup_policies:
+      - base-image-cleanup
+{% elif item.cleanup == "DEFAULT"  %}
+    cleanup_policies:
+      - remove-snapshot-containers
+      - remove-release-containers
+{% elif item.cleanup == "SNAPSHOT" %}
+    cleanup_policies:
+      - remove-snapshot-containers
+{% endif %}
+{% endfor %}
+
+nexus_repos_docker_proxy:
+  - name: docker-proxy
+    v1_enabled: False
+    index_type: "HUB"
+    remote_url: "https://registry-1.docker.io"
+    use_nexus_certificates_to_access_index: false
+    blob_store: dockerhub-blob
+    cleanup_policies:
+      - base-image-docker-cleanup
+{% for item in proxy_repos %}
+  - name: docker-{{ item.proxyname }}
+    v1_enabled: False
+    index_type: "{{ item.type }}"
+    maximum_component_age: 0
+    maximum_metadata_age: 0
+    remote_url: "{{ item.remote.url }}"
+{% if (item.remote.user | default("") != "" or item.remote.pass | default("") != "") %}
+    remote_username: {{ item.remote.user }}
+    remote_password: {{ item.remote.pass }}
+{% endif %}
+{% if (item.remote.cache | default("") != "") %}
+    negative_cache_ttl: {{ item.remote.cache }}
+{% endif %}
+    use_nexus_certificates_to_access_index: true
+    blob_store: proxy-blob
+    cleanup_policies:
+      - base-image-{{ item.proxyname }}-cleanup
+{% endfor %}
+
+nexus_repos_docker_group:
+  - name: docker-group
+    http_port: 8082
+    v1_enabled: False
+{% if 'gip_' in inventory_hostname %}
+    sub_domain: containers
+{% else %}
+    sub_domain: containers-staging
+{% endif %}
+    member_repos:
+{% for item in docker_repo_teams | selectattr("repo", "equalto", "true") %}
+      - {{ item.team }}-repo
+{% endfor %}
+  - name: containers-cicd-gnr
+    sub_domain: containers-cicd
+    member_repos:
+{% for item in docker_repo_teams | selectattr("repo", "equalto", "true") %}
+      - {{ item.team }}-repo
+{% endfor %}
+{% for item in group_repo_teams %}
+  - name: {{ item.team }}-docker-group
+{% if item.port_suffix is defined  %}
+    http_port: 8{{ item.port_suffix }}
+{% endif %}
+    sub_domain: {{ item.team }}
+    writable_member_repo: {{ item.team }}-repo
+    blob_store: {{ item.team }}-blob
+    v1_enabled: False
+    member_repos:
+      - {{ item.team }}-repo
+{% if item.proxyname is defined %}
+{% for proxyitem in item.proxyname %}
+      - docker-{{ proxyitem }}
+{% endfor %}
+{% endif %}
+{% endfor %}
+
+### End: Docker repositories
+
+nexus_repos_cleanup_policies:
+{% for item in proxy_repos %}
+  - name: base-image-{{ item.proxyname }}-cleanup
+    format: docker
+    notes: Clean up policy for base images {{ item.proxyname }}-proxy
+    criteria:
+{% if item.cleanup.lastupdated != "" %}
+      lastBlobUpdated: {{ item.cleanup.lastupdated }}
+{% endif %}
+{% if item.cleanup.lastdownloaded != "" %}
+      lastDownloaded: {{ item.cleanup.lastdownloaded }}
+{% endif %}
+{% if item.cleanup.regex != "" %}
+      regexKey: "{{ item.cleanup.regex }}"
+{% endif %}
+{% endfor %}
+  - name: base-image-docker-cleanup
+    format: docker
+    notes: "Clean up policy for base images docker-proxy"
+    criteria:
+      lastBlobUpdated: 90
+      lastDownloaded: 30
+      regexKey: ".*(library|linuxserver|xebialabs).*"
+  - name: remove-snapshot-containers
+    format: docker
+    notes: Policy for removing temporary container images
+    criteria:
+      lastDownloaded: 14
+      lastBlobUpdated: 30
+      regexKey: ".*(SNAPSHOT|snapshot|DEVELOP|develop|BUILD|build).*"
+  - name: remove-release-containers
+    format: docker
+    notes: Policy for removing that were considered release at some time
+    criteria:
+      lastBlobUpdated: 90
+  - name: base-image-cleanup
+    format: docker
+    notes: Clean up policy for base images
+    criteria:
+      lastBlobUpdated: 90
+      lastDownloaded: 30
+
+nexus_scheduled_tasks:
+{% for item in docker_repo_teams | selectattr('repo', 'equalto', 'true') %}
+{% if item.cleanup != 'NONE'%}
+  - name: docker-delete-unused-manifests-and-images-{{ item.team }}-repo
+    cron: 0 15 1 * * ?
+    typeId: "repository.docker.gc"
+    taskProperties:
+      repositoryName: {{ item.team }}-repo
+      deployOffset: "24"
+{% endif %}
+  - name: {{ item.team }}-compact-blobstore
+    cron: 0 45 1 * * ?
+    typeId: blobstore.compact
+    taskProperties:
+      blobstoreName: {{ item.team }}-blob
+{% endfor %}
+{% for item in docker_repo_teams | selectattr('gitlfs', 'equalto', 'true') %}
+  - name: {{ item.team }}-compact-blobstore-gitlfs
+    cron: 0 0 0 * * ?
+    typeId: blobstore.compact
+    taskProperties:
+      blobstoreName: {{ item.team }}
+{% endfor %}
+{% for item in proxy_repos %}
+  - name: docker-delete-unused-manifests-and-images-{{ item.proxyname }}
+    cron: 0 15 0 * * ?
+    typeId: "repository.docker.gc"
+    taskProperties:
+      repositoryName: docker-{{ item.proxyname }}
+      deployOffset: "24"
+{% endfor %}
+  - name: proxy-compact-blobstore
+    cron: 0 50 0 * * ?
+    typeId: blobstore.compact
+    taskProperties:
+      blobstoreName: proxy-blob
+  - name: docker-delete-unused-manifests-and-images-docker-proxy
+    cron: 0 30 1 * * ?
+    typeId: "repository.docker.gc"
+    taskProperties:
+      repositoryName: docker-proxy
+      deployOffset: "24"
+  - name: dockerhub-blob-compact-blobstore
+    cron: 0 50 0 * * ?
+    typeId: blobstore.compact
+    taskProperties:
+      blobstoreName: dockerhub-blob
+  - name: docker-delete-incomplete-uploads
+    cron: 0 45 1 * * ?
+    typeId: "repository.docker.upload-purge"
+    taskProperties:
+      age: "24"
+  - name: Nexus export configuration and metadata backup
+    cron: 0 0 1 * * ?
+    typeId: "db.backup"
+    task_alert_email: "monitoring-tpe@politie.nl"
+    taskProperties:
+      notificationCondition: Failure
+      location: "{{ nexus_nfs_mount_path }}/orientdb_backup"
+...
