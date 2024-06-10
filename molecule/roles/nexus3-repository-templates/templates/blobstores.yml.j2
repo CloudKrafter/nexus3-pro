@@ -1,0 +1,14 @@
+---
+nexus_blobstores:
+  - name: dockerhub-blob
+    path: {{ nexus_nfs_mount_path }}/sonatype-work/nexus3/blobs/dockerhub-blob
+  - name: proxy-blob
+    path: {{ nexus_nfs_mount_path }}/sonatype-work/nexus3/blobs/proxy-blob
+{% for item in docker_repo_teams | selectattr("repo", "equalto", "true") %}
+  - name: {{ item.team }}-blob
+    path: {{ nexus_nfs_mount_path }}/sonatype-work/nexus3/blobs/{{ item.team }}-blob
+{% endfor %}
+{% for item in docker_repo_teams | selectattr("gitlfs", "equalto", "true") %}
+  - name: {{ item.team }}
+    path: {{ nexus_nfs_mount_path }}/sonatype-work/nexus3/blobs/{{ item.team }}
+{% endfor %}

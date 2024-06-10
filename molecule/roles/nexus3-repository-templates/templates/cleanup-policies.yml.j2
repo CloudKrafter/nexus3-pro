@@ -1,0 +1,42 @@
+---
+nexus_repos_cleanup_policies:
+{% for item in proxy_repos %}
+  - name: base-image-{{ item.proxyname }}-cleanup
+    format: docker
+    notes: Clean up policy for base images {{ item.proxyname }}-proxy
+    criteria:
+{% if item.cleanup.lastupdated != "" %}
+      lastBlobUpdated: {{ item.cleanup.lastupdated }}
+{% endif %}
+{% if item.cleanup.lastdownloaded != "" %}
+      lastDownloaded: {{ item.cleanup.lastdownloaded }}
+{% endif %}
+{% if item.cleanup.regex != "" %}
+      regexKey: "{{ item.cleanup.regex }}"
+{% endif %}
+{% endfor %}
+  - name: base-image-docker-cleanup
+    format: docker
+    notes: "Clean up policy for base images docker-proxy"
+    criteria:
+      lastBlobUpdated: 90
+      lastDownloaded: 30
+      regexKey: ".*(library|linuxserver|xebialabs).*"
+  - name: remove-snapshot-containers
+    format: docker
+    notes: Policy for removing temporary container images
+    criteria:
+      lastDownloaded: 14
+      lastBlobUpdated: 30
+      regexKey: ".*(SNAPSHOT|snapshot|DEVELOP|develop|BUILD|build).*"
+  - name: remove-release-containers
+    format: docker
+    notes: Policy for removing that were considered release at some time
+    criteria:
+      lastBlobUpdated: 90
+  - name: base-image-cleanup
+    format: docker
+    notes: Clean up policy for base images
+    criteria:
+      lastBlobUpdated: 90
+      lastDownloaded: 30
