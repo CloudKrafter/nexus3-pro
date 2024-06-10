@@ -51,12 +51,12 @@ teams:
               - npm-proxy-repo1
               - npm-repo1
       sharedAccessTo:
-        hosted:
-          - name: maven-repo1
-            teams: []
+        hosted: 
+          - name: raw-repo1
+            teams: [Team2]
         proxy:
-          - name: proxy_defaults.maven_defaults
-            teams: []
+          - name: raw-proxy-repo1
+            teams: [Team2]
         group: []
   - ID: Team2
     name: Team2
@@ -74,10 +74,10 @@ teams:
       sharedAccessTo:
         hosted:
           - name: maven-repo-team2
-            teams: [1]
-        proxy:
-          - name: proxy_defaults.maven_defaults
-            teams: []
+            teams: [Team1]
+        proxy: 
+          - name: python-proxy-team2
+            teams: [Team1]
         group: []
 
 

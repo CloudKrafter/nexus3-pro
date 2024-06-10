@@ -25,8 +25,58 @@ nexus_roles:
       - nx-repository-view-{{ team_group_repo.format }}-{{ team_group_repo.name }}-browse
 {% endif %}
 {% endfor %} #}
-{# {% for team.repos.sharedAcsharedAccessTo.hosted | selectattr("format", "equalto", key) %}
-{% endfor %} #}
+{# Start shared loop #}
+{% for team_shared in teams %}
+{# Start shared Hosted repo #}
+{% for hosted_shared in team_shared.repos.sharedAccessTo.hosted %}
+{% for repo_shared in hosted_shared.teams %}
+{% if repo_shared == team.ID %}
+{% for team_data in teams %}
+{% for repo_data in team_data.repos.requestedBy.hosted %}
+{% if hosted_shared.name == repo_data.name %}
+      - nx-repository-view-{{ repo_data.format }}-{{ repo_data.name }}-read
+      - nx-repository-view-{{ repo_data.format }}-{{ repo_data.name }}-browse
+{% endif %}
+{% endfor %}
+{% endfor %}
+{% endif %}
+{% endfor %}
+{% endfor %}
+{# End shared Hosted repo #}
+{# Start shared Proxy repo #}
+{% for proxy_shared in team_shared.repos.sharedAccessTo.proxy %}
+{% for repo_shared in proxy_shared.teams %}
+{% if repo_shared == team.ID %}
+{% for team_data in teams %}
+{% for repo_data in team_data.repos.requestedBy.proxy %}
+{% if proxy_shared.name == repo_data.name %}
+      - nx-repository-view-{{ repo_data.format }}-{{ repo_data.name }}-read
+      - nx-repository-view-{{ repo_data.format }}-{{ repo_data.name }}-browse
+{% endif %}
+{% endfor %}
+{% endfor %}
+{% endif %}
+{% endfor %}
+{% endfor %}
+{# End shared Proxy repo #}
+{# Start shared Group repo #}
+{% for group_shared in team_shared.repos.sharedAccessTo.group %}
+{% for repo_shared in group_shared.teams %}
+{% if repo_shared == team.ID %}
+{% for team_data in teams %}
+{% for repo_data in team_data.repos.requestedBy.group %}
+{% if group_shared.name == repo_data.name %}
+      - nx-repository-view-{{ repo_data.format }}-{{ repo_data.name }}-read
+      - nx-repository-view-{{ repo_data.format }}-{{ repo_data.name }}-browse
+{% endif %}
+{% endfor %}
+{% endfor %}
+{% endif %}
+{% endfor %}
+{% endfor %}
+{# End shared Group repo #}
+{% endfor %}
+{# End shared loop #}
     roles: []
 {# TODO: depending on data impolementation #}
 {% endfor %}
