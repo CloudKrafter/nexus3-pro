@@ -12,3 +12,9 @@
     dest: "/nexus-downloads/hosted-result.yml"
     #remote_src: true
   tags: transform
+- name: Transform roles_defaults into nexus_repos
+  ansible.builtin.template:
+    src: "roles.yml.j2"
+    dest: "/nexus-downloads/roles-result.yml"
+    #remote_src: true
+  tags: transform

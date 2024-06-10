@@ -1,8 +1,9 @@
 ---
+nexus_delete_default_repos: true
 # defaults file for nexus3-repository-templates
 teams:
-  - ID: 1
-    name: Team 1
+  - ID: Team1
+    name: Team1
     repos:
       requestedBy:
         hosted:
@@ -39,19 +40,46 @@ teams:
             format: npm
         group:
           - name: group-repo-1
+            format: maven2
             members:
               - maven-repo2
-              - npm-repo1
+              - maven-repo1
+              - mvn-proxy-repo1
           - name: group-repo-2
+            format: npm
             members:
-              - maven-repo2
+              - npm-proxy-repo1
               - npm-repo1
       sharedAccessTo:
         hosted:
           - name: maven-repo1
+            teams: []
         proxy:
           - name: proxy_defaults.maven_defaults
+            teams: []
         group: []
+  - ID: Team2
+    name: Team2
+    repos:
+      requestedBy:
+        hosted:
+          - name: maven-repo-team2
+            format: maven2
+          - name: python-repo-team2
+            format: pypi
+        proxy: 
+          - name: python-proxy-team2
+            format: pypi
+        group: []
+      sharedAccessTo:
+        hosted:
+          - name: maven-repo-team2
+            teams: [1]
+        proxy:
+          - name: proxy_defaults.maven_defaults
+            teams: []
+        group: []
+
 
 hosted_defaults:
   apt:
@@ -225,7 +253,7 @@ proxy_defaults:
     sub_domain:
     cleanup_policies:
       - docker_cleanup
-  python:
+  pypi:
     name: pypi-central
     format: pypi
     blob_store: blob-pypi
@@ -243,6 +271,8 @@ proxy_defaults:
       enable_cookies:
       enable_circular_redirects:
       timeout:
+    layout_policy: strict
+    write_policy: allow_once # one of "allow", "allow_once" or "deny"
     maximum_component_age: -1
     maximum_metadata_age: 1440
     negative_cache_enabled: True

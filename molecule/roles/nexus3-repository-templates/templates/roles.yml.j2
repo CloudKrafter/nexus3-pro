@@ -1,0 +1,32 @@
+---
+{% for team in teams %}
+{% if teams|length > 0 and loop.first %}
+nexus_roles:
+{% endif %}
+  - id: {{ team.ID|upper }}-members
+    name: {{ team.ID|upper }}-members
+    description: '{{ team.name|upper }} role.'
+    privileges:
+{% for team_hosted_repo in team.repos.requestedBy.hosted %}
+{% if team_hosted_repo|length > 0 %}
+      - nx-repository-view-{{ team_hosted_repo.format }}-{{ team_hosted_repo.name }}-read
+      - nx-repository-view-{{ team_hosted_repo.format }}-{{ team_hosted_repo.name }}-browse
+{% endif %}
+{% endfor %}
+{% for team_proxy_repo in team.repos.requestedBy.proxy %}
+{% if team_proxy_repo|length > 0 %}
+      - nx-repository-view-{{ team_proxy_repo.format }}-{{ team_proxy_repo.name }}-read
+      - nx-repository-view-{{ team_proxy_repo.format }}-{{ team_proxy_repo.name }}-browse
+{% endif %}
+{% endfor %}
+{# {% for team_group_repo in team.repos.requestedBy.group %}
+{% if team_group_repo|length > 0 %}
+      - nx-repository-view-{{ team_group_repo.format }}-{{ team_group_repo.name }}-read
+      - nx-repository-view-{{ team_group_repo.format }}-{{ team_group_repo.name }}-browse
+{% endif %}
+{% endfor %} #}
+{# {% for team.repos.sharedAcsharedAccessTo.hosted | selectattr("format", "equalto", key) %}
+{% endfor %} #}
+    roles: []
+{# TODO: depending on data impolementation #}
+{% endfor %}

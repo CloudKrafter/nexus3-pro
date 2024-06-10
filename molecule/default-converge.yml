@@ -10,6 +10,7 @@
     - nexus_ldap_test_vars.yml
     - .nexus-downloads/hosted-result.yml
     - .nexus-downloads/proxies-result.yml
+    - .nexus-downloads/roles-result.yml
 
   environment:
     http_proxy: "{{ lookup('env', 'http_proxy') }}"

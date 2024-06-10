@@ -1,7 +1,9 @@
 {% for key, value in hosted_defaults.items() %}
 {% for team in teams %}
+{% set teams_loop = loop %}
 {% for team_hosted_repo in team.repos.requestedBy.hosted | selectattr("format", "equalto", key) %}
-{% if team_hosted_repo|length > 0 and loop.first %}
+{% set team_hosted_repo_loop = loop %}
+{% if team_hosted_repo|length > 0 and team_hosted_repo_loop.first and teams_loop.first %}
 {% if key == 'maven2' %}
 nexus_repos_{{ key[:-1] }}_hosted:
 {% else %}

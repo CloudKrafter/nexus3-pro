@@ -1,7 +1,9 @@
 {% for key, value in proxy_defaults.items() %}
 {% for team in teams %}
+{% set teams_loop = loop %}
 {% for team_proxy_repo in team.repos.requestedBy.proxy | selectattr("format", "equalto", key) %}
-{% if team_proxy_repo|length > 0 and loop.first %}
+{% set team_hosted_repo_loop = loop %}
+{% if team_proxy_repo|length > 0 and team_hosted_repo_loop.first and teams_loop.first %}
 {% if key == 'maven2' %}
 nexus_repos_{{ key[:-1] }}_proxy:
 {% else %}
