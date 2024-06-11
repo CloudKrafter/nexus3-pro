@@ -1,12 +1,12 @@
 ---
 nexus_routing_rules:
   routingRules:
-{% for item in proxy_repos %}
-{% if item.routing is defined %}
-    - name: {{ item.routing.publisher }}
-      description: Restrict only to {{ item.routing.publisher }} images
+{% for item in nexus_repos_maven_proxy %}
+{% if item.routing_rule is defined and item.routing_rule != None %}
+    - name: {{ item.name }}-routing-rule
+      description: Restrict only to {{ item.name }} images
       mode: Allow
-      matchers: {{ item.routing.matchers }}
-      proxyname: docker-{{ item.proxyname }}
+      matchers: {{ item.routing_rule }}
+      proxyname: {{ item.name }}
 {% endif %}
 {% endfor %}

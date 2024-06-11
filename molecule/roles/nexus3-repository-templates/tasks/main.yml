@@ -18,3 +18,9 @@
     dest: "/nexus-downloads/roles-result.yml"
     #remote_src: true
   tags: transform
+- name: Transform routing-rules_defaults into nexus_repos
+  ansible.builtin.template:
+    src: "routing-rules.yml.j2"
+    dest: "/nexus-downloads/routing-rules-result.yml"
+    #remote_src: true
+  tags: transform

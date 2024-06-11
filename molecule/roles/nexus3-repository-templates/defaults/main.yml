@@ -1,5 +1,13 @@
 ---
 nexus_delete_default_repos: true
+
+# routing_rules.yml
+nexus_routing_rules_config:
+  nexus:
+    deleteUnknownItems:
+      routingRules: true
+      # customLocalUsers: false
+
 # defaults file for nexus3-repository-templates
 teams:
   - ID: Team1
@@ -26,6 +34,7 @@ teams:
         proxy:
           - name: mvn-proxy-repo1
             format: maven2
+            routing_rule: 'wop'
           - name: yum-proxy-repo1
             format: yum
           - name: docker-proxy-repo1
@@ -217,6 +226,7 @@ proxy_defaults:
     layout_policy: strict
     write_policy: allow_once
     content_disposition: inline
+    routing_rule: '' 
     cleanup_policies:
       - mvn_cleanup
   docker:
@@ -251,6 +261,7 @@ proxy_defaults:
     cache_foreign_layers: true
     foreign_layer_url_whitelist: []
     sub_domain:
+    routing_rule: ''   
     cleanup_policies:
       - docker_cleanup
   pypi:
@@ -277,6 +288,7 @@ proxy_defaults:
     maximum_metadata_age: 1440
     negative_cache_enabled: True
     negative_cache_ttl: 1440
+    routing_rule: ''   
     cleanup_policies:
       - policy-1
   npm:
@@ -305,6 +317,7 @@ proxy_defaults:
     maximum_metadata_age: 1440
     negative_cache_enabled: True
     negative_cache_ttl: 1440
+    routing_rule: ''   
     cleanup_policies:
       - policy-1
   nuget:
@@ -330,6 +343,8 @@ proxy_defaults:
     maximum_metadata_age: 1440
     negative_cache_enabled: True
     negative_cache_ttl: 1440
+    write_policy: allow_once # one of "allow", "allow_once" or "deny"
+    routing_rule: ''   
     cleanup_policies:
       - policy-1
   apt:
@@ -356,6 +371,8 @@ proxy_defaults:
     maximum_metadata_age: 1440
     negative_cache_enabled: True
     negative_cache_ttl: 1440
+    write_policy: allow_once # one of "allow", "allow_once" or "deny"
+    routing_rule: ''   
     cleanup_policies:
       - policy-1
   helm:
@@ -383,6 +400,7 @@ proxy_defaults:
     maximum_metadata_age: 1440
     negative_cache_enabled: True
     negative_cache_ttl: 1440
+    routing_rule: ''   
     cleanup_policies:
       - policy-1
   r:
@@ -407,6 +425,8 @@ proxy_defaults:
     maximum_metadata_age: 1440
     negative_cache_enabled: True
     negative_cache_ttl: 1440
+    write_policy: allow_once # one of "allow", "allow_once" or "deny"
+    routing_rule: ''   
     cleanup_policies:
       - policy-1
   raw:
@@ -432,6 +452,8 @@ proxy_defaults:
     maximum_metadata_age: 1440
     negative_cache_enabled: True
     negative_cache_ttl: 1440
+    write_policy: allow_once # one of "allow", "allow_once" or "deny"
+    routing_rule: ''   
     cleanup_policies:
       - policy-1
     content_disposition: inline
@@ -457,6 +479,8 @@ proxy_defaults:
     maximum_metadata_age: 1440
     negative_cache_enabled: True
     negative_cache_ttl: 1440
+    write_policy: allow_once # one of "allow", "allow_once" or "deny"
+    routing_rule: ''   
     cleanup_policies:
       - policy-1
   go:
@@ -481,6 +505,8 @@ proxy_defaults:
     maximum_metadata_age: 1440
     negative_cache_enabled: True
     negative_cache_ttl: 1440
+    write_policy: allow_once # one of "allow", "allow_once" or "deny"
+    routing_rule: ''   
     cleanup_policies:
       - policy-1
   yum:
@@ -507,6 +533,7 @@ proxy_defaults:
     layout_policy: strict
     write_policy: allow_once
     content_disposition: inline
+    routing_rule: ''   
     cleanup_policies:
       - policy-1
       

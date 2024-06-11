@@ -1,0 +1,31 @@
+---
+- name: Show the combined dictionary for routing rules configuration
+  debug:
+    msg: "{{ nexus_routing_rules_config | combine (nexus_routing_rules) }}"
+
+- name: Declare new or changed groovy scripts in Nexus
+  include_tasks: declare_script_each.yml
+  loop: 
+    - ScriptBaseClass
+    - syncRoutingRules
+    - syncReposWithRoutingRules
+
+- name: Calling Groovy script {{ script_name }}
+  uri:
+    url: "{{ nexus_api_scheme }}://{{ nexus_api_hostname }}:{{ nexus_api_port }}\
+      {{ nexus_api_context_path }}{{ nexus_rest_api_endpoint }}/{{ script_name }}/run"
+    user: 'admin'
+    password: "{{ current_nexus_admin_password }}"
+    headers:
+      Content-Type: "text/plain"
+    method: POST
+    force_basic_auth: yes
+    validate_certs: "{{ nexus_api_validate_certs }}"
+    body: "{{ args | to_json }}"
+  vars:
+    script_name: "{{ item.script }}"
+    args: "{{ item.args }}"
+  loop:
+    - { script: ScriptBaseClass, args: "" }
+    - { script: syncRoutingRules, args: "{{ nexus_routing_rules_config | combine (nexus_routing_rules) }}" }
+    - { script: syncReposWithRoutingRules, args: "{{ nexus_routing_rules_config | combine (nexus_routing_rules) }}" }

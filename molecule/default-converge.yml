@@ -11,6 +11,7 @@
     - .nexus-downloads/hosted-result.yml
     - .nexus-downloads/proxies-result.yml
     - .nexus-downloads/roles-result.yml
+    - .nexus-downloads/routing-rules-result.yml
 
   environment:
     http_proxy: "{{ lookup('env', 'http_proxy') }}"

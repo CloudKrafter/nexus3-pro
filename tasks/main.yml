@@ -302,3 +302,6 @@
   ansible.builtin.include_tasks: migrate_database.yml
   tags: nexus-migrate, nexus-healthcheck
   when: nexus_migrate_database | default(false) | bool
+
+- name: Create routing rules for proxy repositories
+  include_tasks: routing_rules.yml

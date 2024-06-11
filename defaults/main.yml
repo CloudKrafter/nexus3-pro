@@ -214,6 +214,15 @@ nexus_config_p2: false
 nexus_config_conda: false
 nexus_config_go: false
 
+# routing_rules.yml
+nexus_routing_rules_config:
+  nexus:
+    deleteUnknownItems:
+      routingRules: true
+      # customLocalUsers: false
+nexus_routing_rules:
+  routingRules: []
+
 nexus_content_selectors: []
 # example selector item :
 #  - name: docker-login

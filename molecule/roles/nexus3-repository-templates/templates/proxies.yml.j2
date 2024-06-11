@@ -14,7 +14,7 @@ nexus_repos_{{ key }}_proxy:
     online: {{ team_proxy_repo.online if team_proxy_repo.online is defined else value.online }}
     blob_store: {{ team_proxy_repo.blob_store if team_proxy_repo.blob_store is defined else value.blob_store }}
     layout_policy: {{ team_proxy_repo.layout_policy if team_proxy_repo.layout_policy is defined else value.layout_policy }}
-{# write_policy: {{ team_proxy_repo.write_policy if team_proxy_repo.write_policy is defined else value.write_policy }} #}
+    write_policy: {{ team_proxy_repo.write_policy if team_proxy_repo.write_policy is defined else value.write_policy }}
     blocked: {{ team_proxy_repo.blocked if team_proxy_repo.blocked is defined else value.blocked }}
     auto_block: {{ team_proxy_repo.auto_block if team_proxy_repo.auto_block is defined else value.auto_block }}
     remote:
@@ -31,6 +31,7 @@ nexus_repos_{{ key }}_proxy:
     maximum_metadata_age: {{ team_proxy_repo.maximum_metadata_age if team_proxy_repo.maximum_metadata_age is defined else value.maximum_metadata_age }}
     negative_cache_enabled: {{ team_proxy_repo.negative_cache_enabled if team_proxy_repo.negative_cache_enabled is defined else value.negative_cache_enabled }}
     negative_cache_ttl: {{ team_proxy_repo.negative_cache_ttl if team_proxy_repo.negative_cache_ttl is defined else value.negative_cache_ttl }}
+    routing_rule: {{ team_proxy_repo.routing_rule if team_proxy_repo.routing_rule is defined else value.routing_rule }}
     cleanup_policies:
 {% if team.policy is defined %}
 {% for policy in team.cleanup_policies %}
