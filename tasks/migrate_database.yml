@@ -1,5 +1,15 @@
 ---
-  # TODO: Skip this task if the migration is already done or postgres is already used
+# TODO: Skip this task if the migration is already done or postgres is already used
+- name: Ensure temp dir /db-migrator-export exists and is owned by nexus user
+  ansible.builtin.file:
+    path: "{{ nexus_migrate_tmp_dir }}/db-migrator-export"
+    state: directory
+    owner: "{{ nexus_os_user }}"
+    group: "{{ nexus_os_group }}"
+    mode: "0755"
+  tags: nexus-migrate
+  when: nexus_migrate_database | default(false) | bool
+
 
 - name: Download the Nexus database migration tool
   get_url:
@@ -23,7 +33,7 @@
 
 - name: Healthcheck
   ansible.builtin.command:
-    cmd: 'java -Xmx16G -Xms16G -XX:+UseG1GC -XX:MaxDirectMemorySize=28672M -jar nexus-db-migrator-{{ nexus_db_migrator_version }}.jar --healthcheck --yes'
+    cmd: "java -Xmx{{ nexus_db_migrator_maximum_memory }} -Xms{{ nexus_db_migrator_initial_memory }} -XX:+UseG1GC -XX:MaxDirectMemorySize=28672M -jar nexus-db-migrator-{{ nexus_db_migrator_version }}.jar --healthcheck --yes"
     chdir: "{{ nexus_data_dir }}/db"
   become: true
   become_user: "{{ nexus_os_user }}"
@@ -39,13 +49,14 @@
 - name: Run migration
   ansible.builtin.command:
     cmd: >
-      java -Xmx16G -Xms16G -XX:+UseG1GC -XX:MaxDirectMemorySize=28672M
-      -jar nexus-db-migrator-{{ nexus_db_migrator_version }}.jar --yes --tmpdir="{{ nexus_migrate_tmp_dir }}"
-      --migration_type=postgres
+      java -Xmx{{ nexus_db_migrator_maximum_memory }} -Xms{{ nexus_db_migrator_initial_memory }} -XX:+UseG1GC -XX:MaxDirectMemorySize=28672M -Djava.io.tmpdir="{{ nexus_migrate_tmp_dir }}/db-migrator-export"
+      -jar nexus-db-migrator-{{ nexus_db_migrator_version }}.jar --yes
+      --migration_type="{{ nexus_migration_type }}"
       --db_url="jdbc:postgresql://{{ nexus_postgres_db_host }}:{{ nexus_postgres_db_port }}/{{ nexus_postgres_db_name }}?user={{ nexus_postgres_db_username }}&password={{ nexus_postgres_db_password }}"
       --content_migration="{{ nexus_migrate_content_migration }}"
       --logging.level.com.sonatype=TRACE
-      --force="{{ nexus_migrate_force | bool }}"
+      --export_json="{{ nexus_migrate_export_json | default('true')}}"
+      --force="{{ nexus_migrate_force | ternary('true', 'true') | default('false')}}"
     chdir: "{{ nexus_data_dir }}/db"
   become: true
   become_user: "{{ nexus_os_user }}"
@@ -58,13 +69,12 @@
   tags: nexus-migrate
   when: nexus_migrate_database | default(false) | bool
 
-- name: Set fact to enable Postgres
+- name: Set fact to enable Postgres right after migration
   set_fact:
-    nexus_database_migration_done: true
+    nexus_use_postgres_after_migration: true
   tags: nexus-migrate
-  when: nexus_migrate_database | default(false) | bool
+  when: nexus_use_postgres_after_migration is not defined
 
-- name: Enable Postgres as datastore
+- name: Configure Postgres as datastore
   ansible.builtin.include_tasks: enable_postgres.yml
   tags: nexus-migrate
-  when: nexus_migrate_database | default(false) | bool

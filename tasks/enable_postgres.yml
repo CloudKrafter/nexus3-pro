@@ -2,7 +2,7 @@
 - name: Store Nexus properties in {{ nexus_data_dir }}/etc/nexus.properties file
   ansible.builtin.lineinfile:
     path: "{{ nexus_data_dir }}/etc/nexus.properties"
-    line: "nexus.datastore.enabled={{ (nexus_use_postgres | bool or nexus_database_migration_done | default(false)) | ternary('true', 'false') }}"
+    line: "nexus.datastore.enabled={{ nexus_use_postgres | default(false) | bool or nexus_use_postgres_after_migration | default(false) }}"
     firstmatch: true
     insertafter: "EOF"
     state: present
@@ -46,5 +46,8 @@
     name: nexus.service
     state: started
   tags: nexus-postgres,nexus-migrate
+  notify:
+    - wait-for-nexus
+    - wait-for-nexus-port
 
   # wait for nexus to be started succesfully
