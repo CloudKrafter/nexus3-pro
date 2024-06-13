@@ -1,31 +1,32 @@
 ---
-- name: Show the combined dictionary for routing rules configuration
-  debug:
-    msg: "{{ nexus_routing_rules_config | combine (nexus_routing_rules) }}"
-
-- name: Declare new or changed groovy scripts in Nexus
-  include_tasks: declare_script_each.yml
-  loop: 
-    - ScriptBaseClass
-    - syncRoutingRules
-    - syncReposWithRoutingRules
-
-- name: Calling Groovy script {{ script_name }}
-  uri:
-    url: "{{ nexus_api_scheme }}://{{ nexus_api_hostname }}:{{ nexus_api_port }}\
-      {{ nexus_api_context_path }}{{ nexus_rest_api_endpoint }}/{{ script_name }}/run"
-    user: 'admin'
+- name: Create Routing rules
+  ansible.builtin.uri:
+    url: "{{ nexus_api_scheme }}://{{ nexus_api_hostname }}:{{ nexus_api_port }}{{ nexus_api_context_path }}service/rest/v1/routing-rules"
+    user: admin
     password: "{{ current_nexus_admin_password }}"
-    headers:
-      Content-Type: "text/plain"
     method: POST
-    force_basic_auth: yes
+    force_basic_auth: true
     validate_certs: "{{ nexus_api_validate_certs }}"
-    body: "{{ args | to_json }}"
-  vars:
-    script_name: "{{ item.script }}"
-    args: "{{ item.args }}"
-  loop:
-    - { script: ScriptBaseClass, args: "" }
-    - { script: syncRoutingRules, args: "{{ nexus_routing_rules_config | combine (nexus_routing_rules) }}" }
-    - { script: syncReposWithRoutingRules, args: "{{ nexus_routing_rules_config | combine (nexus_routing_rules) }}" }
+    body_format: json
+    body: "{{ routing_rules }}"
+    status_code: 204
+  loop: "{{ api_payload }}"
+  loop_control:
+    loop_var: routing_rules
+  # when: repo.name not in __nexus_existing_repos__.json | map(attribute='name') | list
+
+# - name: Update repositories when repository exists
+#   ansible.builtin.uri:
+#     url: "{{ nexus_api_scheme }}://{{ nexus_api_hostname }}:{{ nexus_api_port }}{{ nexus_api_context_path }}service/rest/v1/repositories/{{ repo.format }}/{{ repo.type}}/{{ repo.name }}"
+#     user: admin
+#     password: "{{ current_nexus_admin_password }}"
+#     method: PUT
+#     force_basic_auth: true
+#     validate_certs: "{{ nexus_api_validate_certs }}"
+#     body_format: json
+#     body: "{{ repo }}"
+#     status_code: 204
+#   loop: "{{ api_payload }}"
+#   loop_control:
+#     loop_var: repo
+  # when: repo.name in __nexus_existing_repos__.json | map(attribute='name') | list

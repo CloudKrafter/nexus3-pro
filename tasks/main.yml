@@ -152,6 +152,11 @@
       when: nexus_repos_cleanup_policies | length > 0
       tags: cleanup
 
+    - name: Create/Update routing rules using API
+      ansible.builtin.include_tasks: routing_rules.yml
+      vars:
+        api_payload: "{{ nexus_routing_rules | d([]) }}"
+
     - name: Apply defaults to repositories configurations and process a single list
       ansible.builtin.include_tasks: process_repos_list.yml
       vars:
@@ -389,6 +394,3 @@
   ansible.builtin.include_tasks: migrate_database.yml
   tags: nexus-migrate, nexus-healthcheck
   when: nexus_migrate_database | default(false) | bool
-
-- name: Create routing rules for proxy repositories
-  include_tasks: routing_rules.yml
