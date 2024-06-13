@@ -5,6 +5,7 @@ httpd_ssl_cert_file_location: "{{ default_cert }}"
 httpd_ssl_cert_key_location: "{{ default_key }}"
 nexus_public_hostname: localhost
 nexus_api_timeout: 45
+nexus_use_api_for_provisioning: true
 
 nexus_transform: true
 
@@ -242,22 +243,22 @@ nexus_repos_maven_hosted:
     cleanup_policies:
       - mvn_cleanup
 
-nexus_repos_maven_group:
-  - name: public-mixed-permissive
-    member_repos:
-      - private-release-cleanup-mvn-cleanup
-      - jcenter-api
-    layout_policy: permissive
-    version_policy: mixed
+nexus_repos_maven_group: []
+  # - name: public-mixed-permissive
+  #   member_repos:
+  #     - private-release-cleanup-mvn-cleanup
+  #     - jcenter-api
+  #   layout_policy: permissive
+  #   version_policy: mixed
 
-  - name: public-offline-mixed-permissive
-    online: false
-    member_repos:
-      - private-release-cleanup-mvn-cleanup
-      - jcenter-api
-      - jboss-api-blob-default
-    layout_policy: permissive
-    version_policy: mixed
+  # - name: public-offline-mixed-permissive
+  #   online: false
+  #   member_repos:
+  #     - private-release-cleanup-mvn-cleanup
+  #     - jcenter-api
+  #     - jboss-api-blob-default
+  #   layout_policy: permissive
+  #   version_policy: mixed
 
 nexus_repos_npm_hosted:
   - name: npm-registry-hosted
@@ -272,12 +273,12 @@ nexus_repos_npm_hosted:
     write_policy: deny
     blocked: true
     auto_block: false
-nexus_repos_npm_group:
-  - name: npm-public
-    member_repos:
-      - npm-registry
-      - npm-registry-blocked
-      - npm-registry-hosted
+nexus_repos_npm_group: []
+  # - name: npm-public
+  #   member_repos:
+  #     - npm-registry
+  #     - npm-registry-blocked
+  #     - npm-registry-hosted
 nexus_repos_npm_proxy:
   - name: npm-registry
     remote_url: https://registry.npmjs.org/
@@ -307,11 +308,11 @@ nexus_repos_yum_proxy:
     negative_cache_ttl: 60
     enable_circular_redirects: true
     enable_cookies: true
-nexus_repos_yum_group:
-  - name: yum_all
-    member_repos:
-      - private_yum_centos_7
-      - epel_centos_7_x86_64
+nexus_repos_yum_group: []
+  # - name: yum_all
+  #   member_repos:
+  #     - private_yum_centos_7
+  #     - epel_centos_7_x86_64
 
 # nexus_repos_yum_hosted:
 #   - name: private_yum_centos_7
@@ -340,11 +341,11 @@ nexus_repos_docker_proxy:
     v1_enabled: true
     write_policy: allow
 
-nexus_repos_docker_group:
-  - name: docker-all
-    member_repos:
-      - docker-private
-      - docker-hub
+nexus_repos_docker_group: []
+  # - name: docker-all
+  #   member_repos:
+  #     - docker-private
+  #     - docker-hub
 nexus_repos_pypi_proxy:
   - name: pypi-proxy
     remote_url: https://pypi.python.org/simple/
@@ -358,11 +359,11 @@ nexus_repos_pypi_hosted:
     force_basic_auth: true
     v1_enabled: true
     write_policy: allow
-nexus_repos_pypi_group:
-  - name: pypi-all
-    member_repos:
-      - pypi-hosted
-      - pypi-proxy
+# nexus_repos_pypi_group:
+#   - name: pypi-all
+#     member_repos:
+#       - pypi-hosted
+#       - pypi-proxy
 nexus_repos_apt_hosted:
   - name: private_apt
     distribution: all
@@ -477,11 +478,11 @@ nexus_repos_raw_hosted:
   - name: raw-hosted
     write_policy: allow
 
-nexus_repos_raw_group:
-  - name: raw-all
-    member_repos:
-      - raw-hosted
-      - raw-proxy
+# nexus_repos_raw_group:
+#   - name: raw-all
+#     member_repos:
+#       - raw-hosted
+#       - raw-proxy
 
 nexus_repos_rubygems_proxy:
   - name: rubygems-proxy
@@ -553,12 +554,12 @@ nexus_repos_nuget_hosted:
   - name: nuget-internal
     blob_store: "{{ nexus_blob_names.nuget.blob }}"
 
-nexus_repos_nuget_group:
-  - name: nuget-all
-    blob_store: "{{ nexus_blob_names.nuget.blob }}"
-    member_repos:
-      - nuget-internal
-      - nuget-proxy-with-version
+# nexus_repos_nuget_group:
+#   - name: nuget-all
+#     blob_store: "{{ nexus_blob_names.nuget.blob }}"
+#     member_repos:
+#       - nuget-internal
+#       - nuget-proxy-with-version
 
 # nexus_repos_nuget_group:
 #   - name: nuget-all
