@@ -31,7 +31,7 @@ nexus_repos_{{ key }}_proxy:
     maximum_metadata_age: {{ team_proxy_repo.maximum_metadata_age if team_proxy_repo.maximum_metadata_age is defined else value.maximum_metadata_age }}
     negative_cache_enabled: {{ team_proxy_repo.negative_cache_enabled if team_proxy_repo.negative_cache_enabled is defined else value.negative_cache_enabled }}
     negative_cache_ttl: {{ team_proxy_repo.negative_cache_ttl if team_proxy_repo.negative_cache_ttl is defined else value.negative_cache_ttl }}
-    routing_rule: {{ team_proxy_repo.routing_rule if team_proxy_repo.routing_rule is defined else value.routing_rule }}
+    routing_rule_matcher: {{ team_proxy_repo.routing_rule_matcher if team_proxy_repo.routing_rule_matcher is defined else value.routing_rule_matcher }}
     cleanup_policies:
 {% if team.policy is defined %}
 {% for policy in team.cleanup_policies %}

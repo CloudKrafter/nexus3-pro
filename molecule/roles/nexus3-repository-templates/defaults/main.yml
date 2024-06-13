@@ -1,8 +1,8 @@
 ---
 nexus_delete_default_repos: true
 
-# routing_rules.yml
-nexus_routing_rules_config:
+# routing_rule_matchers.yml
+nexus_routing_rule_matchers_config:
   nexus:
     deleteUnknownItems:
       routingRules: true
@@ -34,7 +34,7 @@ teams:
         proxy:
           - name: mvn-proxy-repo1
             format: maven2
-            routing_rule: 'wop'
+            routing_rule_matcher: wop
           - name: yum-proxy-repo1
             format: yum
           - name: docker-proxy-repo1
@@ -60,7 +60,7 @@ teams:
               - npm-proxy-repo1
               - npm-repo1
       sharedAccessTo:
-        hosted: 
+        hosted:
           - name: raw-repo1
             teams: [Team2]
         proxy:
@@ -76,7 +76,7 @@ teams:
             format: maven2
           - name: python-repo-team2
             format: pypi
-        proxy: 
+        proxy:
           - name: python-proxy-team2
             format: pypi
         group: []
@@ -84,7 +84,7 @@ teams:
         hosted:
           - name: maven-repo-team2
             teams: [Team1]
-        proxy: 
+        proxy:
           - name: python-proxy-team2
             teams: [Team1]
         group: []
@@ -226,7 +226,7 @@ proxy_defaults:
     layout_policy: strict
     write_policy: allow_once
     content_disposition: inline
-    routing_rule: '' 
+    routing_rule_matcher: ''
     cleanup_policies:
       - mvn_cleanup
   docker:
@@ -261,7 +261,7 @@ proxy_defaults:
     cache_foreign_layers: true
     foreign_layer_url_whitelist: []
     sub_domain:
-    routing_rule: ''   
+    routing_rule_matcher: ''
     cleanup_policies:
       - docker_cleanup
   pypi:
@@ -288,7 +288,7 @@ proxy_defaults:
     maximum_metadata_age: 1440
     negative_cache_enabled: True
     negative_cache_ttl: 1440
-    routing_rule: ''   
+    routing_rule_matcher: ''
     cleanup_policies:
       - policy-1
   npm:
@@ -317,7 +317,7 @@ proxy_defaults:
     maximum_metadata_age: 1440
     negative_cache_enabled: True
     negative_cache_ttl: 1440
-    routing_rule: ''   
+    routing_rule_matcher: ''
     cleanup_policies:
       - policy-1
   nuget:
@@ -344,7 +344,7 @@ proxy_defaults:
     negative_cache_enabled: True
     negative_cache_ttl: 1440
     write_policy: allow_once # one of "allow", "allow_once" or "deny"
-    routing_rule: ''   
+    routing_rule_matcher: ''
     cleanup_policies:
       - policy-1
   apt:
@@ -372,7 +372,7 @@ proxy_defaults:
     negative_cache_enabled: True
     negative_cache_ttl: 1440
     write_policy: allow_once # one of "allow", "allow_once" or "deny"
-    routing_rule: ''   
+    routing_rule_matcher: ''
     cleanup_policies:
       - policy-1
   helm:
@@ -400,7 +400,7 @@ proxy_defaults:
     maximum_metadata_age: 1440
     negative_cache_enabled: True
     negative_cache_ttl: 1440
-    routing_rule: ''   
+    routing_rule_matcher: ''
     cleanup_policies:
       - policy-1
   r:
@@ -426,7 +426,7 @@ proxy_defaults:
     negative_cache_enabled: True
     negative_cache_ttl: 1440
     write_policy: allow_once # one of "allow", "allow_once" or "deny"
-    routing_rule: ''   
+    routing_rule_matcher: ''
     cleanup_policies:
       - policy-1
   raw:
@@ -453,7 +453,7 @@ proxy_defaults:
     negative_cache_enabled: True
     negative_cache_ttl: 1440
     write_policy: allow_once # one of "allow", "allow_once" or "deny"
-    routing_rule: ''   
+    routing_rule_matcher: ''
     cleanup_policies:
       - policy-1
     content_disposition: inline
@@ -480,7 +480,7 @@ proxy_defaults:
     negative_cache_enabled: True
     negative_cache_ttl: 1440
     write_policy: allow_once # one of "allow", "allow_once" or "deny"
-    routing_rule: ''   
+    routing_rule_matcher: ''
     cleanup_policies:
       - policy-1
   go:
@@ -506,7 +506,7 @@ proxy_defaults:
     negative_cache_enabled: True
     negative_cache_ttl: 1440
     write_policy: allow_once # one of "allow", "allow_once" or "deny"
-    routing_rule: ''   
+    routing_rule_matcher: ''
     cleanup_policies:
       - policy-1
   yum:
@@ -533,10 +533,10 @@ proxy_defaults:
     layout_policy: strict
     write_policy: allow_once
     content_disposition: inline
-    routing_rule: ''   
+    routing_rule_matcher: ''
     cleanup_policies:
       - policy-1
-      
+
 group_defaults:
   maven:
   python:

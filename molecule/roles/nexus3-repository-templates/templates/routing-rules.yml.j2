@@ -1,12 +1,13 @@
 ---
 nexus_routing_rules:
-  routingRules:
 {% for item in nexus_repos_maven_proxy %}
-{% if item.routing_rule is defined and item.routing_rule != None %}
+{% if item.routing_rule_matcher is defined and item.routing_rule_matcher != None %}
     - name: {{ item.name }}-routing-rule
       description: Restrict only to {{ item.name }} images
       mode: Allow
-      matchers: {{ item.routing_rule }}
-      proxyname: {{ item.name }}
+      matchers:
+{% for matcher in item.routing_rule_matcher %}
+        - {{ matcher }}
+{% endfor %}
 {% endif %}
 {% endfor %}
