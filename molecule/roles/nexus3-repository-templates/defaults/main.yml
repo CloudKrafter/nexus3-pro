@@ -1,13 +1,6 @@
 ---
 nexus_delete_default_repos: true
 
-# routing_rule_matchers.yml
-nexus_routing_rule_matchers_config:
-  nexus:
-    deleteUnknownItems:
-      routingRules: true
-      # customLocalUsers: false
-
 # defaults file for nexus3-repository-templates
 teams:
   - ID: Team1
@@ -34,9 +27,13 @@ teams:
         proxy:
           - name: mvn-proxy-repo1
             format: maven2
-            routing_rule_matcher: wop
+            routing_rule_matcher: test
+          - name: mvn-proxy-team1
+            format: maven2
+            routing_rule_matcher: alleenimages
           - name: yum-proxy-repo1
             format: yum
+            routing_rule_matcher: yumtest
           - name: docker-proxy-repo1
             format: docker
           - name: raw-proxy-repo1
