@@ -1,5 +1,6 @@
 ---
 nexus_version: ""
+nexus_version_file: ""
 
 # This var is calculated dynamically by the role and
 # will hold the currently installed version if any
@@ -23,6 +24,25 @@ nexus_script_dir: "{{ nexus_installation_dir }}/nexus-{{ nexus_version }}/etc/sc
 nexus_plugin_urls: []
 nexus_onboarding_wizard: false
 nexus_java_version: 17
+
+# Enable Pro features
+nexus_enable_pro_version: false
+nexus_migration_type: postgres
+nexus_db_migrator_initial_memory: 4G
+nexus_db_migrator_maximum_memory: 4G
+
+# Nexus 3.21.0+ supports the ability to use PostgreSQL as the database
+# This is a one-time operation and should be done before starting Nexus
+# If you want to use PostgreSQL as the database for NEW installations, set the following to true
+nexus_use_postgres: false
+
+nexus_postgres_db_host: localhost
+nexus_postgres_db_name: nexus
+nexus_postgres_db_port: 5432
+nexus_postgres_db_username: nexus
+nexus_postgres_db_password: nexus
+nexus_postgres_max_lifetime: 840000
+nexus_postgres_max_pool_size: 85
 
 # These are the default values for JVM Ram
 # don't touch those unless you have read
@@ -196,6 +216,8 @@ nexus_config_r: false
 nexus_config_p2: false
 nexus_config_conda: false
 nexus_config_go: false
+nexus_config_cocoapods: false
+nexus_config_conan: false
 
 nexus_content_selectors: []
 # example selector item :
@@ -279,7 +301,11 @@ nexus_blob_names: # Splited blob name list @ blob_vars.yml
     blob: default
   conda:
     blob: default
+  conan:
+    blob: default
   go:
+    blob: default
+  cocoapods:
     blob: default
 
 nexus_blobstores: []
@@ -771,3 +797,25 @@ _nexus_repos_go_defaults:
 
 nexus_repos_go_group: []
 nexus_repos_go_proxy: []
+
+_nexus_repos_conan_defaults:
+  blob_store: "{{ nexus_blob_names.conan.blob }}"
+  strict_content_validation: true
+  write_policy: allow_once # one of "allow", "allow_once" or "deny"
+  maximum_component_age: 1440 # Nexus gui default. For proxies only
+  maximum_metadata_age: 1440 # Nexus gui default. For proxies only
+  negative_cache_enabled: true # Nexus gui default. For proxies only
+  negative_cache_ttl: 1440 # Nexus gui default. For proxies only
+
+nexus_repos_conan_proxy: []
+
+_nexus_repos_cocoapods_defaults:
+  blob_store: "{{ nexus_blob_names.cocoapods.blob }}"
+  strict_content_validation: true
+  write_policy: allow_once # one of "allow", "allow_once" or "deny"
+  maximum_component_age: 1440 # Nexus gui default. For proxies only
+  maximum_metadata_age: 1440 # Nexus gui default. For proxies only
+  negative_cache_enabled: true # Nexus gui default. For proxies only
+  negative_cache_ttl: 1440 # Nexus gui default. For proxies only
+
+nexus_repos_cocoapods_proxy: []
