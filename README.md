@@ -629,6 +629,18 @@ Delete the default blobstore from the nexus install initial default configuratio
     # - name: separate-storage
     #   type: file
     #   path: /mnt/custom/path
+    # - name: storage-with-softquota-space-remaining
+    #   type: file
+    #   path: /mnt/custom/path
+    #   softQuota:
+    #     type: "spaceRemainingQuota"
+    #     limit: 1000000000
+    # - name: storage-with-softquota-space-used
+    #   type: file
+    #   path: /mnt/custom/path
+    #   softQuota:
+    #     type: "spaceUsedQuota"
+    #     limit: 1000000000
     # - name: s3-blobstore
     #   type: S3
     #   config:
@@ -1077,6 +1089,7 @@ Feel free to use them or implement your own install scenario at your convenience
           - Developpers # role ID here
     nexus_blobstores:
       - name: company-artifacts
+        type: file
         path: /var/nexus/blobs/company-artifacts
     nexus_scheduled_tasks:
       - name: compact-blobstore
