@@ -111,3 +111,15 @@
       - nexus_custom_jvm_settings must be list
       - and cannot contain any settings related to memory
       - (-{{ option_blacklist | join(', -') }})
+
+# @requirement: nexus_blobstores must have a type defined
+# @version: tbd
+- name: Check if all items in nexus_blobstores have a type defined
+  ansible.builtin.assert:
+    that:
+      - nexus_blobstores | selectattr('type', 'defined') | list | length == nexus_blobstores | list | length
+    quiet: true
+    fail_msg: >-
+      All items in nexus_blobstores must have a type defined.
+      Please review your configuration in nexus_blobstores.
+
