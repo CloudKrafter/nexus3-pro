@@ -22,7 +22,9 @@
     - nexus_latest_link.stat.islnk | default(false)
 
 - name: No version given => Version detection
-  when: nexus_version | length == 0
+  when:
+    - nexus_version | length == 0
+    - nexus_version_file | length == 0
   block:
     - name: Register nexus_version from currently installed
       # Note: setting nexus_version here skips the next block task.
@@ -52,10 +54,45 @@
           }}
         nexus_version_detected_from: latest
 
+- name: Version file present => Version detection
+  when: nexus_version_file | length > 0
+  block:
+    - name: Register nexus_version from currently installed
+      # Note: setting nexus_version here skips the next block task.
+      ansible.builtin.set_fact:
+        nexus_version: "{{ nexus_version_running }}"
+        nexus_version_detected_from: installed
+      when:
+        - nexus_version_running is defined
+        - not (nexus_upgrade | default(false) | bool)
+
+    - name: download nexus_version_file
+      ansible.builtin.get_url:
+        url: "{{ nexus_download_url }}/{{ nexus_version_file }}"
+        dest: "{{ nexus_download_dir }}/{{ nexus_version_file }}"
+        force: false
+        validate_certs: "{{ nexus_download_ssl_verify | default(omit) }}"
+        owner: root
+        group: root
+        mode: "0644"
+      check_mode: false
+
+    - name: Get content of nexus_version_file
+      ansible.builtin.slurp:
+        src: "{{ nexus_download_dir }}/{{ nexus_version_file }}"
+      register: nexus_version_file_content
+      check_mode: false
+
+    - name: Register nexus_version from file content
+      ansible.builtin.set_fact:
+        nexus_version: "{{ nexus_version_file_content.content | b64decode }}"
+        nexus_version_detected_from: file
+
 - name: Print info about detected version to use
   vars:
     version_info: |-
       Used version: {{ nexus_version }}
+      Java version: {{ nexus_java_version | default(17) }}
       Version detected from: {{ nexus_version_detected_from }}
       Upgrade allowed: {{ nexus_upgrade | default(false) | bool }}
       Current running version: {{ nexus_version_running | default('none') }}
@@ -64,7 +101,14 @@
 
 - name: Register nexus package name
   ansible.builtin.set_fact:
-    nexus_package: nexus-{{ nexus_version }}-unix.tar.gz
+      nexus_package: >-
+        {{
+          'nexus-' + nexus_version
+          + '-java' + nexus_java_version | string
+          + '-unix.tar.gz'
+          if nexus_version is version_compare('3.67.1-01', '>=') and nexus_version is version_compare('3.70.1-02', '<=')
+          else 'nexus-' + nexus_version + '-unix.tar.gz'
+        }}
 
 - name: Download nexus_package
   ansible.builtin.get_url:
@@ -77,7 +121,8 @@
     mode: "0644"
   check_mode: false
   register: download_status
-  until: download_status.status_code == 200
+  until: >
+    (download_status.status_code == 200) or (download_status.status_code == 304)
   retries: "{{ nexus_download_retries }}"
   delay: "{{ nexus_download_delay }}"
   notify:
@@ -218,6 +263,11 @@
     group: "{{ nexus_os_group }}"
     mode: "0750"
 
+- name: Enable Pro features
+  ansible.builtin.include_tasks: enable_pro_version.yml
+  when: nexus_use_postgres | default(false) | bool or nexus_enable_pro_version | default(false) | bool
+  tags: nexus-pro
+
 - name: Setup Nexus data directory
   ansible.builtin.lineinfile:
     dest: "{{ nexus_installation_dir }}/nexus-latest/bin/nexus.vmoptions"
@@ -230,7 +280,7 @@
   ansible.builtin.lineinfile:
     dest: "{{ nexus_installation_dir }}/nexus-latest/bin/nexus.vmoptions"
     regexp: ^-XX:LogFile=.*
-    line: -XX:LogFile={{ nexus_data_dir }}log/jvm.log
+    line: -XX:LogFile={{ nexus_data_dir }}/log/jvm.log
   notify:
     - nexus-service-stop
 
@@ -420,6 +470,10 @@
 
 - name: Run all notified handlers now
   ansible.builtin.meta: flush_handlers
+
+- name: Config Postgres
+  ansible.builtin.include_tasks: enable_postgres.yml
+  tags: nexus-postgres
 
 - name: Enable nexus systemd service and make sure it is started
   ansible.builtin.systemd:

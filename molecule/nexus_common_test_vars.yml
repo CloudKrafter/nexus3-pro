@@ -28,7 +28,6 @@ nexus_config_pypi: true
 nexus_config_docker: true
 nexus_config_raw: true
 nexus_config_rubygems: true
-nexus_config_bower: true
 nexus_config_npm: true
 nexus_config_nuget: true
 nexus_config_gitlfs: true
@@ -37,7 +36,11 @@ nexus_config_apt: true
 nexus_config_helm: true
 nexus_config_r: true
 nexus_config_conda: true
+nexus_config_conan: true
 nexus_config_go: true
+nexus_config_bower: true
+nexus_config_p2: true
+nexus_config_cocoapods: true
 
 nexus_anonymous_access: true
 
@@ -47,52 +50,232 @@ nexus_rut_auth_realm: false
 nexus_rut_auth_header: CUSTOM_RUT_HEADER
 
 nexus_repos_cleanup_policies:
-  - name: mvn_cleanup
-    format: maven2
-    mode:
-    notes: ""
+  - name: all_cleanup
+    format: all
+    notes: "All"
     criteria:
       lastBlobUpdated: 60
       lastDownloaded: 120
-
+  - name: mvn_cleanup
+    format: maven2
+    notes: "mvn"
+    criteria:
+      lastBlobUpdated: 60
+      lastDownloaded: 120
+  - name: mvn_releases_cleanup
+    format: maven2
+    notes: "mvn RELEASES"
+    criteria:
+      lastBlobUpdated: 60
+      lastDownloaded: 120
+      isPrerelease: RELEASES
+  - name: mvn_prereleases_cleanup
+    format: maven2
+    notes: "mvn PRERELEASES"
+    criteria:
+      lastBlobUpdated: 60
+      lastDownloaded: 120
+      isPrerelease: PRERELEASES
+  - name: python_cleanup
+    format: pypi
+    notes: "Python pip"
+    criteria:
+      lastBlobUpdated: 60
+      lastDownloaded: 120
+      regexKey: "beta-*"
+  - name: docker_cleanup
+    format: docker
+    notes: "Docker"
+    criteria:
+      lastBlobUpdated: 60
+      lastDownloaded: 120
+      regexKey: "beta-*"
+  - name: raw_cleanup
+    format: raw
+    notes: "Raw"
+    criteria:
+      lastBlobUpdated: 60
+      lastDownloaded: 120
+      regexKey: "beta-*"
+  - name: rubygems_cleanup
+    format: rubygems
+    notes: "Rubygems"
+    criteria:
+      lastBlobUpdated: 60
+      lastDownloaded: 120
+      regexKey: "beta-*"
+  - name: npm_cleanup
+    format: npm
+    notes: ""
+    criteria:
+      regexKey: "beta-*"
+  - name: npm_releases_cleanup
+    format: npm
+    notes: "npm RELEASES"
+    criteria:
+      regexKey: "beta-*"
+      isPrerelease: RELEASES
+  - name: npm_prereleases_cleanup
+    format: npm
+    notes: "npm PRERELEASES"
+    criteria:
+      regexKey: "beta-*"
+      isPrerelease: PRERELEASES
+  - name: nuget_cleanup
+    format: nuget
+    notes: "NuGet"
+    criteria:
+      lastBlobUpdated: 60
+      lastDownloaded: 120
+      regexKey: "beta-*"
+  - name: gitlfs_cleanup
+    format: gitlfs
+    notes: "gitlfs"
+    criteria:
+      lastBlobUpdated: 60
+      lastDownloaded: 120
+  - name: yum_prerelease_cleanup
+    format: yum
+    notes: "yum PRERELEASES"
+    criteria:
+      lastBlobUpdated: 60
+      lastDownloaded: 120
+      regexKey: "beta-*"
+      isPrerelease: PRERELEASES
+  - name: yum_release_cleanup
+    format: yum
+    notes: "yum RELEASES"
+    criteria:
+      lastBlobUpdated: 60
+      lastDownloaded: 120
+      regexKey: "beta-*"
+      isPrerelease: RELEASES
+  - name: yum_cleanup
+    format: yum
+    notes: "yum"
+    criteria:
+      lastBlobUpdated: 60
+      lastDownloaded: 120
+      regexKey: "beta-*"
+  - name: apt_cleanup
+    format: apt
+    notes: "apt"
+    criteria:
+      lastBlobUpdated: 60
+      lastDownloaded: 120
+      regexKey: "beta-*"
+  - name: helm_cleanup
+    format: helm
+    notes: "Helm"
+    criteria:
+      lastBlobUpdated: 60
+      lastDownloaded: 120
+      regexKey: "beta-*"
+  - name: r_cleanup
+    format: r
+    notes: "r"
+    criteria:
+      lastBlobUpdated: 60
+      lastDownloaded: 120
+      regexKey: "beta-*"
+  - name: conda_cleanup
+    format: conda
+    notes: "conda"
+    criteria:
+      lastBlobUpdated: 60
+      lastDownloaded: 120
+      regexKey: "beta-*"
+  - name: go_cleanup
+    format: go
+    notes: "go"
+    criteria:
+      lastBlobUpdated: 60
+      lastDownloaded: 120
+      regexKey: "beta-*"
+  - name: cocoapods_cleanup
+    format: cocoapods
+    notes: "cocoapods"
+    criteria:
+      lastBlobUpdated: 60
+      lastDownloaded: 120
+      regexKey: "beta-*"
+  - name: conan_cleanup
+    format: conan
+    notes: "conan"
+    criteria:
+      lastBlobUpdated: 60
+      lastDownloaded: 120
+      regexKey: "beta-*"
+  - name: p2_cleanup
+    format: p2
+    notes: "p2"
+    criteria:
+      lastBlobUpdated: 60
+      lastDownloaded: 120
+      regexKey: "beta-*"
 nexus_repos_maven_proxy:
-  - name: central
+  - name: central-blob-default-permissive-http-authentication
     remote_url: https://repo1.maven.org/maven2/
     layout_policy: permissive
-    cleanup_policies:
-      - mvn_cleanup
-  - name: jboss
+    remote_username: admin
+    remote_password: admin123
+
+  - name: central-blob-default-permissive
+    remote_url: https://repo1.maven.org/maven2/
+    layout_policy: permissive
+
+  - name: jboss-api-blob-default
     remote_url: https://repository.jboss.org/nexus/content/groups/public-jboss/
-    cleanup_policies:
-      - mvn_cleanup
+
+  - name: jcenter-api-blob-default
+    remote_url: https://jcenter.bintray.com/
+
+  - name: jcenter-api
+    remote_url: https://jcenter.bintray.com/
 
 nexus_repos_maven_hosted:
-  - name: private-release
+  - name: private-release-cleanup-mvn-cleanup
     version_policy: release
     write_policy: allow_once # one of "allow", "allow_once" or "deny"
     cleanup_policies:
       - mvn_cleanup
 
 nexus_repos_maven_group:
-  - name: public
+  - name: public-mixed-permissive
     member_repos:
-      - central
-      - jboss
-    layout_policy: permissive
-    version_policy: mixed
-  - name: public-offline
-    online: false
-    member_repos:
-      - central
-      - jboss
+      - private-release-cleanup-mvn-cleanup
+      - jcenter-api
     layout_policy: permissive
     version_policy: mixed
 
-nexus_repos_npm_hosted: []
+  - name: public-offline-mixed-permissive
+    online: false
+    member_repos:
+      - private-release-cleanup-mvn-cleanup
+      - jcenter-api
+      - jboss-api-blob-default
+    layout_policy: permissive
+    version_policy: mixed
+
+nexus_repos_npm_hosted:
+  - name: npm-registry-hosted
+    http_port: "5000"
+    force_basic_auth: true
+    v1_enabled: true
+    write_policy: allow
+  - name: npm-registry-blocked-hosted
+    http_port: "5001"
+    force_basic_auth: true
+    v1_enabled: true
+    write_policy: deny
+    blocked: true
+    auto_block: false
 nexus_repos_npm_group:
   - name: npm-public
     member_repos:
       - npm-registry
+      - npm-registry-blocked
+      - npm-registry-hosted
 nexus_repos_npm_proxy:
   - name: npm-registry
     remote_url: https://registry.npmjs.org/
@@ -106,6 +289,10 @@ nexus_repos_npm_proxy:
     blocked: true
     auto_block: false
     user_agent_suffix: custom-agent
+
+nexus_repos_gitlfs_hosted:
+  - name: gitlfs-hosted
+    write_policy: allow
 
 nexus_repos_yum_hosted:
   - name: private_yum_centos_7
@@ -137,7 +324,39 @@ nexus_repos_docker_hosted:
     write_policy: deny # will be effective when allow_redeploy_latest is false
     allow_redeploy_latest: false
 
-nexus_repos_docker_proxy: []
+nexus_repos_docker_proxy:
+  - name: docker-hub
+    remote_url: https://registry-1.docker.io/
+    index_type: HUB
+    index_url: http://docker.io
+    http_port: "5001"
+    force_basic_auth: true
+    v1_enabled: true
+    write_policy: allow
+
+nexus_repos_docker_group:
+  - name: docker-all
+    member_repos:
+      - docker-private
+      - docker-hub
+nexus_repos_pypi_proxy:
+  - name: pypi-proxy
+    remote_url: https://pypi.python.org/simple/
+    http_port: "5002"
+    force_basic_auth: true
+    v1_enabled: true
+    write_policy: allow
+nexus_repos_pypi_hosted:
+  - name: pypi-hosted
+    http_port: "5003"
+    force_basic_auth: true
+    v1_enabled: true
+    write_policy: allow
+nexus_repos_pypi_group:
+  - name: pypi-all
+    member_repos:
+      - pypi-hosted
+      - pypi-proxy
 nexus_repos_apt_hosted:
   - name: private_apt
     distribution: all
@@ -240,6 +459,53 @@ nexus_repos_apt_proxy:
     maximum_metadata_age: -1
     negative_cache_ttl: 60
 
+nexus_repos_raw_proxy:
+  - name: raw-proxy
+    remote_url: https://raw.githubusercontent.com/
+    negative_cache_enabled: false
+    enable_circular_redirects: true
+    enable_cookies: true
+    connection_timeout: 300
+    connection_retries: 5
+
+nexus_repos_raw_hosted:
+  - name: raw-hosted
+    write_policy: allow
+
+nexus_repos_raw_group:
+  - name: raw-all
+    member_repos:
+      - raw-hosted
+      - raw-proxy
+
+nexus_repos_rubygems_proxy:
+  - name: rubygems-proxy
+    remote_url: https://rubygems.org/
+
+nexus_repos_rubygems_hosted:
+  - name: rubygems-hosted
+    write_policy: allow
+
+nexus_repos_rubygems_group:
+  - name: rubygems-all
+    member_repos:
+      - rubygems-hosted
+      - rubygems-proxy
+
+nexus_repos_bower_proxy:
+  - name: bower-proxy
+    remote_url: https://bower.herokuapp.com/
+
+nexus_repos_bower_hosted:
+  - name: bower-hosted
+    write_policy: allow
+
+nexus_repos_bower_group:
+  - name: bower-all
+    member_repos:
+      - bower-hosted
+      - bower-proxy
+
 nexus_repos_helm_hosted:
   - name: helm-hosted
 
@@ -266,9 +532,18 @@ nexus_repos_conda_proxy:
   - name: conda-proxy
     remote_url: https://repo.continuum.io/pkgs/
 
+nexus_repos_conan_proxy:
+  - name: conan-proxy
+    remote_url: https://api.bintray.com/conan/conan-community/conan
+
 nexus_repos_go_proxy:
   - name: go-proxy
     remote_url: https://golang.org/pkg/
+
+nexus_repos_go_group:
+  - name: go-all
+    member_repos:
+      - go-proxy
 
 nexus_repos_nuget_hosted:
   - name: nuget-internal
@@ -279,7 +554,7 @@ nexus_repos_nuget_group:
     blob_store: "{{ nexus_blob_names.nuget.blob }}"
     member_repos:
       - nuget-internal
-      - nuget-proxy
+      - nuget-proxy-with-version
 
 nexus_repos_nuget_proxy:
   - name: nuget-proxy-with-version
@@ -288,6 +563,14 @@ nexus_repos_nuget_proxy:
     nuget_version: v2
   - name: nuget-proxy-default
     remote_url: https://api.nuget.org/v3/index.json
+
+nexus_repos_p2_proxy:
+  - name: p2-proxy
+    remote_url: http://download.eclipse.org/technology/epp/packages/oxygen/
+
+nexus_repos_cocoapods_proxy:
+  - name: cocoapods-proxy
+    remote_url: https://cdn.cocoapods.org/
 
 nexus_content_selectors:
   # Docker by namespace. For mode details see:
@@ -497,3 +780,16 @@ nexus_proxy_exclude_hosts: # no_proxy env for shell does not obey java style
   - localhost
   - 127.*
   - "[::1]"
+
+_nexus_repos_maven_defaults:
+  blob_store: "{{ nexus_blob_names.mvn.blob }}"
+  strict_content_validation: true
+  version_policy: release # release, snapshot or mixed
+  layout_policy: strict # strict or permissive
+  write_policy: allow_once # one of "allow", "allow_once" or "deny"
+  maximum_component_age: -1 # Nexus gui default. For proxies only
+  maximum_metadata_age: 1440 # Nexus gui default. For proxies only
+  negative_cache_enabled: true # Nexus gui default. For proxies only
+  negative_cache_ttl: 1440 # Nexus gui default. For proxies only
+  cleanup_policies:
+    - all_cleanup
