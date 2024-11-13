@@ -23,7 +23,7 @@ nexus_tmp_dir: "{{ (ansible_os_family == 'RedHat') | ternary('/var/nexus-tmp', '
 nexus_script_dir: "{{ nexus_installation_dir }}/nexus-{{ nexus_version }}/etc/scripts"
 nexus_plugin_urls: []
 nexus_onboarding_wizard: false
-nexus_java_version: 8
+nexus_java_version: 17
 
 # Enable Pro features
 nexus_enable_pro_version: false
