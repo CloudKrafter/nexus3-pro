@@ -109,6 +109,20 @@
       when: nexus_restore_point is undefined
       tags: provision
       block:
+        - name: Get all existing blobstores
+          ansible.builtin.uri:
+            url: "{{ nexus_api_scheme }}://{{ nexus_api_hostname }}:{{ nexus_api_port }}{{ nexus_api_context_path }}service/rest/v1/blobstores"
+            user: admin
+            password: "{{ current_nexus_admin_password }}"
+            method: GET
+            force_basic_auth: true
+            validate_certs: "{{ nexus_api_validate_certs }}"
+            body_format: json
+            return_content: yes
+            status_code: 200
+          register: __nexus_existing_blobstores__
+          tags: blobstores
+
         - name: Create directories for blob stores.
           ansible.builtin.file:
             path: "{{ item['path'] }}"
@@ -121,11 +135,12 @@
           loop_control:
             label: "blobstore: {{ item.name }} - type: {{ item.type | d('file') }} - path: {{ item.path | d('None') }}"
 
-        - name: Create/Check blobstores
-          ansible.builtin.include_tasks: call_script.yml
+        - name: Create/Check blobstores using API
+          ansible.builtin.include_tasks: create_blobstores.yml
           vars:
-            script_name: create_blobstores_from_list
-            call_args: "{{ nexus_blobstores }}"
+            api_payload: "{{ item | default([]) }}"
+          loop:
+            - "{{ nexus_blobstores | d([]) }}"
           when: nexus_blobstores | length > 0
 
 - name: Restore nexus backup
