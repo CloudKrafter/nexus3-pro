@@ -1,3 +1,13 @@
+# Role moved to a collection
+
+While working on several bugfixes and new features we have decided to split the features out into multiple smaller roles within a collection.
+All new development will be done in https://github.com/CloudKrafter/nexus-ansible-collection/tree/main/roles/nexus_oss.
+
+
+
+
+
+
 [![Build Status](https://travis-ci.com/ansible-ThoTeam/nexus3-oss.svg?branch=main)](https://app.travis-ci.com/github/ansible-ThoTeam/nexus3-oss)
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/ansible-ThoTeam/nexus3-oss)](https://github.com/ansible-ThoTeam/nexus3-oss/releases/latest)
 [![GitHub commits since latest release](https://img.shields.io/github/commits-since/ansible-ThoTeam/nexus3-oss/latest)](https://github.com/ansible-ThoTeam/nexus3-oss/commits/main)
