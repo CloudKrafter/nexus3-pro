@@ -112,14 +112,25 @@
       - and cannot contain any settings related to memory
       - (-{{ option_blacklist | join(', -') }})
 
-# @requirement: nexus_blobstores must have a type defined
-# @version: tbd
-- name: Check if all items in nexus_blobstores have a type defined
-  ansible.builtin.assert:
-    that:
-      - nexus_blobstores | selectattr('type', 'defined') | list | length == nexus_blobstores | list | length
-    quiet: true
-    fail_msg: >-
-      All items in nexus_blobstores must have a type defined.
-      Please review your configuration in nexus_blobstores.
+# - name: When nexus_enable_pro_version is defined assert that environment varibale NEXUS_PRO_LICENSE_B64 is set
+#   ansible.builtin.assert:
+#     that:
+#       - lookup('env', 'NEXUS_PRO_LICENSE_B64') is defined
+#     quiet: true
+#     fail_msg: >-
+#       When nexus_enable_pro_version is defined, the environment variable NEXUS_PRO_LICENSE_B64 must be set.
+#       Please set the environment variable NEXUS_PRO_LICENSE_B64 with the base64 encoded license file content.
+#   when: nexus_enable_pro_version | default(false)
 
+
+# @deprecated: nexus_config_bower is not supported on Nexus 3.71 and higher
+# # @version: 3.0.0
+# - name: When nexus_version is higher than 3.70.1 asser that the nexus_config_bower variable is false
+#   ansible.builtin.assert:
+#     that:
+#       - nexus_config_bower | default(false) == false
+#     quiet: true
+#     fail_msg: >-
+#       When nexus_version is higher than 3.70.1, the nexus_config_bower variable must be false.
+#       Please set nexus_config_bower to false.
+#   when: nexus_version is version('3.70.1', '>') == true

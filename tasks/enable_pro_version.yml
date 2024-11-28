@@ -30,13 +30,26 @@
   ansible.builtin.shell: |
     echo $NEXUS_PRO_LICENSE_B64 | tr -d ' ' > "{{ nexus_data_dir }}/etc/license.b64"
   environment:
-    NEXUS_PRO_LICENSE_B64: "{{ lookup('env', 'NEXUS_PRO_LICENSE_B64') }}"
+    NEXUS_LICENSE_B64: "{{ lookup('env', 'NEXUS_LICENSE_B64') }}"
+  when: lookup('env', 'NEXUS_LICENSE_B64')
   tags: nexus-postgres,nexus-migrate,nexus-pro
 
 # base64 decode the license file
 - name: Decode the license file
   ansible.builtin.shell: |
     base64 -d "{{ nexus_data_dir }}/etc/license.b64" > "{{ nexus_data_dir }}/etc/license.lic"
+  when: lookup('env', 'NEXUS_LICENSE_B64')
+  tags: nexus-postgres,nexus-migrate,nexus-pro
+
+# copy license file from files directory to the remote host
+- name: Copy the license file to the remote host
+  ansible.builtin.copy:
+    src: "license.lic"
+    dest: "{{ nexus_data_dir }}/etc/license.lic"
+    owner: "{{ nexus_os_user }}"
+    group: "{{ nexus_os_group }}"
+    mode: "0640"
+  when: lookup('env', 'NEXUS_LICENSE_B64') is not defined
   tags: nexus-postgres,nexus-migrate,nexus-pro
 
 # set file permissions for "{{ nexus_data_dir }}/etc/license.lic"

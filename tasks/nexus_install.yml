@@ -503,6 +503,7 @@
     owner: root
     group: root
     mode: "0644"
+    validate_certs: "{{ nexus_download_ssl_verify | default(omit) }}"
   with_items: "{{ nexus_plugin_urls }}"
 
 - name: Run all notified handlers now

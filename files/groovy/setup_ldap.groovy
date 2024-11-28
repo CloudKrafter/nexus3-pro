@@ -27,7 +27,11 @@ connection.setHost(new Connection.Host(Connection.Protocol.valueOf(parsed_args.p
 if (parsed_args.auth == "simple") {
     connection.setAuthScheme("simple")
     connection.setSystemUsername(parsed_args.username)
-    connection.setSystemPassword(parsed_args.password)
+    try {
+        connection.setSystemPassword(parsed_args.password)
+    } catch (MissingMethodException) {
+        connection.setRawSystemPassword(parsed_args.password)
+    }
 } else {
     connection.setAuthScheme("none")
 }
