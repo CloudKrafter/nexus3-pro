@@ -10,6 +10,7 @@
     body_format: json
     body: "{{ blobstore }}"
     status_code: 204
+    timeout: "{{ nexus_api_timeout | int }}"
   loop: "{{ api_payload }}"
   loop_control:
     loop_var: blobstore
@@ -26,6 +27,7 @@
     body_format: json
     body: "{{ blobstore }}"
     status_code: 204
+    timeout: "{{ nexus_api_timeout | int }}"
   loop: "{{ api_payload }}"
   loop_control:
     loop_var: blobstore

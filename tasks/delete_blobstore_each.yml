@@ -13,7 +13,8 @@
     body_format: json
     body: "{{ blobstore }}"
     status_code: 204
-  loop: "{{ item }}"
+    timeout: "{{ nexus_api_timeout | int }}"
+  loop: "{{ item | list }}"
   loop_control:
     loop_var: blobstore
-  when: blobstore.name in __nexus_existing_blobstores__.json | map(attribute='name') | list
+  when: __nexus_existing_blobstores__ and blobstore.name in __nexus_existing_blobstores__.json | map(attribute='name') | list

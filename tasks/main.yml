@@ -77,11 +77,13 @@
       | unique
     }}
   when: (nexus_data_dir_contents.matched == 0) and nexus_delete_default_blobstore
+  tags: blobstores
 
 - name: Provisioning (ldap, content selectors, blobstores, prepare privileges)
   when: nexus_run_provisionning | default(true) | bool
   tags:
     - provision
+    - blobstores
   block:
     - name: Create/check ldap servers
       ansible.builtin.include_tasks: setup_ldap_each.yml
@@ -107,7 +109,7 @@
 
     - name: Create/Check blobstores
       when: nexus_restore_point is undefined
-      tags: provision
+      tags: provision, blobstores
       block:
         - name: Get all existing blobstores
           ansible.builtin.uri:
@@ -134,7 +136,8 @@
           loop: "{{ nexus_blobstores }}"
           loop_control:
             label: "blobstore: {{ item.name }} - type: {{ item.type | d('file') }} - path: {{ item.path | d('None') }}"
-
+          tags: blobstores
+        # Note: blob type is now required!
         - name: Create/Check blobstores using API
           ansible.builtin.include_tasks: create_blobstores.yml
           vars:
@@ -142,12 +145,13 @@
           loop:
             - "{{ nexus_blobstores | d([]) }}"
           when: nexus_blobstores | length > 0
+          tags: blobstores
 
 - name: Restore nexus backup
   ansible.builtin.include_tasks: nexus-restore.yml
   when: nexus_restore_point is defined
 
-- name: Provisionning part 2 (cleanup policies, repositories, privileges, roles, ...)
+- name: Provisionning part 2 (cleanup policies, repositories, privileges, roles, routing rules)
   when: nexus_run_provisionning | default(true) | bool
   tags:
     - provision
@@ -157,14 +161,61 @@
     - roles
     - users
     - ldap
+    - routing-rules
   block:
     - name: Create/check cleanup policies
       ansible.builtin.include_tasks: call_script.yml
       vars:
         script_name: create_cleanup_policies_from_list
         call_args: "{{ nexus_repos_cleanup_policies }}"
-      when: nexus_repos_cleanup_policies | length > 0
+      when: nexus_repos_cleanup_policies | length > 0 and not nexus_enable_pro_version | default(false) | bool
       tags: cleanup
+
+    - name: Get all existing cleanup policies
+      ansible.builtin.uri:
+        url: "{{ nexus_api_scheme }}://{{ nexus_api_hostname }}:{{ nexus_api_port }}{{ nexus_api_context_path }}service/rest/v1/cleanup-policies"
+        user: admin
+        password: "{{ current_nexus_admin_password }}"
+        method: GET
+        force_basic_auth: true
+        validate_certs: "{{ nexus_api_validate_certs }}"
+        body_format: json
+        return_content: yes
+        status_code: 200
+      register: __nexus_existing_cleanup_policies__
+      when: nexus_enable_pro_version | default(false) | bool
+      tags: cleanup
+    
+    - name: Create configured cleanup policies using Nexus API
+      ansible.builtin.include_tasks: create_cleanup_policies.yml
+      vars:
+        api_payload: "{{ item | default([]) }}"
+      loop:
+        - "{{ nexus_repos_cleanup_policies | d([]) }}"
+      when: nexus_use_api_for_provisioning | default(false) | bool and nexus_repos_cleanup_policies | length > 0 and nexus_enable_pro_version
+      tags: cleanup
+    
+    - name: Get all existing routing rules
+      ansible.builtin.uri:
+        url: "{{ nexus_api_scheme }}://{{ nexus_api_hostname }}:{{ nexus_api_port }}{{ nexus_api_context_path }}service/rest/v1/routing-rules"
+        user: admin
+        password: "{{ current_nexus_admin_password }}"
+        method: GET
+        force_basic_auth: true
+        validate_certs: "{{ nexus_api_validate_certs }}"
+        body_format: json
+        return_content: yes
+        status_code: 200
+      register: __nexus_existing_routing_rules__
+      tags: routing-rules
+
+    - name: Create configured routing rules using Nexus API
+      ansible.builtin.include_tasks: create_routing_rules.yml
+      vars:
+        api_payload: "{{ item | default([]) }}"
+      loop:
+        - "{{ nexus_repos_routing_rules | d([]) }}"
+      tags: routing-rules
 
     - name: Apply defaults to repositories configurations and process a single list
       ansible.builtin.include_tasks: process_repos_list.yml
@@ -218,9 +269,7 @@
         - "{{ _nexus_repos_bower_proxy | d([]) }}"
         - "{{ _nexus_repos_bower_hosted | d([]) }}"
         - "{{ _nexus_repos_bower_group | d([]) }}"
-        - "{{ _nexus_repos_npm_proxy | d([]) }}"
         - "{{ _nexus_repos_npm_hosted | d([]) }}"
-        - "{{ _nexus_repos_npm_group | d([]) }}"
         - "{{ _nexus_repos_nuget_proxy | d([]) }}"
         - "{{ _nexus_repos_nuget_hosted | d([]) }}"
         - "{{ _nexus_repos_nuget_group | d([]) }}"
@@ -241,6 +290,25 @@
         - "{{ _nexus_repos_go_group | d([]) }}"
         - "{{ _nexus_repos_conan_proxy | d([]) }}"
         - "{{ _nexus_repos_cocoapods_proxy | d([]) }}"
+      when: nexus_use_api_for_provisioning | default(false) | bool
+      tags: repos
+    
+    # This is temporarily because BearerToken for NPM proxies can not be set using the API
+    - name: Create configured NPM Proxy repositories
+      ansible.builtin.include_tasks: call_script.yml
+      vars:
+        script_name: create_repos_from_list
+        call_args: "{{ _nexus_repos_npm_proxy | d([]) }}"
+      tags: repos
+    
+    # This is temporarily because when creating NPM group repos, thers a possibility it contains NPM proxies.
+    # Therefor we only create NPM group repos after hosted and proxy repos have been created.
+    - name: Create configured NPM group repositories using Nexus API
+      ansible.builtin.include_tasks: create_repos.yml
+      vars:
+        api_payload: "{{ item | default([]) }}"
+      loop:
+        - "{{ _nexus_repos_npm_group | d([]) }}"
       when: nexus_use_api_for_provisioning | default(false) | bool
       tags: repos
 

@@ -48,6 +48,7 @@ _(Created with [gh-md-toc](https://github.com/ekalinin/github-markdown-toc))_
       * [Users](#users)
       * [Content selectors](#content-selectors)
       * [Cleanup policies](#cleanup-policies)
+      * [Routing Rules](#routing-rules)
       * [Blobstores and repositories](#blobstores-and-repositories)
       * [Scheduled tasks](#scheduled-tasks)
       * [Backups](#backups)
@@ -646,6 +647,26 @@ nexus_repos_cleanup_policies:
 
 Cleanup policies definitions. Can be added to repo definitions with the option `cleanup_policies`
 
+### Routing rules
+```yaml
+nexus_repos_routing_rules:
+  - name: V2-Only
+    description: Restrict only to /v2/ images
+    mode: ALLOW
+    matchers:
+    - /v2/.*$
+```
+
+Routing rules can be added to proxy repo definitions with the option `routing_rule` for example:
+```
+  - name: chrome-proxy
+    blob_store: "{{ nexus_blob_names.raw.blob }}"
+    remote_url: https://googlechromelabs.github.io/chrome-for-testing/
+    routing_rule: V2-Only
+```
+Note that the current Groovy implementation does NOT support assigning routing rules to repositories!
+Run your playbook with `nexus_use_api_for_provisioning=true` variable.
+
 ### Blobstores and repositories
 ```yaml
     nexus_delete_default_repos: false
@@ -1210,6 +1231,14 @@ If you wish to contribute:
 
 Moreover, if you have time to devote for code review, merge for realeases, etc... drop an email to contact@thoteam.com to get in touch.
 
+### Setup local dev/test environment
+
+Use python 3.12
+brew install python@3.12
+python3.12 -m venv .venv3.12
+source .venv3.12/bin/activate
+pip3 install -r requirements.txt
+ansible-galaxy collection install -r requirements.yml
 
 ### Testing
 

@@ -7,6 +7,7 @@
     insertafter: "EOF"
     state: present
   tags: nexus-postgres,nexus-migrate
+  when: nexus_use_postgres | default(false) | bool or nexus_use_postgres_after_migration | default(false)
 
 - name: Create {{ nexus_data_dir }}/etc/fabric directory
   ansible.builtin.file:

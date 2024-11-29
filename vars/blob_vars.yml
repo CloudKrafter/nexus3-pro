@@ -85,9 +85,11 @@ nexus_blobstores:
     type: file
     path: "{{ nexus_data_dir }}/blobs/{{ nexus_blob_names.conda.blob }}"
   - name: "{{ nexus_blob_prefix }}conan"
+    type: file
     path: "{{ nexus_data_dir }}/blobs/{{ nexus_blob_names.conan.blob }}"
   - name: "{{ nexus_blob_prefix }}go"
     type: file
     path: "{{ nexus_data_dir }}/blobs/{{ nexus_blob_names.go.blob }}"
   - name: "{{ nexus_blob_prefix }}cocoapods"
+    type: file
     path: "{{ nexus_data_dir }}/blobs/{{ nexus_blob_names.cocoapods.blob }}"

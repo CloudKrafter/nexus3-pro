@@ -10,6 +10,7 @@
     body_format: json
     body: "{{ repo }}"
     status_code: 201
+    timeout: "{{ nexus_api_timeout | int }}"
   loop: "{{ api_payload }}"
   loop_control:
     loop_var: repo
@@ -26,6 +27,7 @@
     body_format: json
     body: "{{ repo }}"
     status_code: 204
+    timeout: "{{ nexus_api_timeout | int }}"
   loop: "{{ api_payload }}"
   loop_control:
     loop_var: repo

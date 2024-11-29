@@ -25,10 +25,11 @@
   when: nexus_properties_file.stat.exists == false
   tags: nexus-postgres,nexus-migrate,nexus-pro
 
-# TODO: check if the environment variable NEXUS_PRO_LICENSE_B64 is set otherwise use the ansible variable NEXUS_LICENSE
+# TODO: check if the environment variable NEXUS_LICENSE_B64 is set otherwise use the ansible variable NEXUS_LICENSE
+
 - name: Set the license file content
   ansible.builtin.shell: |
-    echo $NEXUS_PRO_LICENSE_B64 | tr -d ' ' > "{{ nexus_data_dir }}/etc/license.b64"
+    echo $NEXUS_LICENSE_B64 | tr -d ' ' > "{{ nexus_data_dir }}/etc/license.b64"
   environment:
     NEXUS_LICENSE_B64: "{{ lookup('env', 'NEXUS_LICENSE_B64') }}"
   when: lookup('env', 'NEXUS_LICENSE_B64')

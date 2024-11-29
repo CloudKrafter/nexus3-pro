@@ -265,7 +265,7 @@ nexus_ldap_users: []
 
 nexus_delete_default_repos: false
 
-nexus_delete_default_blobstore: false
+nexus_delete_default_blobstore: true
 
 #
 # Nexus blobstore config
@@ -819,3 +819,5 @@ _nexus_repos_cocoapods_defaults:
   negative_cache_ttl: 1440 # Nexus gui default. For proxies only
 
 nexus_repos_cocoapods_proxy: []
+
+nexus_repos_routing_rules: []

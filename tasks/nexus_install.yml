@@ -474,6 +474,7 @@
 - name: Config Postgres
   ansible.builtin.include_tasks: enable_postgres.yml
   tags: nexus-postgres
+  when: nexus_use_postgres | default(false) | bool or nexus_use_postgres_after_migration | default(false)
 
 - name: Enable nexus systemd service and make sure it is started
   ansible.builtin.systemd:

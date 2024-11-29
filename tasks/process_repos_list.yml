@@ -1007,11 +1007,7 @@
                 'removeQuarantined': combined_repo.removeQuarantined | default(omit)
               }
             } -%}
-            {%- if use_api -%}
-              {{ result.append(transformed_repo) }}
-            {%- else -%}
-              {{ result.append(combined_repo) }}
-            {%- endif -%}
+            {{ result.append(combined_repo) }}
           {%- endfor -%}
           {{ result | to_json | from_json }}
 
