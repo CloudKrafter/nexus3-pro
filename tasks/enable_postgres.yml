@@ -50,3 +50,5 @@
   notify:
     - wait-for-nexus
     - wait-for-nexus-port
+
+  # wait for nexus to be started succesfully

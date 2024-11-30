@@ -1,0 +1,82 @@
+---
+{% for team in teams %}
+{% if teams|length > 0 and loop.first %}
+nexus_roles:
+{% endif %}
+  - id: {{ team.ID|upper }}-members
+    name: {{ team.ID|upper }}-members
+    description: '{{ team.name|upper }} role.'
+    privileges:
+{% for team_hosted_repo in team.repos.requestedBy.hosted %}
+{% if team_hosted_repo|length > 0 %}
+      - nx-repository-view-{{ team_hosted_repo.format }}-{{ team_hosted_repo.name }}-read
+      - nx-repository-view-{{ team_hosted_repo.format }}-{{ team_hosted_repo.name }}-browse
+{% endif %}
+{% endfor %}
+{% for team_proxy_repo in team.repos.requestedBy.proxy %}
+{% if team_proxy_repo|length > 0 %}
+      - nx-repository-view-{{ team_proxy_repo.format }}-{{ team_proxy_repo.name }}-read
+      - nx-repository-view-{{ team_proxy_repo.format }}-{{ team_proxy_repo.name }}-browse
+{% endif %}
+{% endfor %}
+{# {% for team_group_repo in team.repos.requestedBy.group %}
+{% if team_group_repo|length > 0 %}
+      - nx-repository-view-{{ team_group_repo.format }}-{{ team_group_repo.name }}-read
+      - nx-repository-view-{{ team_group_repo.format }}-{{ team_group_repo.name }}-browse
+{% endif %}
+{% endfor %} #}
+{# Start shared loop #}
+{% for team_shared in teams %}
+{# Start shared Hosted repo #}
+{% for hosted_shared in team_shared.repos.sharedAccessTo.hosted %}
+{% for repo_shared in hosted_shared.teams %}
+{% if repo_shared == team.ID %}
+{% for team_data in teams %}
+{% for repo_data in team_data.repos.requestedBy.hosted %}
+{% if hosted_shared.name == repo_data.name %}
+      - nx-repository-view-{{ repo_data.format }}-{{ repo_data.name }}-read
+      - nx-repository-view-{{ repo_data.format }}-{{ repo_data.name }}-browse
+{% endif %}
+{% endfor %}
+{% endfor %}
+{% endif %}
+{% endfor %}
+{% endfor %}
+{# End shared Hosted repo #}
+{# Start shared Proxy repo #}
+{% for proxy_shared in team_shared.repos.sharedAccessTo.proxy %}
+{% for repo_shared in proxy_shared.teams %}
+{% if repo_shared == team.ID %}
+{% for team_data in teams %}
+{% for repo_data in team_data.repos.requestedBy.proxy %}
+{% if proxy_shared.name == repo_data.name %}
+      - nx-repository-view-{{ repo_data.format }}-{{ repo_data.name }}-read
+      - nx-repository-view-{{ repo_data.format }}-{{ repo_data.name }}-browse
+{% endif %}
+{% endfor %}
+{% endfor %}
+{% endif %}
+{% endfor %}
+{% endfor %}
+{# End shared Proxy repo #}
+{# Start shared Group repo #}
+{% for group_shared in team_shared.repos.sharedAccessTo.group %}
+{% for repo_shared in group_shared.teams %}
+{% if repo_shared == team.ID %}
+{% for team_data in teams %}
+{% for repo_data in team_data.repos.requestedBy.group %}
+{% if group_shared.name == repo_data.name %}
+      - nx-repository-view-{{ repo_data.format }}-{{ repo_data.name }}-read
+      - nx-repository-view-{{ repo_data.format }}-{{ repo_data.name }}-browse
+{% endif %}
+{% endfor %}
+{% endfor %}
+{% endif %}
+{% endfor %}
+{% endfor %}
+{# End shared Group repo #}
+{% endfor %}
+{# End shared loop #}
+    roles: []
+{# TODO: depending on data impolementation #}
+{% endfor %}

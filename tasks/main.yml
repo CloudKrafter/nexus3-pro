@@ -29,6 +29,7 @@
 
 - name: Run installation tasks
   ansible.builtin.import_tasks: nexus_install.yml
+  tags: nexus-install
 
 - name: Configure apache reverse proxy
   ansible.builtin.include_tasks: httpd_reverse_proxy_config.yml
@@ -170,6 +171,27 @@
         call_args: "{{ nexus_repos_cleanup_policies }}"
       when: nexus_repos_cleanup_policies | length > 0 and not nexus_enable_pro_version | default(false) | bool
       tags: cleanup
+     
+    - name: Get all existing routing rules
+      ansible.builtin.uri:
+        url: "{{ nexus_api_scheme }}://{{ nexus_api_hostname }}:{{ nexus_api_port }}{{ nexus_api_context_path }}service/rest/v1/routing-rules"
+        user: admin
+        password: "{{ current_nexus_admin_password }}"
+        method: GET
+        force_basic_auth: true
+        validate_certs: "{{ nexus_api_validate_certs }}"
+        body_format: json
+        return_content: yes
+        status_code: 200
+      register: __nexus_existing_routing_rules__
+      tags: repos
+      when: nexus_use_api_for_provisioning | default(false) | bool
+
+    - name: Create/Update routing rules using API
+      ansible.builtin.include_tasks: routing_rules.yml
+      vars:
+        api_payload: "{{ nexus_routing_rules | d([]) }}"
+      tags: repos
 
     - name: Get all existing cleanup policies
       ansible.builtin.uri:

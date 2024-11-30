@@ -1,0 +1,66 @@
+{% for key, value in proxy_defaults.items() %}
+{% for team in teams %}
+{% set teams_loop = loop %}
+{% for team_proxy_repo in team.repos.requestedBy.proxy | selectattr("format", "equalto", key) %}
+{% set team_hosted_repo_loop = loop %}
+{% if team_proxy_repo|length > 0 and team_hosted_repo_loop.first and teams_loop.first %}
+{% if key == 'maven2' %}
+nexus_repos_{{ key[:-1] }}_proxy:
+{% else %}
+nexus_repos_{{ key }}_proxy:
+{% endif %}
+{% endif %}
+  - name: {{ team_proxy_repo.name }}
+    online: {{ team_proxy_repo.online if team_proxy_repo.online is defined else value.online }}
+    blob_store: {{ team_proxy_repo.blob_store if team_proxy_repo.blob_store is defined else value.blob_store }}
+    layout_policy: {{ team_proxy_repo.layout_policy if team_proxy_repo.layout_policy is defined else value.layout_policy }}
+    write_policy: {{ team_proxy_repo.write_policy if team_proxy_repo.write_policy is defined else value.write_policy }}
+    blocked: {{ team_proxy_repo.blocked if team_proxy_repo.blocked is defined else value.blocked }}
+    auto_block: {{ team_proxy_repo.auto_block if team_proxy_repo.auto_block is defined else value.auto_block }}
+    remote:
+      username: {{ team_proxy_repo.remote.username if team_proxy_repo.remote.username is defined else value.remote.username }}
+      password: {{ team_proxy_repo.remote.password if team_proxy_repo.remote.password is defined else value.remote.password }}
+    remote_url: {{ team_proxy_repo.remote_url if team_proxy_repo.remote_url is defined else value.remote.url }}
+    connection:
+      retries: {{ team_proxy_repo.connection.retries if team_proxy_repo.connection.retries is defined else value.connection.retries }}
+      user_agent_suffix: {{ team_proxy_repo.connection.user_agent_suffix if team_proxy_repo.connection.user_agent_suffix is defined else value.connection.user_agent_suffix }}
+      enable_cookies: {{ team_proxy_repo.connection.enable_cookies if team_proxy_repo.connection.enable_cookies is defined else value.connection.enable_cookies }}
+      enable_circular_redirects: {{ team_proxy_repo.connection.enable_circular_redirects if team_proxy_repo.connection.enable_circular_redirects is defined else value.connection.enable_circular_redirects }}
+      timeout: {{ team_proxy_repo.connection.timeout if team_proxy_repo.connection.timeout is defined else value.connection.timeout }}
+    maximum_component_age: {{ team_proxy_repo.maximum_component_age if team_proxy_repo.maximum_component_age is defined else value.maximum_component_age }}
+    maximum_metadata_age: {{ team_proxy_repo.maximum_metadata_age if team_proxy_repo.maximum_metadata_age is defined else value.maximum_metadata_age }}
+    negative_cache_enabled: {{ team_proxy_repo.negative_cache_enabled if team_proxy_repo.negative_cache_enabled is defined else value.negative_cache_enabled }}
+    negative_cache_ttl: {{ team_proxy_repo.negative_cache_ttl if team_proxy_repo.negative_cache_ttl is defined else value.negative_cache_ttl }}
+    routing_rule: {{ team_proxy_repo.name+'-routing-rule' if team_proxy_repo.routing_rule_matcher is defined | default(omit) }}
+    routing_rule_matcher: {{ team_proxy_repo.routing_rule_matcher if team_proxy_repo.routing_rule_matcher is defined else value.routing_rule_matcher }}
+    cleanup_policies:
+{% if team.policy is defined %}
+{% for policy in team.cleanup_policies %}
+      - {{ policy }}
+{% endfor %}
+{% else %}
+{% for policy in value.cleanup_policies %}
+      - {{ policy }}
+{% endfor %}
+{% endif %}
+{% if key == 'apt' %}
+    distribution: {{ team_proxy_repo.distribution if team_proxy_repo.distribution is defined else value.distribution }}
+    keypair: {{ team_proxy_repo.keypair if team_proxy_repo.keypair is defined else value.keypair }}
+    passphrase: {{ team_proxy_repo.passphrase if team_proxy_repo.passphrase is defined else value.passphrase }}
+{% endif %}
+{% if key == 'docker' %}
+    force_basic_auth: {{ team_proxy_repo.force_basic_auth if team_proxy_repo.force_basic_auth is defined else value.force_basic_auth }}
+    v1_enabled: {{ team_proxy_repo.v1_enabled if team_proxy_repo.v1_enabled is defined else value.v1_enabled }}
+    http_port: {{ team_proxy_repo.http_port if team_proxy_repo.http_port is defined else value.http_port }}
+    sub_domain: {{ team_proxy_repo.sub_domain if team_proxy_repo.sub_domain is defined else value.sub_domain }}
+    index_type: {{ team_proxy_repo.index_type if team_proxy_repo.index_type is defined else value.index_type }}
+    use_nexus_certificates_to_access_index: {{ team_proxy_repo.use_nexus_certificates_to_access_index if team_proxy_repo.use_nexus_certificates_to_access_index is defined else value.use_nexus_certificates_to_access_index }}
+    cache_foreign_layers: {{ team_proxy_repo.cache_foreign_layers if team_proxy_repo.cache_foreign_layers is defined else value.cache_foreign_layers }}
+    foreign_layer_url_whitelist: {{ team_proxy_repo.foreign_layer_url_whitelist if team_proxy_repo.foreign_layer_url_whitelist is defined else value.foreign_layer_url_whitelist }}
+{% endif %}
+{% if key == 'raw' %}
+    content_disposition: {{ team_proxy_repo.content_disposition if team_proxy_repo.content_disposition is defined else value.content_disposition }}
+{% endif %}
+{% endfor %}
+{% endfor %}
+{% endfor %}

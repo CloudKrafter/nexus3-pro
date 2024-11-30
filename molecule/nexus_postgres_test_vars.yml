@@ -27,3 +27,362 @@ nexus_postgres_db_username: nexus
 nexus_postgres_db_password: nexus
 nexus_postgres_max_lifetime: 840000
 nexus_postgres_max_pool_size: 85
+
+nexus_transform: true
+
+proxy_defaults:
+  - maven:
+      - name: maven-central
+        format: maven2
+        online: true
+        blocked: false
+        auto_block: true
+        remote:
+          url: https://repo.maven.apache.org/maven2
+          username: username
+          password: password
+        connection:
+          useTrustStore: false
+          retries: 2
+          user_agent_suffix: agent
+          enable_cookies: true
+          enable_circular_redirects: true
+          timeout: 1440
+        maximum_component_age: 1440
+        maximum_metadata_age: 1440
+        negative_cache_enabled: true
+        negative_cache_ttl: 1440
+        cleanup_policies:
+          - policy-1
+        version_policy: RELEASE
+        layout_policy: PERMISSIVE
+        content_disposition: INLINE
+      - name: maven-central-02
+        format: maven2
+        online: true
+        blocked: false
+        auto_block: true
+        remote:
+          url: https://repo.maven.apache.org/maven2
+          username: username
+          password: password
+        connection:
+          useTrustStore: false
+          retries: 2
+          user_agent_suffix: agent
+          enable_cookies: true
+          enable_circular_redirects: true
+          timeout: 1440
+        maximum_component_age: 1440
+        maximum_metadata_age: 1440
+        negative_cache_enabled: true
+        negative_cache_ttl: 1440
+        cleanup_policies:
+          - policy-1
+        version_policy: RELEASE
+        layout_policy: PERMISSIVE
+        content_disposition: INLINE
+  # - python:
+  #     - name: pypi-central
+  #       format: pypi
+  #       online: true
+  #       blocked: false
+  #       auto_block: true
+  #       remote:
+  #         url: https://pypi.org/simple
+  #         username:
+  #         password:
+  #       connection:
+  #         useTrustStore: false
+  #         retries:
+  #         user_agent_suffix:
+  #         enable_cookies:
+  #         enable_circular_redirects:
+  #         timeout:
+  #       maximum_component_age:
+  #       maximum_metadata_age:
+  #       negative_cache_enabled:
+  #       negative_cache_ttl:
+  #       cleanup_policies:
+  #         - policy-1
+  # - npm:
+  #     - name: npm-registry
+  #       format: npm
+  #       online: true
+  #       blocked: false
+  #       auto_block: true
+  #       remote:
+  #         url: https://registry.npmjs.org/
+  #         username:
+  #         password:
+  #         bearerToken:
+  #       connection:
+  #         useTrustStore: false
+  #         retries:
+  #         user_agent_suffix:
+  #         enable_cookies:
+  #         enable_circular_redirects:
+  #         timeout:
+  #       maximum_component_age:
+  #       maximum_metadata_age:
+  #       negative_cache_enabled:
+  #       negative_cache_ttl:
+  #       cleanup_policies:
+  #         - policy-1
+  # - nuget:
+  #     - name: nuget-gallery
+  #       format: nuget
+  #       online: true
+  #       blocked: false
+  #       auto_block: true
+  #       nuget_version: v3
+  #       remote:
+  #         url: https://api.nuget.org/v3/index.json
+  #         username:
+  #         password:
+  #       connection:
+  #         useTrustStore: false
+  #         retries:
+  #         user_agent_suffix:
+  #         enable_cookies:
+  #         enable_circular_redirects:
+  #         timeout:
+  #       maximum_component_age:
+  #       maximum_metadata_age:
+  #       negative_cache_enabled:
+  #       negative_cache_ttl:
+  #       cleanup_policies:
+  #         - policy-1
+  # - apt:
+  #     - name: ubuntu-apt
+  #       format: apt
+  #       online: true
+  #       blocked: false
+  #       auto_block: true
+  #       distribution: bionic
+  #       flat: false
+  #       remote:
+  #         url: http://archive.ubuntu.com/ubuntu/
+  #         username:
+  #         password:
+  #       connection:
+  #         useTrustStore: false
+  #         retries:
+  #         user_agent_suffix:
+  #         enable_cookies:
+  #         enable_circular_redirects:
+  #         timeout:
+  #       maximum_component_age:
+  #       maximum_metadata_age:
+  #       negative_cache_enabled:
+  #       negative_cache_ttl:
+  #       cleanup_policies:
+  #         - policy-1
+  # - helm:
+  #     - name: helm-proxy
+  #       format: helm
+  #       online: true
+  #       blocked: false
+  #       auto_block: true
+  #       remote:
+  #         url: https://kubernetes-charts.storage.googleapis.com
+  #         username:
+  #         password:
+  #       connection:
+  #         useTrustStore: false
+  #         retries:
+  #         user_agent_suffix:
+  #         enable_cookies:
+  #         enable_circular_redirects:
+  #         timeout:
+  #       maximum_component_age:
+  #       maximum_metadata_age:
+  #       negative_cache_enabled:
+  #       negative_cache_ttl:
+  #       cleanup_policies:
+  #         - policy-1
+  # - r:
+  #     - name: r-proxy
+  #       format: r
+  #       online: true
+  #       blocked: false
+  #       auto_block: true
+  #       remote:
+  #         url: https://cran.r-project.org
+  #         username:
+  #         password:
+  #       connection:
+  #         useTrustStore: false
+  #         retries:
+  #         user_agent_suffix:
+  #         enable_cookies:
+  #         enable_circular_redirects:
+  #         timeout:
+  #       maximum_component_age:
+  #       maximum_metadata_age:
+  #       negative_cache_enabled:
+  #       negative_cache_ttl:
+  #       cleanup_policies:
+  #         - policy-1
+  # - raw:
+  #     - name: raw-proxy
+  #       format: raw
+  #       online: true
+  #       blocked: false
+  #       auto_block: true
+  #       remote:
+  #         url: https://www.jfrog.com/
+  #         username:
+  #         password:
+  #       connection:
+  #         useTrustStore: false
+  #         retries:
+  #         user_agent_suffix:
+  #         enable_cookies:
+  #         enable_circular_redirects:
+  #         timeout:
+  #       maximum_component_age:
+  #       maximum_metadata_age:
+  #       negative_cache_enabled:
+  #       negative_cache_ttl:
+  #       cleanup_policies:
+  #         - policy-1
+  #       contentDisposition:
+  # - conda:
+  #     - name: conda-proxy
+  #       format: conda
+  #       online: true
+  #       blocked: false
+  #       auto_block: true
+  #       remote:
+  #         url: https://repo.anaconda.com/pkgs/main
+  #         username:
+  #         password:
+  #       connection:
+  #         useTrustStore: false
+  #         retries:
+  #         user_agent_suffix:
+  #         enable_cookies:
+  #         enable_circular_redirects:
+  #         timeout:
+  #       maximum_component_age:
+  #       maximum_metadata_age:
+  #       negative_cache_enabled:
+  #       negative_cache_ttl:
+  #       cleanup_policies:
+  #         - policy-1
+  # - go:
+  #     - name: go-proxy
+  #       format: go
+  #       online: true
+  #       blocked: false
+  #       auto_block: true
+  #       remote:
+  #         url: https://proxy.golang.org
+  #         username:
+  #         password:
+  #       connection:
+  #         useTrustStore: false
+  #         retries:
+  #         user_agent_suffix:
+  #         enable_cookies:
+  #         enable_circular_redirects:
+  #         timeout:
+  #       maximum_component_age:
+  #       maximum_metadata_age:
+  #       negative_cache_enabled:
+  #       negative_cache_ttl:
+  #       cleanup_policies:
+  #         - policy-1
+  - yum:
+      - name: yum-proxy
+        format: yum
+        online: true
+        blocked: false
+        auto_block: true
+        remote:
+          url: http://mirror.centos.org/centos/
+          username: username
+          password: password
+        connection:
+          useTrustStore: false
+          retries: 2
+          user_agent_suffix: agent
+          enable_cookies: true
+          enable_circular_redirects: true
+          timeout: 1440
+        maximum_component_age: 1440
+        maximum_metadata_age: 1440
+        negative_cache_enabled: true
+        negative_cache_ttl: 1440
+        cleanup_policies:
+          - policy-1
+
+nexus_repos_maven_proxy:
+  - name: maven-central
+    format: maven2
+    online: True
+    blocked: False
+    auto_block: True
+    remote:
+      url: https://repo.maven.apache.org/maven2
+      username: username
+      password: password
+    connection:
+      useTrustStore: False
+      retries: 2
+      user_agent_suffix: agent
+      enable_cookies: True
+      enable_circular_redirects: True
+      timeout: 1440
+    maximum_component_age: 1440
+    maximum_metadata_age: 1440
+    negative_cache_enabled: True
+    negative_cache_ttl: 1440
+    cleanup_policies:
+      - policy-1
+  - name: maven-central-02
+    format: maven2
+    online: True
+    blocked: False
+    auto_block: True
+    remote:
+      url: https://repo.maven.apache.org/maven2
+      username: username
+      password: password
+    connection:
+      useTrustStore: False
+      retries: 2
+      user_agent_suffix: agent
+      enable_cookies: True
+      enable_circular_redirects: True
+      timeout: 1440
+    maximum_component_age: 1440
+    maximum_metadata_age: 1440
+    negative_cache_enabled: True
+    negative_cache_ttl: 1440
+    cleanup_policies:
+      - policy-1
+nexus_repos_yum_proxy:
+  - name: yum-proxy
+    format: yum
+    online: True
+    blocked: False
+    auto_block: True
+    remote:
+      url: http://mirror.centos.org/centos/
+      username: username
+      password: password
+    connection:
+      useTrustStore: False
+      retries: 2
+      user_agent_suffix: agent
+      enable_cookies: True
+      enable_circular_redirects: True
+      timeout: 1440
+    maximum_component_age: 1440
+    maximum_metadata_age: 1440
+    negative_cache_enabled: True
+    negative_cache_ttl: 1440
+    cleanup_policies:
+      - policy-1

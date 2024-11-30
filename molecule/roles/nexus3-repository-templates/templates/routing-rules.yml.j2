@@ -1,0 +1,20 @@
+---
+nexus_routing_rules:
+{% set nexus_combined_repos_proxy =     nexus_repos_maven_proxy + 
+                                        nexus_repos_yum_proxy + 
+                                        nexus_repos_npm_proxy + 
+                                        nexus_repos_docker_proxy + 
+                                        nexus_repos_pypi_proxy +
+                                        nexus_repos_helm_proxy +
+                                        nexus_repos_raw_proxy %}
+{% for item in nexus_combined_repos_proxy%}
+{% if item.routing_rule_matcher is defined and item.routing_rule_matcher != None %}
+    - name: {{ item.name }}-routing-rule
+      description: Restrict only to {{ item.name }} images
+      mode: Allow
+      matchers:
+{% for matcher in item.routing_rule_matcher %}
+        - {{ matcher }}
+{% endfor %}
+{% endif %}
+{% endfor %}

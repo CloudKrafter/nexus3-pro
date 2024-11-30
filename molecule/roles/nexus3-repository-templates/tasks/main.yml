@@ -1,0 +1,26 @@
+---
+# tasks file for nexus3-repository-templates
+- name: Transform proxy_defaults into nexus_repos
+  ansible.builtin.template:
+    src: "proxies.yml.j2"
+    dest: "/nexus-downloads/proxies-result.yml"
+    #remote_src: true
+  tags: transform
+- name: Transform hosted_defaults into nexus_repos
+  ansible.builtin.template:
+    src: "hosted.yml.j2"
+    dest: "/nexus-downloads/hosted-result.yml"
+    #remote_src: true
+  tags: transform
+- name: Transform roles_defaults into nexus_repos
+  ansible.builtin.template:
+    src: "roles.yml.j2"
+    dest: "/nexus-downloads/roles-result.yml"
+    #remote_src: true
+  tags: transform
+- name: Transform routing-rules_defaults into nexus_repos
+  ansible.builtin.template:
+    src: "routing-rules.yml.j2"
+    dest: "/nexus-downloads/routing-rules-result.yml"
+    #remote_src: true
+  tags: transform

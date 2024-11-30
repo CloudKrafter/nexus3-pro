@@ -1,0 +1,44 @@
+{% for key, value in hosted_defaults.items() %}
+{% for team in teams %}
+{% set teams_loop = loop %}
+{% for team_hosted_repo in team.repos.requestedBy.hosted | selectattr("format", "equalto", key) %}
+{% set team_hosted_repo_loop = loop %}
+{% if team_hosted_repo|length > 0 and team_hosted_repo_loop.first and teams_loop.first %}
+{% if key == 'maven2' %}
+nexus_repos_{{ key[:-1] }}_hosted:
+{% else %}
+nexus_repos_{{ key }}_hosted:
+{% endif %}
+{% endif %}
+  - name: {{ team_hosted_repo.name }}
+    online: {{ team_hosted_repo.online if team_hosted_repo.online is defined else value.online }}
+    blob_store: {{ team_hosted_repo.blob_store if team_hosted_repo.blob_store is defined else value.blob_store }}
+    layout_policy: {{ team_hosted_repo.layout_policy if team_hosted_repo.layout_policy is defined else value.layout_policy }}
+    write_policy: {{ team_hosted_repo.write_policy if team_hosted_repo.write_policy is defined else value.write_policy }}
+    cleanup_policies:
+{% if team.policy is defined %}
+{% for policy in team.cleanup_policies %}
+      - {{ policy }}
+{% endfor %}
+{% else %}
+{% for policy in value.cleanup_policies %}
+      - {{ policy }}
+{% endfor %}
+{% endif %}
+{% if key == 'apt' %}
+    distribution: {{ team_hosted_repo.distribution if team_hosted_repo.distribution is defined else value.distribution }}
+    keypair: {{ team_hosted_repo.keypair if team_hosted_repo.keypair is defined else value.keypair }}
+    passphrase: {{ team_hosted_repo.passphrase if team_hosted_repo.passphrase is defined else value.passphrase }}
+{% endif %}
+{% if key == 'docker' %}
+    force_basic_auth: {{ team_hosted_repo.force_basic_auth if team_hosted_repo.force_basic_auth is defined else value.force_basic_auth }}
+    v1_enabled: {{ team_hosted_repo.v1_enabled if team_hosted_repo.v1_enabled is defined else value.v1_enabled }}
+    http_port: {{ team_hosted_repo.http_port if team_hosted_repo.http_port is defined else value.http_port }}
+    sub_domain: {{ team_hosted_repo.sub_domain if team_hosted_repo.sub_domain is defined else value.sub_domain }}
+{% endif %}
+{% if key == 'raw' %}
+    content_disposition: {{ team_hosted_repo.content_disposition if team_hosted_repo.content_disposition is defined else value.content_disposition }}
+{% endif %}
+{% endfor %}
+{% endfor %}
+{% endfor %}

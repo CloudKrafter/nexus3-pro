@@ -1,0 +1,61 @@
+---
+nexus_scheduled_tasks:
+{% for item in docker_repo_teams | selectattr('repo', 'equalto', 'true') %}
+{% if item.cleanup != 'NONE'%}
+  - name: docker-delete-unused-manifests-and-images-{{ item.team }}-repo
+    cron: 0 15 1 * * ?
+    typeId: "repository.docker.gc"
+    taskProperties:
+      repositoryName: {{ item.team }}-repo
+      deployOffset: "24"
+{% endif %}
+  - name: {{ item.team }}-compact-blobstore
+    cron: 0 45 1 * * ?
+    typeId: blobstore.compact
+    taskProperties:
+      blobstoreName: {{ item.team }}-blob
+{% endfor %}
+{% for item in docker_repo_teams | selectattr('gitlfs', 'equalto', 'true') %}
+  - name: {{ item.team }}-compact-blobstore-gitlfs
+    cron: 0 0 0 * * ?
+    typeId: blobstore.compact
+    taskProperties:
+      blobstoreName: {{ item.team }}
+{% endfor %}
+{% for item in proxy_repos %}
+  - name: docker-delete-unused-manifests-and-images-{{ item.proxyname }}
+    cron: 0 15 0 * * ?
+    typeId: "repository.docker.gc"
+    taskProperties:
+      repositoryName: docker-{{ item.proxyname }}
+      deployOffset: "24"
+{% endfor %}
+  - name: proxy-compact-blobstore
+    cron: 0 50 0 * * ?
+    typeId: blobstore.compact
+    taskProperties:
+      blobstoreName: proxy-blob
+  - name: docker-delete-unused-manifests-and-images-docker-proxy
+    cron: 0 30 1 * * ?
+    typeId: "repository.docker.gc"
+    taskProperties:
+      repositoryName: docker-proxy
+      deployOffset: "24"
+  - name: dockerhub-blob-compact-blobstore
+    cron: 0 50 0 * * ?
+    typeId: blobstore.compact
+    taskProperties:
+      blobstoreName: dockerhub-blob
+  - name: docker-delete-incomplete-uploads
+    cron: 0 45 1 * * ?
+    typeId: "repository.docker.upload-purge"
+    taskProperties:
+      age: "24"
+  - name: Nexus export configuration and metadata backup
+    cron: 0 0 1 * * ?
+    typeId: "db.backup"
+    task_alert_email: "monitoring-tpe@politie.nl"
+    taskProperties:
+      notificationCondition: Failure
+      location: "{{ nexus_nfs_mount_path }}/orientdb_backup"
+...

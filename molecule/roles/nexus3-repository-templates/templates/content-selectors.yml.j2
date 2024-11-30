@@ -1,0 +1,19 @@
+---
+nexus_content_selectors:
+{% for item in docker_repo_teams | selectattr("repo", "equalto", "true") %}
+  - name: {{ item.team }}-container-content
+    description: {{ item.team }}-repo push conventions
+    search_expression: format == 'docker' and path=^ "/v2/{{ item.team }}/"
+{% endfor %}
+  - name: all-gitlfs
+    description: Selector for Git LFS repositories
+    search_expression: format=='gitlfs'
+  - name: container-content
+    description: only allowed to download images
+    search_expression: format == 'docker'
+  - name: amos-container-content
+    description: amos-repo push conventions
+    search_expression: format == 'docker' and ( path =^ "/v2/pet-system/" or path =^ "/v2/amos-pet/" )
+  - name: sens-container-content
+    description: sens-repo push conventions
+    search_expression: format == 'docker' and ( path =^ "/v2/sens/" or path =^ "/v2/viz/" or path =^ "/v2/anpr/" or path =^ "/v2/kolibrie/" )

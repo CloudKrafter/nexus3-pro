@@ -2,11 +2,16 @@
 - name: Converge
   hosts: nexus
   roles:
-    - role: nexus3-oss
+    - role: nexus3-repository-templates
+    - role: nexus3-pro
   vars_files:
     - ssl-{{ ansible_os_family }}.yml
     - nexus_common_test_vars.yml
     - nexus_ldap_test_vars.yml
+    - .nexus-downloads/hosted-result.yml
+    - .nexus-downloads/proxies-result.yml
+    - .nexus-downloads/roles-result.yml
+    - .nexus-downloads/routing-rules-result.yml
 
   environment:
     http_proxy: "{{ lookup('env', 'http_proxy') }}"

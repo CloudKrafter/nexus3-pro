@@ -219,6 +219,15 @@ nexus_config_go: false
 nexus_config_cocoapods: false
 nexus_config_conan: false
 
+# routing_rules.yml
+nexus_routing_rules_config:
+  nexus:
+    deleteUnknownItems:
+      routingRules: true
+      # customLocalUsers: false
+nexus_routing_rules:
+  routingRules: []
+
 nexus_content_selectors: []
 # example selector item :
 #  - name: docker-login
@@ -441,11 +450,7 @@ nexus_repos_pypi_hosted:
     version_policy: release
     write_policy: allow # one of "allow", "allow_once" or "deny"
 
-nexus_repos_pypi_group:
-  - name: pypi-all
-    member_repos:
-      - pypi-internal
-      - pypi
+nexus_repos_pypi_group: []
 
 nexus_repos_pypi_proxy:
   - name: pypi
@@ -481,11 +486,7 @@ nexus_repos_raw_hosted:
     version_policy: release
     write_policy: allow_once # one of "allow", "allow_once" or "deny"
 
-nexus_repos_raw_group:
-  - name: raw-all
-    member_repos:
-      - raw-internal
-      - ubuntu-archive
+nexus_repos_raw_group: []
 
 # Docker support
 _nexus_repos_docker_defaults:
@@ -522,7 +523,7 @@ nexus_repos_docker_proxy:
     # maximum_component_age: 1440
     # maximum_metadata_age: 1440
     # negative_cache_enabled: true
-    # negative_cache_ttl: 1440
+    # negative_cache_ttl: 1440x
 
 nexus_repos_docker_group:
   - name: docker-group
@@ -636,12 +637,7 @@ nexus_repos_nuget_hosted:
   - name: nuget-internal
     blob_store: "{{ nexus_blob_names.nuget.blob }}"
 
-nexus_repos_nuget_group:
-  - name: nuget-all
-    blob_store: "{{ nexus_blob_names.nuget.blob }}"
-    member_repos:
-      - nuget-internal
-      - nuget-proxy
+nexus_repos_nuget_group: []
 
 nexus_repos_nuget_proxy:
   - name: nuget-proxy

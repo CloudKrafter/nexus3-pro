@@ -3,12 +3,14 @@
   ansible.builtin.set_fact:
     nexus_version_detected_from: fixed
   when: nexus_version | length > 0
+  tags: nexus-install
 
 - name: Check nexus-latest link stat in {{ nexus_installation_dir }}
   ansible.builtin.stat:
     path: "{{ nexus_installation_dir }}/nexus-latest"
   register: nexus_latest_link
   check_mode: false
+  tags: nexus-install
 
 - name: Register current running version if any
   ansible.builtin.set_fact:
@@ -20,6 +22,7 @@
   when:
     - nexus_latest_link.stat.exists | default(false)
     - nexus_latest_link.stat.islnk | default(false)
+  tags: nexus-install
 
 - name: No version given => Version detection
   when:
@@ -98,6 +101,7 @@
       Current running version: {{ nexus_version_running | default('none') }}
   ansible.builtin.debug:
     msg: "{{ version_info.split('\n') }}"
+  tags: nexus-install
 
 - name: Register nexus package name
   ansible.builtin.set_fact:
@@ -125,6 +129,7 @@
     (download_status.status_code == 200) or (download_status.status_code == 304)
   retries: "{{ nexus_download_retries }}"
   delay: "{{ nexus_download_delay }}"
+  tags: nexus-install
   notify:
     - nexus-service-stop
 
@@ -473,6 +478,7 @@
 
 - name: Config Postgres
   ansible.builtin.include_tasks: enable_postgres.yml
+  when: nexus_enable_pro_version | default(false) | bool
   tags: nexus-postgres
   when: nexus_use_postgres | default(false) | bool or nexus_use_postgres_after_migration | default(false)
 

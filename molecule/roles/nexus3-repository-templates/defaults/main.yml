@@ -1,0 +1,539 @@
+---
+nexus_delete_default_repos: true
+
+# defaults file for nexus3-repository-templates
+teams:
+  - ID: Team1
+    name: Team1
+    repos:
+      requestedBy:
+        hosted:
+          - name: maven-repo1
+            format: maven2
+          - name: maven-repo2
+            format: maven2
+          - name: python-repo1
+            format: pypi
+          - name: npm-repo1
+            format: npm
+          - name: apt-repo1
+            format: apt
+          - name: docker-repo1
+            format: docker
+          - name: helm-repo1
+            format: helm
+          - name: raw-repo1
+            format: raw
+        proxy:
+          - name: mvn-proxy-repo1
+            format: maven2
+            routing_rule_matcher: test
+          - name: mvn-proxy-team1
+            format: maven2
+            routing_rule_matcher: alleenimages
+          - name: yum-proxy-repo1
+            format: yum
+            routing_rule_matcher: yumtest
+          - name: docker-proxy-repo1
+            format: docker
+          - name: raw-proxy-repo1
+            format: raw
+          - name: helm-proxy-repo1
+            format: helm
+          - name: python-proxy-repo1
+            format: pypi
+          - name: npm-proxy-repo1
+            format: npm
+        group:
+          - name: group-repo-1
+            format: maven2
+            members:
+              - maven-repo2
+              - maven-repo1
+              - mvn-proxy-repo1
+          - name: group-repo-2
+            format: npm
+            members:
+              - npm-proxy-repo1
+              - npm-repo1
+      sharedAccessTo:
+        hosted:
+          - name: raw-repo1
+            teams: [Team2]
+        proxy:
+          - name: raw-proxy-repo1
+            teams: [Team2]
+        group: []
+  - ID: Team2
+    name: Team2
+    repos:
+      requestedBy:
+        hosted:
+          - name: maven-repo-team2
+            format: maven2
+          - name: python-repo-team2
+            format: pypi
+        proxy:
+          - name: python-proxy-team2
+            format: pypi
+        group: []
+      sharedAccessTo:
+        hosted:
+          - name: maven-repo-team2
+            teams: [Team1]
+        proxy:
+          - name: python-proxy-team2
+            teams: [Team1]
+        group: []
+
+
+hosted_defaults:
+  apt:
+    blob_store: blob-apt
+    online: true
+    distribution: dist
+    keypair: 'none'
+    passphrase: 'none'
+    strict_content_validation: true
+    layout_policy: strict # strict or permissive
+    write_policy: allow_once # one of "allow", "allow_once" or "deny"
+    cleanup_policies:
+      - apt_cleanup
+  docker:
+    online: true
+    blob_store: blob-docker
+    remote_url: 'https://a.a'
+    force_basic_auth: true
+    strict_content_validation: true
+    allow_redeploy_latest: false
+    version_policy: release # release, snapshot or mixed
+    write_policy: allow_once
+    layout_policy: strict # strict or permissive
+    http_port:
+    https_port:
+    sub_domain:
+    v1_enabled: false
+    cleanup_policies:
+      - docker_cleanup
+  gitlfs:
+    repositoryName: <team>-repo
+    recipeName: recipeName,
+    online: true
+    blob_store: blob-gitlfs
+    layout_policy: strict # strict or permissive
+    write_policy: allow_once # ALLOW_ONCE or ALLOW
+    strict_content_validation: true
+    cleanup_policies:
+      - gitlfs_cleanup
+  helm:
+    repositoryName: <team>-repo
+    recipeName: recipeName,
+    online: true
+    blob_store: blob-helm
+    layout_policy: strict # strict or permissive
+    write_policy: allow_once # ALLOW_ONCE or ALLOW
+    strict_content_validation: true
+    cleanup_policies:
+      - helm_cleanup
+  maven2:
+    online: true
+    blob_store: blob-mvn
+    strict_content_validation: true
+    version_policy: release # release, snapshot or mixed
+    layout_policy: strict # strict or permissive
+    write_policy: allow_once # one of "allow", "allow_once" or "deny"
+    cleanup_policies:
+      - mvn_cleanup
+  npm:
+    repositoryName: <team>-repo
+    recipeName: recipeName,
+    online: true
+    blob_store: blob-npm
+    layout_policy: strict # strict or permissive
+    write_policy: allow_once # ALLOW_ONCE or ALLOW
+    strict_content_validation: true
+    cleanup_policies:
+      - npm_cleanup
+  nuget:
+    repositoryName: <team>-repo
+    recipeName: recipeName,
+    online: true
+    blob_store: blob-nuget
+    layout_policy: strict # strict or permissive
+    write_policy: allow_once # ALLOW_ONCE or ALLOW
+    strict_content_validation: true
+    cleanup_policies:
+      - nuget_cleanup
+  pypi:
+    repositoryName: <team>-repo
+    recipeName: recipeName,
+    online: true
+    blob_store: blob-pypi
+    layout_policy: strict # strict or permissive
+    write_policy: allow_once # ALLOW_ONCE or ALLOW
+    strict_content_validation: true
+    cleanup_policies:
+      - python_cleanup
+  raw:
+    repositoryName: <team>-repo
+    recipeName: recipeName,
+    online: true
+    blob_store: blob-raw
+    layout_policy: strict # strict or permissive
+    write_policy: allow_once # ALLOW_ONCE or ALLOW
+    strict_content_validation: true
+    cleanup_policies:
+      - raw_cleanup
+    content_disposition: INLINE
+  yum:
+    repositoryName: <team>-repo
+    recipeName: recipeName,
+    online: true
+    blob_store: blob-yum
+    layout_policy: strict # strict or permissive
+    write_policy: allow_once # ALLOW_ONCE or ALLOW
+    strict_content_validation: true
+    cleanup_policies:
+      - yum_cleanup
+    repodataDepth: 1
+    deployPolicy: strict # strict or permissive
+
+proxy_defaults:
+  maven2:
+    online: true
+    blocked: false
+    auto_block: true
+    blob_store: blob-mvn
+    strict_content_validation: true
+    remote:
+      url: https://repo.maven.apache.org/maven2
+      username: ''
+      password: ''
+    connection:
+      retries: 5
+      user_agent_suffix: ''
+      enable_cookies: false
+      enable_circular_redirects: false
+      timeout: ''
+    maximum_component_age: -1
+    maximum_metadata_age: 1440
+    negative_cache_enabled: true
+    negative_cache_ttl: 1440
+    version_policy: release
+    layout_policy: strict
+    write_policy: allow_once
+    content_disposition: inline
+    routing_rule_matcher: ''
+    cleanup_policies:
+      - mvn_cleanup
+  docker:
+    online: true
+    blocked: false
+    auto_block: true
+    blob_store: blob-docker
+    strict_content_validation: true
+    force_basic_auth: true
+    v1_enabled: false
+    http_port:
+    remote:
+      url: https://registry-1.docker.io
+      username:
+      password:
+    connection:
+      retries: 5
+      user_agent_suffix:
+      enable_cookies: false
+      enable_circular_redirects: false
+      timeout:
+    maximum_component_age: -1
+    maximum_metadata_age: 1440
+    negative_cache_enabled: true
+    negative_cache_ttl: 1440
+    version_policy: release
+    layout_policy: strict
+    write_policy: allow_once
+    content_disposition: inline
+    index_type: HUB
+    use_nexus_certificates_to_access_index: false
+    cache_foreign_layers: true
+    foreign_layer_url_whitelist: []
+    sub_domain:
+    routing_rule_matcher: ''
+    cleanup_policies:
+      - docker_cleanup
+  pypi:
+    name: pypi-central
+    format: pypi
+    blob_store: blob-pypi
+    online: true
+    blocked: false
+    auto_block: true
+    remote:
+      url: https://pypi.org/simple
+      username:
+      password:
+    connection:
+      useTrustStore: false
+      retries:
+      user_agent_suffix:
+      enable_cookies:
+      enable_circular_redirects:
+      timeout:
+    layout_policy: strict
+    write_policy: allow_once # one of "allow", "allow_once" or "deny"
+    maximum_component_age: -1
+    maximum_metadata_age: 1440
+    negative_cache_enabled: True
+    negative_cache_ttl: 1440
+    routing_rule_matcher: ''
+    cleanup_policies:
+      - policy-1
+  npm:
+    name: npm-registry
+    format: npm
+    online: true
+    blob_store: blob-npm
+    blocked: false
+    auto_block: true
+    remote:
+      url: https://registry.npmjs.org/
+      username:
+      password:
+      bearerToken:
+    connection:
+      useTrustStore: false
+      retries:
+      user_agent_suffix:
+      enable_cookies:
+      enable_circular_redirects:
+      timeout:
+    strict_content_validation: true
+    layout_policy: strict
+    write_policy: allow_once # one of "allow", "allow_once" or "deny"
+    maximum_component_age: -1
+    maximum_metadata_age: 1440
+    negative_cache_enabled: True
+    negative_cache_ttl: 1440
+    routing_rule_matcher: ''
+    cleanup_policies:
+      - policy-1
+  nuget:
+    name: nuget-gallery
+    format: nuget
+    online: true
+    blob_store: blob-nuget
+    blocked: false
+    auto_block: true
+    nuget_version: v3
+    remote:
+      url: https://api.nuget.org/v3/index.json
+      username:
+      password:
+    connection:
+      useTrustStore: false
+      retries:
+      user_agent_suffix:
+      enable_cookies:
+      enable_circular_redirects:
+      timeout:
+    maximum_component_age: -1
+    maximum_metadata_age: 1440
+    negative_cache_enabled: True
+    negative_cache_ttl: 1440
+    write_policy: allow_once # one of "allow", "allow_once" or "deny"
+    routing_rule_matcher: ''
+    cleanup_policies:
+      - policy-1
+  apt:
+    name: ubuntu-apt
+    format: apt
+    online: true
+    blob_store: blob-apt
+    blocked: false
+    auto_block: true
+    distribution: bionic
+    flat: false
+    remote:
+      url: http://archive.ubuntu.com/ubuntu/
+      username:
+      password:
+    connection:
+      useTrustStore: false
+      retries:
+      user_agent_suffix:
+      enable_cookies:
+      enable_circular_redirects:
+      timeout:
+    maximum_component_age: -1
+    maximum_metadata_age: 1440
+    negative_cache_enabled: True
+    negative_cache_ttl: 1440
+    write_policy: allow_once # one of "allow", "allow_once" or "deny"
+    routing_rule_matcher: ''
+    cleanup_policies:
+      - policy-1
+  helm:
+    name: helm-proxy
+    format: helm
+    online: true
+    blob_store: blob-helm
+    blocked: false
+    auto_block: true
+    remote:
+      url: https://kubernetes-charts.storage.googleapis.com
+      username:
+      password:
+    connection:
+      useTrustStore: false
+      retries:
+      user_agent_suffix:
+      enable_cookies:
+      enable_circular_redirects:
+      timeout:
+    strict_content_validation: true
+    layout_policy: strict # strict or permissive
+    write_policy: allow_once # one of "allow", "allow_once" or "deny"
+    maximum_component_age: -1
+    maximum_metadata_age: 1440
+    negative_cache_enabled: True
+    negative_cache_ttl: 1440
+    routing_rule_matcher: ''
+    cleanup_policies:
+      - policy-1
+  r:
+    name: r-proxy
+    format: r
+    online: true
+    blocked: false
+    blob_store: blob-r
+    auto_block: true
+    remote:
+      url: https://cran.r-project.org
+      username:
+      password:
+    connection:
+      useTrustStore: false
+      retries:
+      user_agent_suffix:
+      enable_cookies:
+      enable_circular_redirects:
+      timeout:
+    maximum_component_age: -1
+    maximum_metadata_age: 1440
+    negative_cache_enabled: True
+    negative_cache_ttl: 1440
+    write_policy: allow_once # one of "allow", "allow_once" or "deny"
+    routing_rule_matcher: ''
+    cleanup_policies:
+      - policy-1
+  raw:
+    name: raw-proxy
+    blob_store: blob-raw
+    format: raw
+    online: true
+    blocked: false
+    auto_block: true
+    remote:
+      url: https://www.jfrog.com/
+      username:
+      password:
+    connection:
+      useTrustStore: false
+      retries:
+      user_agent_suffix:
+      enable_cookies:
+      enable_circular_redirects:
+      timeout:
+    layout_policy: strict
+    maximum_component_age: -1
+    maximum_metadata_age: 1440
+    negative_cache_enabled: True
+    negative_cache_ttl: 1440
+    write_policy: allow_once # one of "allow", "allow_once" or "deny"
+    routing_rule_matcher: ''
+    cleanup_policies:
+      - policy-1
+    content_disposition: inline
+  conda:
+    name: conda-proxy
+    blob_store: blob-conda
+    format: conda
+    online: true
+    blocked: false
+    auto_block: true
+    remote:
+      url: https://repo.anaconda.com/pkgs/main
+      username:
+      password:
+    connection:
+      useTrustStore: false
+      retries:
+      user_agent_suffix:
+      enable_cookies:
+      enable_circular_redirects:
+      timeout:
+    maximum_component_age: -1
+    maximum_metadata_age: 1440
+    negative_cache_enabled: True
+    negative_cache_ttl: 1440
+    write_policy: allow_once # one of "allow", "allow_once" or "deny"
+    routing_rule_matcher: ''
+    cleanup_policies:
+      - policy-1
+  go:
+    name: go-proxy
+    blob_store: blob-go
+    format: go
+    online: true
+    blocked: false
+    auto_block: true
+    remote:
+      url: https://proxy.golang.org
+      username:
+      password:
+    connection:
+      useTrustStore: false
+      retries:
+      user_agent_suffix:
+      enable_cookies:
+      enable_circular_redirects:
+      timeout:
+    maximum_component_age: -1
+    maximum_metadata_age: 1440
+    negative_cache_enabled: True
+    negative_cache_ttl: 1440
+    write_policy: allow_once # one of "allow", "allow_once" or "deny"
+    routing_rule_matcher: ''
+    cleanup_policies:
+      - policy-1
+  yum:
+    online: true
+    blocked: false
+    auto_block: true
+    blob_store: blob-yum
+    remote:
+      url: http://mirror.centos.org/centos/
+      username: ''
+      password: ''
+    connection:
+      retries: 5
+      user_agent_suffix: 'cn'
+      enable_cookies: false
+      enable_circular_redirects: false
+      timeout: ''
+    maximum_component_age: -1
+    maximum_metadata_age: 1440
+    negative_cache_enabled: true
+    negative_cache_ttl: 1440
+    strict_content_validation: true
+    version_policy: release
+    layout_policy: strict
+    write_policy: allow_once
+    content_disposition: inline
+    routing_rule_matcher: ''
+    cleanup_policies:
+      - policy-1
+
+group_defaults:
+  maven:
+  python:
